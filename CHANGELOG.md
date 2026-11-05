@@ -64,3 +64,4 @@ Première version.
 ### Corrigé
 - Mobile : les onglets Lots et Locataires de l'espace gestion se rechargent après l'actualisation du cache (ils restaient vides après la première connexion) ; l'écran de paiement du locataire affiche « Montant à payer » au lieu de « Montant encaissé ».
 - Images `web` et `license-web` : npm et npx retirés de l'étage d'exécution (inutiles pour « node server.js »). Leurs dépendances embarquées (brace-expansion, ip-address, pacote, picomatch, sigstore) provoquaient 10 failles HIGH qui bloquaient l'analyse Trivy d'une release. Scan local sans faille CRITICAL/HIGH corrigeable, démarrage vérifié.
+- Image `sauvegarde` : `gosu` retiré (jamais appelé, `boucle.sh` remplace l'entrypoint de postgres ; sa bibliothèque Go provoquait 1 faille CRITICAL et 25 HIGH) et `apt` mis à jour en 3.0.4 (CVE-2026-109518). Scan local sans faille CRITICAL/HIGH corrigeable, démarrage du service et `pg_dump` vérifiés.

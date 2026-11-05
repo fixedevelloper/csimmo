@@ -1,6 +1,12 @@
 # Service de sauvegarde : pg_dump 16 + rclone. Contexte de build : deploy/
 FROM postgres:16
-RUN apt-get update && apt-get install -y --no-install-recommends rclone openssl ca-certificates util-linux && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends rclone openssl ca-certificates util-linux \
+    # apt 3.0.4 corrige CVE-2026-109518 (HIGH) présent dans postgres:16 ; inutile dès que l'image de base l'embarque
+    && apt-get install -y --no-install-recommends --only-upgrade apt \
+    && rm -rf /var/lib/apt/lists/*
+# gosu (fourni par l'image postgres pour son propre entrypoint, remplacé ici par boucle.sh) n'est jamais appelé : sa
+# bibliothèque standard Go provoquait 1 faille CRITICAL et 25 HIGH qui bloquaient l'analyse Trivy d'une release.
+RUN rm -f /usr/local/bin/gosu
 COPY sauvegarde/ /opt/sauvegarde/
 ENV TZ=Africa/Douala
 ENTRYPOINT ["/opt/sauvegarde/boucle.sh"]
