@@ -25,6 +25,7 @@ class _LotsScreenState extends ConsumerState<LotsScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    ref.watch(derniereMajProvider); // recharge la liste après une actualisation du cache
     return Column(children: [
       Padding(
         padding: const EdgeInsets.all(12),
@@ -71,6 +72,7 @@ class _LocatairesScreenState extends ConsumerState<LocatairesScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    ref.watch(derniereMajProvider); // recharge la liste après une actualisation du cache
     return Column(children: [
       Padding(
         padding: const EdgeInsets.all(12),

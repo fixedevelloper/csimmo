@@ -55,3 +55,6 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 - Refonte visuelle du mobile : thème Material 3 clair/sombre aux couleurs CSImmo (`core/theme`), transitions fondues, composants communs (`core/widgets` : squelettes de chargement, états vides, pastilles de statut, cartes d'information), accueil locataire avec carte de solde, baux et échéances en cartes, retour haptique sur la navigation et « Payer », bandeau « encaissements en attente d'envoi » dans l'espace agent. Aucune nouvelle dépendance.
 - Refonte visuelle du web, écrans restants : `PageHeader` sur toutes les pages (listes, Paramètres avec retour, créations), assistant de bail avec indicateur d'étapes à pastilles numérotées.
 - Refonte visuelle du mobile, écrans restants : connexion et choix du serveur avec en-tête de marque, champs au style du thème, documents, signalements, listes de lots et de locataires en cartes avec pastilles de statut, états vides et squelettes, encaissement agent et paiement locataire (cartes, retour haptique, écran de résultat).
+
+### Corrigé
+- Mobile : les onglets Lots et Locataires de l'espace gestion se rechargent après l'actualisation du cache (ils restaient vides après la première connexion) ; l'écran de paiement du locataire affiche « Montant à payer » au lieu de « Montant encaissé ».

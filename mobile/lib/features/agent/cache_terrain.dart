@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:immogest_api/immogest_api.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show StreamProvider;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/db/app_database.dart';
@@ -105,3 +106,6 @@ class CacheTerrain {
 
 @Riverpod(keepAlive: true)
 CacheTerrain cacheTerrain(Ref ref) => CacheTerrain(ref.watch(appDatabaseProvider), ref.watch(apiProvider));
+
+/// Date de la dernière actualisation du cache : les écrans qui lisent la copie locale s'y abonnent pour se recharger.
+final derniereMajProvider = StreamProvider<DateTime?>((ref) => ref.watch(cacheTerrainProvider).derniereActualisation());

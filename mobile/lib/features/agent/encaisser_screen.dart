@@ -119,7 +119,7 @@ class _EncaisserScreenState extends ConsumerState<EncaisserScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context).toString();
-    final maj = ref.watch(_derniereMajProvider).value;
+    final maj = ref.watch(derniereMajProvider).value;
     final utilisateur = ref.watch(currentUserProvider);
     return ListView(padding: const EdgeInsets.all(16), children: [
       utilisateur.maybeWhen(
@@ -204,7 +204,6 @@ class _EncaisserScreenState extends ConsumerState<EncaisserScreen> {
   }
 }
 
-final _derniereMajProvider = StreamProvider<DateTime?>((ref) => ref.watch(cacheTerrainProvider).derniereActualisation());
 
 /// Pour les tests : relit la file sans passer par l'écran.
 Future<BilanSynchro> synchroniserMaintenant(WidgetRef ref) => ref.read(synchroEncaissementsProvider).synchroniser();
