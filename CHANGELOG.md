@@ -63,3 +63,4 @@ Première version.
 
 ### Corrigé
 - Mobile : les onglets Lots et Locataires de l'espace gestion se rechargent après l'actualisation du cache (ils restaient vides après la première connexion) ; l'écran de paiement du locataire affiche « Montant à payer » au lieu de « Montant encaissé ».
+- Images `web` et `license-web` : npm et npx retirés de l'étage d'exécution (inutiles pour « node server.js »). Leurs dépendances embarquées (brace-expansion, ip-address, pacote, picomatch, sigstore) provoquaient 10 failles HIGH qui bloquaient l'analyse Trivy d'une release. Scan local sans faille CRITICAL/HIGH corrigeable, démarrage vérifié.
