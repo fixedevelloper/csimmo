@@ -150,6 +150,7 @@
   "choisirBailErreur": "Choose the lease concerned.",
   "mensuel": "{montant} per month",
   "montantFcfa": "Amount collected (FCFA)",
+  "montantAPayerFcfa": "Amount to pay (FCFA)",
   "montantInvalide": "Enter a whole amount in FCFA.",
   "enregistrerEncaissement": "Record the payment",
   "encaissementEnregistre": "Payment saved on the phone. It will be sent as soon as possible.",

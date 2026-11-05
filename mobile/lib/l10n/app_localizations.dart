@@ -830,6 +830,12 @@ abstract class AppLocalizations {
   /// **'Montant encaissé (FCFA)'**
   String get montantFcfa;
 
+  /// No description provided for @montantAPayerFcfa.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant à payer (FCFA)'**
+  String get montantAPayerFcfa;
+
   /// No description provided for @montantInvalide.
   ///
   /// In fr, this message translates to:

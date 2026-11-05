@@ -403,6 +403,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get montantFcfa => 'Amount collected (FCFA)';
 
   @override
+  String get montantAPayerFcfa => 'Amount to pay (FCFA)';
+
+  @override
   String get montantInvalide => 'Enter a whole amount in FCFA.';
 
   @override

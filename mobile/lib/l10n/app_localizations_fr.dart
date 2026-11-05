@@ -406,6 +406,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get montantFcfa => 'Montant encaissé (FCFA)';
 
   @override
+  String get montantAPayerFcfa => 'Montant à payer (FCFA)';
+
+  @override
   String get montantInvalide => 'Saisissez un montant entier en FCFA.';
 
   @override

@@ -169,7 +169,7 @@ class _PayerScreenState extends ConsumerState<PayerScreen> {
                         controller: _montant,
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]'))],
-                        decoration: InputDecoration(labelText: l.montantFcfa,),
+                        decoration: InputDecoration(labelText: l.montantAPayerFcfa,),
                         validator: (v) {
                           final n = int.tryParse((v ?? '').replaceAll(RegExp(r'\s'), ''));
                           return n == null || n <= 0 || n > 20000000 ? l.montantInvalide : null;

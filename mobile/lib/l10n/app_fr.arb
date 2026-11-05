@@ -150,6 +150,7 @@
   "choisirBailErreur": "Choisissez le bail concerné.",
   "mensuel": "{montant} par mois",
   "montantFcfa": "Montant encaissé (FCFA)",
+  "montantAPayerFcfa": "Montant à payer (FCFA)",
   "montantInvalide": "Saisissez un montant entier en FCFA.",
   "enregistrerEncaissement": "Enregistrer l'encaissement",
   "encaissementEnregistre": "Encaissement enregistré sur le téléphone. Il sera envoyé dès que possible.",
