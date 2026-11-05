@@ -3,7 +3,23 @@
     "nom": "CSImmo",
     "description": "Rental property management"
   },
+  "theme": {
+    "titre": "Theme",
+    "clair": "Light",
+    "sombre": "Dark",
+    "systeme": "System"
+  },
   "nav": {
+    "groupes": {
+      "vue": "Overview",
+      "activite": "Rental activity",
+      "finance": "Finance",
+      "reference": "Records",
+      "administration": "Administration"
+    },
+    "reduire": "Collapse menu",
+    "developper": "Expand menu",
+    "compte": "My account",
     "dashboard": "Dashboard",
     "patrimoine": "Properties",
     "locataires": "Tenants",

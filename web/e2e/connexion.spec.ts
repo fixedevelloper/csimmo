@@ -39,7 +39,8 @@ test("connexion → tableau de bord vide → déconnexion", async ({ page }) => 
   expect(cookies.find((c) => c.name === "immogest_refresh")?.httpOnly).toBe(true);
   expect(await page.evaluate(() => document.cookie)).not.toContain("immogest_");
 
-  await page.getByRole("button", { name: "Se déconnecter" }).click();
+  await page.getByRole("button", { name: "Mon compte" }).click();
+  await page.getByRole("menuitem", { name: "Se déconnecter" }).click();
   await expect(page).toHaveURL(/\/login/);
 
   // La session est bien terminée : retour forcé vers la connexion
@@ -65,7 +66,7 @@ test("retour à la page demandée après connexion, et changement de langue", as
 
   await page.getByRole("button", { name: "EN", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Leases", level: 1 })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "My account" })).toBeVisible();
 });
 
 test("une session expirée côté API renvoie vers la connexion", async ({ page }) => {

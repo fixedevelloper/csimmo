@@ -3,7 +3,23 @@
     "nom": "CSImmo",
     "description": "Gestion immobilière locative"
   },
+  "theme": {
+    "titre": "Thème",
+    "clair": "Clair",
+    "sombre": "Sombre",
+    "systeme": "Système"
+  },
   "nav": {
+    "groupes": {
+      "vue": "Vue d'ensemble",
+      "activite": "Activité locative",
+      "finance": "Finance",
+      "reference": "Fiches",
+      "administration": "Administration"
+    },
+    "reduire": "Réduire le menu",
+    "developper": "Développer le menu",
+    "compte": "Mon compte",
     "dashboard": "Tableau de bord",
     "patrimoine": "Patrimoine",
     "locataires": "Locataires",
