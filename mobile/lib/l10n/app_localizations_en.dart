@@ -9,10 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'ImmoGest';
+  String get appTitle => 'CSImmo';
 
   @override
-  String get serveurTitre => 'Your ImmoGest server';
+  String get serveurTitre => 'Your CSImmo server';
 
   @override
   String get serveurExplication =>
@@ -44,7 +44,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Camera access is denied. Enter the address manually.';
 
   @override
-  String get serveurQrInvalide => 'This QR code is not an ImmoGest address.';
+  String get serveurQrInvalide => 'This QR code is not an CSImmo address.';
 
   @override
   String get connexionTitre => 'Sign in';
@@ -138,7 +138,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errServeurNonImmogest =>
-      'This address does not respond like an ImmoGest server.';
+      'This address does not respond like an CSImmo server.';
 
   @override
   String get errUrlInvalide =>

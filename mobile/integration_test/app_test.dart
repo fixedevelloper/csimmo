@@ -92,7 +92,7 @@ void main() {
 
   testWidgets('configuration du serveur → connexion → espace gestion, puis déconnexion', (tester) async {
     await lancer(tester);
-    expect(find.text('Votre serveur ImmoGest'), findsOneWidget);
+    expect(find.text('Votre serveur CSImmo'), findsOneWidget);
 
     await configurerServeur(tester);
     expect(await store.read('server.url'), backend.url);

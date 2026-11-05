@@ -50,7 +50,7 @@ class _ImmoGestAppState extends ConsumerState<ImmoGestApp> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      theme: ThemeData(colorSchemeSeed: const Color(0xFF1F4E79), useMaterial3: true),
+      theme: ThemeData(colorSchemeSeed: const Color(0xFF0B4DB0), useMaterial3: true),
     );
   }
 }

@@ -10,7 +10,7 @@
          L'application refuse http:// vers toute adresse publique (voir ServerUrl) : seul le réseau privé est concerné. -->
     <application
         android:usesCleartextTraffic="true"
-        android:label="ImmoGest"
+        android:label="CSImmo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

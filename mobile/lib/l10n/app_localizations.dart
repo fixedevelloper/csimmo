@@ -101,13 +101,13 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In fr, this message translates to:
-  /// **'ImmoGest'**
+  /// **'CSImmo'**
   String get appTitle;
 
   /// No description provided for @serveurTitre.
   ///
   /// In fr, this message translates to:
-  /// **'Votre serveur ImmoGest'**
+  /// **'Votre serveur CSImmo'**
   String get serveurTitre;
 
   /// No description provided for @serveurExplication.
@@ -167,7 +167,7 @@ abstract class AppLocalizations {
   /// No description provided for @serveurQrInvalide.
   ///
   /// In fr, this message translates to:
-  /// **'Ce QR code n\'est pas une adresse ImmoGest.'**
+  /// **'Ce QR code n\'est pas une adresse CSImmo.'**
   String get serveurQrInvalide;
 
   /// No description provided for @connexionTitre.
@@ -341,7 +341,7 @@ abstract class AppLocalizations {
   /// No description provided for @errServeurNonImmogest.
   ///
   /// In fr, this message translates to:
-  /// **'Cette adresse ne répond pas comme un serveur ImmoGest.'**
+  /// **'Cette adresse ne répond pas comme un serveur CSImmo.'**
   String get errServeurNonImmogest;
 
   /// No description provided for @errUrlInvalide.
