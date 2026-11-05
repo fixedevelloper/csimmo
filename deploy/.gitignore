@@ -1,2 +1,6 @@
 .env
 generated/
+# produits par update.sh et package.sh : jamais des sources
+.avant-mise-a-jour/
+.update.lock
+dist/

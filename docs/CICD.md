@@ -1,6 +1,6 @@
 # CI/CD d'ImmoGest
 
-> **État** : les workflows sont écrits et passent `actionlint`, mais **n'ont jamais tourné sur GitHub** : le dépôt n'a ni commit ni dépôt distant. Les Dockerfiles, eux, ont été construits et démarrés localement. Les premières exécutions réelles révéleront probablement des ajustements (cache, droits, noms de paquets).
+> **État** : les workflows sont poussés sur `fixedevelloper/csimmo` (privé) et passent `actionlint` ; **leurs premiers résultats réels n'ont pas encore été relus** (dépôt privé : non lisibles sans authentification). Les Dockerfiles, eux, ont été construits et démarrés localement. Les premières exécutions réelles révéleront probablement des ajustements (cache, droits, noms de paquets).
 
 ## Vue d'ensemble
 
@@ -11,7 +11,7 @@
 | `codeql.yml` | PR, `main`, chaque lundi | Analyse statique de sécurité Java et TypeScript |
 | `dependabot.yml` | chaque semaine | PR groupées de mises à jour (Maven, npm ×2, pub, Docker, Actions) |
 
-Images publiées (`ghcr.io/<propriétaire>/immogest-<nom>`) : `app` (jar obfusqué), `web`, `sauvegarde`, `license-server`, `license-web`. Une seule architecture : **linux/amd64**.
+Images publiées (`ghcr.io/fixedevelloper/immogest-<nom>`) : `app` (jar obfusqué), `web`, `sauvegarde`, `license-server`, `license-web`. Une seule architecture : **linux/amd64**.
 
 Étiquettes : `edge` et `sha-xxxxxxx` à chaque fusion sur `main` ; `X.Y.Z`, `X.Y` et `latest` sur un tag. Une étiquette peut bouger, **le condensé (digest) signé non** : c'est lui qui fait foi.
 
@@ -20,13 +20,10 @@ Images publiées (`ghcr.io/<propriétaire>/immogest-<nom>`) : `app` (jar obfusqu
 Ces commandes agissent hors de cette machine : à lancer par un humain, après relecture.
 
 ```bash
-# 1. Dépôt privé (le code est propriétaire) — branche principale « main »
-git branch -m master main
-gh repo create <organisation>/immogest --private --source . --remote origin
-git add -A && git commit -m "feat: première version" && git push -u origin main
+# 1. Dépôt déjà créé et poussé : https://github.com/fixedevelloper/csimmo (privé, branche main)
 
 # 2. Protection de la branche principale : la CI doit être verte
-gh api -X PUT repos/<organisation>/immogest/branches/main/protection --input - <<'JSON'
+gh api -X PUT repos/fixedevelloper/csimmo/branches/main/protection --input - <<'JSON'
 { "required_status_checks": { "strict": true, "contexts": ["backend", "web (web)", "web (license-web)", "web-e2e", "audit-dependances (web)", "audit-dependances (license-web)", "mobile", "packaging", "images-editeur (license-server)", "images-editeur (license-web)"] },
   "enforce_admins": true,
   "required_pull_request_reviews": { "required_approving_review_count": 1 },
@@ -49,8 +46,8 @@ Aucun secret n'est nécessaire à ce stade : la publication utilise le `GITHUB_T
 ## Vérifier une image avant de l'installer
 
 ```bash
-cosign verify ghcr.io/<propriétaire>/immogest-app:1.4.0 \
-  --certificate-identity-regexp '^https://github.com/<propriétaire>/immogest/\.github/workflows/images\.yml@refs/tags/v' \
+cosign verify ghcr.io/fixedevelloper/immogest-app:1.4.0 \
+  --certificate-identity-regexp '^https://github.com/fixedevelloper/csimmo/\.github/workflows/images\.yml@refs/tags/v' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 Réussit seulement si l'image a été produite par `images.yml` de CE dépôt sur un tag. Une image modifiée à la main, ou construite ailleurs, échoue. Chaque image porte aussi sa **provenance** (révision git, workflow) et son **SBOM** (liste des composants), consultables avec `docker buildx imagetools inspect`.
@@ -59,10 +56,16 @@ Réussit seulement si l'image a été produite par `images.yml` de CE dépôt su
 
 ```bash
 docker login ghcr.io
-export IMMOGEST_IMAGE_APP=ghcr.io/<propriétaire>/immogest-app IMMOGEST_IMAGE_WEB=ghcr.io/<propriétaire>/immogest-web IMMOGEST_IMAGE_SAUVEGARDE=ghcr.io/<propriétaire>/immogest-sauvegarde
+export IMMOGEST_IMAGE_APP=ghcr.io/fixedevelloper/immogest-app IMMOGEST_IMAGE_WEB=ghcr.io/fixedevelloper/immogest-web IMMOGEST_IMAGE_SAUVEGARDE=ghcr.io/fixedevelloper/immogest-sauvegarde
 cd deploy && ./install.sh --mode domaine --site immo.exemple.cm --version 1.4.0 --images-prebuilt --yes
 ```
 `--images-prebuilt` **ne construit rien** (`up --no-build`). Pour un client **sans accès à GHCR ou sans Internet**, la voie reste l'archive `immogest-X.tar.gz` + somme SHA-256 de `update.sh` (`deploy/package.sh`).
+
+## Points d'attention des premières exécutions
+
+- **CodeQL sur dépôt privé** : l'analyse de code (« code scanning ») exige GitHub Advanced Security hors dépôts publics. Si le job `codeql` échoue à l'envoi des résultats, désactivez-le (Settings > Code security) ou passez le dépôt en public ; le reste du CI n'en dépend pas.
+- **`images.yml` tourne dès la première fusion sur `main`** et publie `edge` et `sha-…` dans GHCR (paquets privés par défaut).
+- Les contrôles obligatoires de la protection de branche doivent porter les noms exacts affichés par GitHub après une première exécution : ajustez la liste du § Mise en place.
 
 ## Ce qui n'est pas encore fait
 

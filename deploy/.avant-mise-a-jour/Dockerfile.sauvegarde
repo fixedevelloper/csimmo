@@ -1,6 +1,0 @@
-# Service de sauvegarde : pg_dump 16 + rclone. Contexte de build : deploy/
-FROM postgres:16
-RUN apt-get update && apt-get install -y --no-install-recommends rclone openssl ca-certificates util-linux && rm -rf /var/lib/apt/lists/*
-COPY sauvegarde/ /opt/sauvegarde/
-ENV TZ=Africa/Douala
-ENTRYPOINT ["/opt/sauvegarde/boucle.sh"]
