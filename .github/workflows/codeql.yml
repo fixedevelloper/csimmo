@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read          # requis sur un dépôt privé pour lire l'exécution en cours
       security-events: write
     strategy:
       fail-fast: false
