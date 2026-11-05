@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title th:text="'Bail ' + ${d.numero}">Bail</title>
+  <style type="text/css">
+    @page { size: A4; margin: 22mm 18mm 22mm 18mm;
+            @bottom-center { content: "Page " counter(page) " / " counter(pages); font-size: 8pt; color: #555; } }
+    body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; line-height: 1.4; color: #111; }
+    h1 { font-size: 18pt; text-align: center; margin: 0 0 4pt 0; }
+    h2 { font-size: 11pt; margin: 14pt 0 4pt 0; border-bottom: 1px solid #999; padding-bottom: 2pt; }
+    .numero { text-align: center; color: #444; margin-bottom: 10pt; }
+    .brouillon { text-align: center; color: #b00020; font-weight: bold; border: 1px solid #b00020; padding: 4pt; margin-bottom: 10pt; }
+    table.fiche { width: 100%; border-collapse: collapse; }
+    table.fiche td { padding: 2pt 4pt; vertical-align: top; }
+    table.fiche td.libelle { width: 32%; color: #444; }
+    table.conditions { width: 100%; border-collapse: collapse; margin-top: 4pt; }
+    table.conditions td { border: 1px solid #bbb; padding: 3pt 5pt; }
+    table.conditions td.libelle { background: #f2f2f2; width: 40%; }
+    p { margin: 0 0 6pt 0; text-align: justify; }
+    .signatures { margin-top: 28pt; width: 100%; }
+    .signatures td { width: 50%; height: 70pt; vertical-align: top; }
+    .pied { margin-top: 18pt; font-size: 8pt; color: #555; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="brouillon" th:if="${d.brouillon}">PROJET DE BAIL - NON SIGNÉ</div>
+  <h1>CONTRAT DE BAIL</h1>
+  <div class="numero" th:text="'N° ' + ${d.numero}">N° BAIL-2026-0001</div>
+
+  <h2>Entre les soussignés</h2>
+  <p th:each="ligne : ${d.preambule}" th:text="${ligne}">Préambule</p>
+  <table class="fiche">
+    <tr><td class="libelle">Le bailleur</td><td><b th:text="${d.bailleurNom}">Bailleur</b><span th:if="${d.bailleurAdresse != null}" th:text="', ' + ${d.bailleurAdresse}"></span></td></tr>
+    <tr><td class="libelle">Le locataire</td><td><b th:text="${d.locataireNom}">Locataire</b></td></tr>
+    <tr th:if="${d.locataireProfession != null}"><td class="libelle">Profession</td><td th:text="${d.locataireProfession}"></td></tr>
+    <tr th:if="${d.locataireNaissance != null}"><td class="libelle">Né(e) le</td><td th:text="${d.locataireNaissance}"></td></tr>
+    <tr th:if="${d.locataireCni != null}"><td class="libelle">CNI n°</td><td th:text="${d.locataireCni}"></td></tr>
+    <tr th:if="${d.locataireAdresse != null}"><td class="libelle">Adresse</td><td th:text="${d.locataireAdresse}"></td></tr>
+    <tr><td class="libelle">Contact</td><td th:text="${d.locataireContact}"></td></tr>
+  </table>
+
+  <h2>Désignation du bien loué</h2>
+  <table class="fiche">
+    <tr><td class="libelle">Immeuble</td><td th:text="${d.immeuble}">Immeuble</td></tr>
+    <tr><td class="libelle">Adresse</td><td th:text="${d.adresse}">Adresse</td></tr>
+    <tr><td class="libelle">Lot</td><td th:text="${d.lot}">Lot</td></tr>
+  </table>
+
+  <h2>Conditions financières et durée</h2>
+  <table class="conditions">
+    <tr><td class="libelle">Date de début</td><td th:text="${d.dateDebut}"></td></tr>
+    <tr><td class="libelle">Date de fin</td><td th:text="${d.dateFin}"></td></tr>
+    <tr><td class="libelle">Loyer</td><td th:text="${d.loyer}"></td></tr>
+    <tr><td class="libelle">Charges</td><td th:text="${d.charges}"></td></tr>
+    <tr><td class="libelle">Périodicité</td><td th:text="${d.periodicite}"></td></tr>
+    <tr><td class="libelle">Échéance</td><td th:text="${d.echeance}"></td></tr>
+    <tr><td class="libelle">Dépôt de garantie (caution)</td><td th:text="${d.caution}"></td></tr>
+    <tr><td class="libelle">Avance versée à la signature</td><td th:text="${d.avance}"></td></tr>
+    <tr><td class="libelle">Préavis de départ</td><td th:text="${d.preavis}"></td></tr>
+  </table>
+
+  <div th:if="${!d.garants.isEmpty()}">
+    <h2>Garants</h2>
+    <table class="fiche">
+      <tr th:each="g : ${d.garants}"><td class="libelle" th:text="${g.lien}">Lien</td><td><b th:text="${g.nom}">Garant</b><span th:text="${g.details}"></span></td></tr>
+    </table>
+  </div>
+
+  <h2>Clauses</h2>
+  <p th:each="ligne : ${d.clauses}" th:text="${ligne}">Clause</p>
+
+  <table class="signatures">
+    <tr><td>Fait à ____________________, le ____________________<br /><br />Le bailleur<br />(signature précédée de « lu et approuvé »)</td>
+        <td>Le locataire<br />(signature précédée de « lu et approuvé »)</td></tr>
+  </table>
+  <div class="pied" th:if="${d.piedDePage != null}" th:text="${d.piedDePage}"></div>
+</body>
+</html>

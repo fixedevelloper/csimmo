@@ -1,0 +1,14 @@
+"use server";
+
+import { cookies } from "next/headers";
+
+import { estLocale, LOCALE_COOKIE } from "@/i18n/locales";
+
+export async function changerLangue(locale: string) {
+  if (!estLocale(locale)) return;
+  (await cookies()).set(LOCALE_COOKIE, locale, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+}

@@ -1,0 +1,3 @@
+overrides:
+  # next embarque un postcss vulnérable (GHSA-fxqj-rqcc-2cmp et autres) : version corrigée forcée
+  postcss: '>=8.5.23'

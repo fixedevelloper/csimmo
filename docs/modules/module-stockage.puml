@@ -1,0 +1,19 @@
+@startuml
+set separator none
+title Stockage
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("ImmoGestApplication.ImmoGestApplication_boundary", "ImmoGestApplication", $tags="") {
+  Component(ImmoGestApplication.ImmoGestApplication.Commun, "Commun", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Stockage, "Stockage", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml

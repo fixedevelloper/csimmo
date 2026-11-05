@@ -1,0 +1,14 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.tableaudebord`
+|Spring components
+|_Services_
+
+* `c.i.a.t.DashboardService`
+|Bean references
+|* `c.i.a.p.api.LecteurLots` (in Patrimoine)
+* `c.i.a.b.api.LecteurBaux` (in Baux)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+* `c.i.a.f.EcheanceService` (in Finance)
+|===

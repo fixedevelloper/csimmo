@@ -1,0 +1,12 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.stockage`
+|Spring components
+|_Services_
+
+* `c.i.a.s.ChiffrementDonnees`
+* `c.i.a.s.StockageService`
+|Bean references
+|* `c.i.a.s.FileStorage` (in Commun)
+|===

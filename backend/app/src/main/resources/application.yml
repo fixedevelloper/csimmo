@@ -1,0 +1,98 @@
+spring:
+  data:
+    web:
+      pageable:
+        # un client ne peut pas demander plus de 100 éléments à la fois (sinon 2000 par défaut : lecture massive, mémoire) ; shared.Pagination applique la même borne
+        max-page-size: 100
+        default-page-size: 20
+  servlet:
+    multipart:
+      # Les photos font 10 Mo au plus (le module stockage applique la vraie limite et valide le contenu)
+      max-file-size: 10MB
+      max-request-size: 11MB
+  application:
+    name: immogest
+  profiles:
+    default: dev
+  datasource:
+    url: ${IMMOGEST_DB_URL:jdbc:postgresql://localhost:5432/immogest}
+    username: ${IMMOGEST_DB_USER:immogest}
+    password: ${IMMOGEST_DB_PASSWORD:immogest}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        # Chargement par lots des collections EAGER et des associations paresseuses : sans cela, charger 2 000 baux émet 2 000 requêtes de plus (garants)
+        default_batch_fetch_size: 100
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  modulith:
+    events:
+      republish-outstanding-events-on-restart: true
+  jackson:
+    time-zone: UTC
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: false
+
+immogest:
+  stockage:
+    endpoint: ${IMMOGEST_S3_ENDPOINT:http://localhost:8333}
+    region: ${IMMOGEST_S3_REGION:us-east-1}
+    bucket: ${IMMOGEST_S3_BUCKET:immogest}
+    access-key: ${IMMOGEST_S3_ACCESS_KEY:}
+    secret-key: ${IMMOGEST_S3_SECRET_KEY:}
+    path-style: true
+    url-presignee: false
+    creer-bucket-au-demarrage: true
+    # Clé AES-256 en base64 (openssl rand -base64 32), propre à l'installation. Obligatoire pour les fichiers sensibles.
+    cle-chiffrement: ${IMMOGEST_CLE_CHIFFREMENT:}
+  securite:
+    # Secret HMAC du JWT, base64, 32 octets minimum (openssl rand -base64 48). Obligatoire hors dev.
+    jwt-secret: ${IMMOGEST_JWT_SECRET:}
+    acces-duree-minutes: 15
+    refresh-duree-jours: 30
+    otp-duree-minutes: 5
+    otp-intervalle-secondes: 60
+    otp-tentatives-max: 5
+    echecs-max: 5
+    verrouillage-minutes: 15
+    # Limite de débit par adresse IP sur /api/v1/auth/** (en plus du verrouillage par compte) : essais de connexion et d'OTP, puis renouvellements
+    limite-auth-par-minute: 20
+    limite-refresh-par-minute: 60
+  version: ${IMMOGEST_VERSION:dev}
+  sauvegarde:
+    repertoire: ${IMMOGEST_SAUVEGARDE_REPERTOIRE:/sauvegardes}
+    demandes: ${IMMOGEST_SAUVEGARDE_DEMANDES:/demandes}
+    heure: ${IMMOGEST_SAUVEGARDE_HEURE:02:30}
+    version: ${IMMOGEST_VERSION:dev}
+    redemarrage-sur-demande: ${IMMOGEST_SAUVEGARDE_REDEMARRAGE:false}
+  licence:
+    # Clé publique de l'éditeur (base64). Vide : la clé embarquée dans le jar (licence/cle-publique-editeur.txt).
+    cle-publique: ${IMMOGEST_LICENCE_CLE_PUBLIQUE:}
+    # URL du serveur de licences de l'éditeur. Vide : vérification en ligne désactivée (et donc pas de délai de grâce).
+    serveur-url: ${IMMOGEST_LICENCE_SERVEUR_URL:}
+    identifiant-machine-secours: ${IMMOGEST_MACHINE_ID_SECOURS:}
+    grace-jours: 30
+    verification-intervalle-jours: 7
+    alertes-jours: [30, 15, 7]
+
+db-scheduler:
+  enabled: true
+  # Une base partagée n'a qu'une instance : un sondage lent suffit et ménage le serveur du client
+  polling-interval: 30s
+  table-name: scheduled_tasks

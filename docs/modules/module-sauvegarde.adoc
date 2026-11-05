@@ -1,0 +1,16 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.sauvegarde`
+|Spring components
+|_Services_
+
+* `c.i.a.s.SauvegardeService`
+
+_Configuration properties_
+
+* `c.i.a.s.SauvegardeProperties`
+|Bean references
+|* `c.i.a.l.LicenceService` (in Licence)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

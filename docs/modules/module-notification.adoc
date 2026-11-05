@@ -1,0 +1,22 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.notification`
+|Spring components
+|_Services_
+
+* `c.i.a.n.NotificationService`
+
+_Configuration properties_
+
+* `c.i.a.n.NotificationProperties`
+|Bean references
+|* `c.i.a.s.ChiffrementDonnees` (in Stockage)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|Events listened to
+|* `c.i.a.s.PersonneAnonymisee` (async) 
+* `c.i.a.n.NotificationService.FileAlimentee` 
+* `c.i.a.f.EvenementsPaiement.DocumentEmis` (async) 
+* `c.i.a.f.EvenementsPaiement.PaiementEnregistre` (async) 
+|===

@@ -1,0 +1,28 @@
+# Java / Maven
+target/
+*.class
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+playwright-report/
+test-results/
+# Flutter
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins*
+mobile/android/.gradle/
+mobile/android/local.properties
+# IDE
+.idea/
+*.iml
+.vscode/
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+license-private*
+# OS
+.DS_Store

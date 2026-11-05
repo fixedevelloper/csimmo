@@ -1,0 +1,16 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.paiementenligne`
+|Spring components
+|_Services_
+
+* `c.i.a.p.PaiementEnLigneService`
+|Bean references
+|* `c.i.a.f.PaiementService` (in Finance)
+* `c.i.a.b.api.LecteurBaux` (in Baux)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+* `c.i.a.l.api.ControlePalier` (in Licence)
+* `c.i.a.s.ChiffrementDonnees` (in Stockage)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

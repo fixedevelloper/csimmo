@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: license-server
+  datasource:
+    url: ${LICENSE_SERVER_DB_URL:jdbc:postgresql://localhost:5433/licenseserver}
+    username: ${LICENSE_SERVER_DB_USER:licenseserver}
+    password: ${LICENSE_SERVER_DB_PASSWORD:licenseserver}
+  flyway:
+    enabled: true
+server:
+  port: ${LICENSE_SERVER_PORT:8090}
+license-server:
+  # Fichier contenant la clé privée Ed25519 (base64 PKCS#8, produit par `generer-cles`). HORS du dépôt ; lecture seule.
+  cle-privee-chemin: ${LICENSE_SERVER_CLE_PRIVEE_CHEMIN:}
+  # Secret HS256 des jetons de connexion de l'éditeur (32 caractères au moins)
+  jwt-secret: ${LICENSE_SERVER_JWT_SECRET:}
+  # Compte éditeur créé au premier démarrage si la base n'en contient aucun
+  admin-email: ${LICENSE_SERVER_ADMIN_EMAIL:}
+  admin-mot-de-passe: ${LICENSE_SERVER_ADMIN_MOT_DE_PASSE:}
+  transferts-max: 3

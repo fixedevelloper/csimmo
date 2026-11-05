@@ -1,0 +1,9 @@
+{
+  "identities": [
+    {
+      "name": "immogest-dev",
+      "credentials": [{ "accessKey": "immogest", "secretKey": "immogest-secret" }],
+      "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    }
+  ]
+}

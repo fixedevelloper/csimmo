@@ -1,0 +1,22 @@
+@startuml
+set separator none
+title Sauvegardes
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("ImmoGestApplication.ImmoGestApplication_boundary", "ImmoGestApplication", $tags="") {
+  Component(ImmoGestApplication.ImmoGestApplication.Sauvegardes, "Sauvegardes", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Commun, "Commun", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Licence, "Licence", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(ImmoGestApplication.ImmoGestApplication.Licence, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Sauvegardes, ImmoGestApplication.ImmoGestApplication.Licence, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Sauvegardes, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml

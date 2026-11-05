@@ -1,0 +1,140 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+      - run: ./mvnw -B verify
+        working-directory: backend
+
+  web:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [web, license-web]
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: ${{ matrix.project }}/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  web-e2e:
+    runs-on: ubuntu-latest
+    needs: [backend, web]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - name: Environnement de dev (PostgreSQL, SeaweedFS)
+        run: docker compose -f deploy/docker-compose.dev.yml up -d --wait postgres seaweedfs
+      - name: Backend (profil dev, ADMIN de développement)
+        working-directory: backend
+        run: |
+          ./mvnw -B -q install -DskipTests -pl licensing-core -am
+          nohup ./mvnw -B -pl app spring-boot:run > ../backend.log 2>&1 &
+          timeout 180 bash -c 'until curl -sf localhost:8080/api/v1/health; do sleep 3; done'
+      - run: pnpm install --frozen-lockfile
+        working-directory: web
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: web
+      - run: pnpm test:e2e
+        working-directory: web
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-diagnostics
+          path: |
+            web/playwright-report
+            web/test-results
+            backend.log
+
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart run build_runner build -d
+      - run: flutter analyze
+      # Inclut test/flow : le parcours d'intégration (serveur → connexion → accueil par rôle) sur la VM de test
+      - run: flutter test
+
+  # Packaging : construit les images (jar obfusqué compris), installe en mode réseau local et vérifie que tout répond à travers Caddy.
+  packaging:
+    runs-on: ubuntu-latest
+    needs: [backend, web]
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash -n deploy/install.sh
+      - run: ./install.sh --mode local --site localhost --stockage local --yes
+        working-directory: deploy
+      - name: Vérifications
+        working-directory: deploy
+        run: |
+          curl -ksf https://localhost/api/v1/health
+          # avant l'installation, /login redirige vers l'assistant : 200 ou 307, jamais une erreur
+          curl -ks -o /dev/null -w '%{http_code}\n' https://localhost/login | grep -xE '200|307'
+          # jamais exposés
+          test "$(curl -ks -o /dev/null -w '%{http_code}' https://localhost/actuator/health)" != 200
+          test "$(curl -ks -o /dev/null -w '%{http_code}' https://localhost/api/v1/webhooks/simule -X POST)" = 404
+          # le stockage et la base ne publient aucun port
+          test -z "$(docker compose ps --format '{{range .Publishers}}{{if .PublishedPort}}{{.PublishedPort}} {{end}}{{end}}' postgres seaweedfs sauvegarde app | tr -d ' \n')"
+      - if: failure()
+        working-directory: deploy
+        run: docker compose logs --tail 200
+
+  # Mise à jour N-1 → N : installe le dernier tag, met à jour avec le update.sh courant, vérifie base et fichiers. Ignoré tant qu'aucun tag n'existe.
+  mise-a-jour:
+    runs-on: ubuntu-latest
+    needs: [backend, web]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Version précédente
+        id: prev
+        run: echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || true)" >> "$GITHUB_OUTPUT"
+      - if: steps.prev.outputs.tag != ''
+        run: deploy/tests/mise-a-jour-n-1.sh "${{ steps.prev.outputs.tag }}"
+      - if: failure()
+        working-directory: deploy
+        run: docker compose logs --tail 200

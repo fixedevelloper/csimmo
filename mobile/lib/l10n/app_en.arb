@@ -1,0 +1,245 @@
+{
+  "@@locale": "en",
+  "appTitle": "ImmoGest",
+  "serveurTitre": "Your ImmoGest server",
+  "serveurExplication": "Enter the address of your agency's or landlord's server, or scan the QR code you were given.",
+  "serveurUrlLabel": "Server address",
+  "serveurUrlHint": "https://immo.example.com",
+  "serveurContinuer": "Continue",
+  "serveurVerification": "Checking…",
+  "serveurScanner": "Scan a QR code",
+  "serveurScanTitre": "Scan the QR code",
+  "serveurScanAide": "Place the server's QR code inside the frame.",
+  "serveurCameraRefusee": "Camera access is denied. Enter the address manually.",
+  "serveurQrInvalide": "This QR code is not an ImmoGest address.",
+  "connexionTitre": "Sign in",
+  "connexionServeur": "Server: {url}",
+  "identifiantLabel": "Phone or e-mail",
+  "motDePasseLabel": "Password",
+  "seConnecter": "Sign in",
+  "connexionEnCours": "Signing in…",
+  "connexionParSms": "Get a code by SMS",
+  "connexionParMotDePasse": "Use a password",
+  "recevoirCode": "Get the code",
+  "codeLabel": "Code received by SMS",
+  "verifier": "Verify",
+  "deuxFacteursInfo": "A 6-digit code has been sent to you by SMS.",
+  "codeEnvoye": "If this number is registered, a code has just been sent by SMS.",
+  "retour": "Back",
+  "changerServeur": "Change server",
+  "champRequis": "This field is required",
+  "codeSixChiffres": "The code has 6 digits",
+  "deconnexion": "Sign out",
+  "bienvenue": "Welcome, {nom}",
+  "bientotDisponible": "This area will be available soon.",
+  "espaceLocataire": "My tenant area",
+  "espaceAgent": "Management area",
+  "espacePrestataire": "Contractor area",
+  "espaceProprietaire": "Owner area",
+  "chargement": "Loading…",
+  "reessayer": "Try again",
+  "errInconnue": "An unexpected error occurred. Try again.",
+  "errServeurIndisponible": "Cannot reach the server. Check your connection and the address.",
+  "errServeurNonImmogest": "This address does not respond like an ImmoGest server.",
+  "errUrlInvalide": "Invalid address. Example: https://immo.example.com",
+  "errUrlHttpRefusee": "A public address must start with https:// (secure connection).",
+  "errIdentifiantsInvalides": "Incorrect identifier or password.",
+  "errCompteVerrouille": "Account temporarily locked after too many failures. Try again in 15 minutes.",
+  "errCompteDesactive": "This account is disabled.",
+  "errOtpInvalide": "Invalid or expired code.",
+  "errAccesRefuse": "You do not have the required permissions.",
+  "errSessionExpiree": "Your session has expired. Please sign in again.",
+  "errLicenceExpiree": "The application licence has expired: read-only mode.",
+  "@connexionServeur": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "@bienvenue": {
+    "placeholders": {
+      "nom": {
+        "type": "String"
+      }
+    }
+  },
+  "ongletAccueil": "Home",
+  "ongletBaux": "My leases",
+  "ongletDocuments": "Receipts",
+  "ongletSignaler": "Report",
+  "soldeDu": "Balance due",
+  "soldeAJour": "You are up to date",
+  "arrieres": "Overdue rent",
+  "aVenir": "Upcoming",
+  "credit": "Unapplied credit",
+  "payer": "Pay",
+  "payerBientot": "Mobile Money payment is coming soon.",
+  "aucunBail": "No lease yet.",
+  "bailActif": "Active",
+  "bailResilie": "Terminated",
+  "bailTermine": "Ended",
+  "bailBrouillon": "Draft",
+  "echeances": "Instalments",
+  "echeancePayee": "Paid",
+  "echeanceEnRetard": "Overdue",
+  "echeancePartielle": "Partly paid",
+  "echeanceDue": "Due",
+  "echeanceAVenir": "Upcoming",
+  "loyerMensuel": "Monthly rent",
+  "chargesMensuelles": "Monthly charges",
+  "caution": "Deposit",
+  "debutBail": "Lease start",
+  "finBail": "Lease end",
+  "sansDateFin": "Open-ended",
+  "sortiePrevue": "Planned move-out",
+  "avantLe": "before {date}",
+  "resteAPayer": "{montant} left",
+  "aucunDocument": "No rent receipt or payment slip yet.",
+  "quittance": "Rent receipt",
+  "recu": "Payment slip",
+  "signalerTitre": "Report a problem",
+  "signalerDescription": "Describe the problem",
+  "signalerDescriptionCourte": "Describe the problem in a few words (5 characters minimum).",
+  "photoCamera": "Take a photo",
+  "photoGalerie": "Gallery",
+  "retirerPhoto": "Remove the photo",
+  "signalerEnvoyer": "Send the report",
+  "envoiEnCours": "Sending…",
+  "signalementEnvoye": "Report sent. Your manager will handle it.",
+  "mesSignalements": "My reports",
+  "aucunSignalement": "No report yet.",
+  "signalementNouveau": "Received",
+  "signalementEnCours": "In progress",
+  "signalementResolu": "Resolved",
+  "signalementRejete": "Rejected",
+  "errSignalementBailRequis": "Specify which lease it concerns.",
+  "errSignalementAucunBail": "You have no current lease.",
+  "errSignalementLimite": "Too many reports waiting: please wait until they are handled.",
+  "errSignalementDescription": "Describe the problem in 5 to 2000 characters.",
+  "errFichierInvalide": "This photo is not accepted (JPEG, PNG or WebP, 10 MB at most).",
+  "errLocataireIntrouvable": "No tenant record is linked to your account. Contact your manager.",
+  "@avantLe": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@resteAPayer": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  },
+  "ongletEncaisser": "Collect",
+  "ongletAEnvoyer": "To send",
+  "ongletLots": "Units",
+  "ongletLocataires": "Tenants",
+  "donneesDu": "Data from {date}",
+  "donneesAbsentes": "No data stored on this phone.",
+  "donneesAbsentesAide": "Refresh the data (with a network) so you can work offline afterwards.",
+  "actualiserDonnees": "Refresh",
+  "donneesActualisees": "Data refreshed.",
+  "donneesAnciennes": "The previous data remains usable.",
+  "rechercherLocataire": "Search a tenant",
+  "aucunLocataire": "No tenant found.",
+  "changer": "Change",
+  "aucunBailLocataire": "This tenant has no lease on record.",
+  "choisirBailErreur": "Choose the lease concerned.",
+  "mensuel": "{montant} per month",
+  "montantFcfa": "Amount collected (FCFA)",
+  "montantInvalide": "Enter a whole amount in FCFA.",
+  "enregistrerEncaissement": "Record the payment",
+  "encaissementEnregistre": "Payment saved on the phone. It will be sent as soon as possible.",
+  "recuSmsInfo": "The tenant gets an SMS receipt when the payment reaches the server.",
+  "synchroniserMaintenant": "Send now",
+  "fileVide": "No payment entered recently.",
+  "statutEnAttente": "Waiting",
+  "statutEnvoye": "Sent",
+  "statutRejete": "Refused",
+  "supprimerSaisie": "Delete the entry",
+  "saisieSupprimee": "Entry deleted.",
+  "abandonImpossible": "Not possible: this payment was already presented to the server and may be recorded there.",
+  "synchroTerminee": "Done: {envoyes} sent, {rejetes} refused.",
+  "synchroInterrompue": "{raison} {restants} payment(s) still waiting.",
+  "deconnexionAvecFile": "{n} unsent payment(s) will be kept on this phone and sent at your next sign-in with this account.",
+  "annuler": "Cancel",
+  "rechercherLot": "Search a unit",
+  "aucunLot": "No unit.",
+  "lotLibre": "Vacant",
+  "lotOccupe": "Occupied",
+  "lotEnTravaux": "Under works",
+  "errBailIntrouvable": "Lease not found: the payment cannot be recorded.",
+  "errPaiementInvalide": "Invalid amount or details.",
+  "errPaiementDateFuture": "The payment date is in the future: check the phone's clock.",
+  "errIdempotence": "This entry was already used for a different amount.",
+  "@donneesDu": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@mensuel": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  },
+  "@synchroTerminee": {
+    "placeholders": {
+      "envoyes": {
+        "type": "int"
+      },
+      "rejetes": {
+        "type": "int"
+      }
+    }
+  },
+  "@synchroInterrompue": {
+    "placeholders": {
+      "raison": {
+        "type": "String"
+      },
+      "restants": {
+        "type": "int"
+      }
+    }
+  },
+  "@deconnexionAvecFile": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "payerTitre": "Pay my rent",
+  "payerBail": "Lease to pay",
+  "payerTelephone": "Mobile Money number paying",
+  "payerTelephoneInvalide": "Enter a valid number in international format.",
+  "payerConfirmer": "Pay",
+  "operateurMtn": "MTN MoMo",
+  "operateurOrange": "Orange Money",
+  "payerAttenteTitre": "Waiting for your approval",
+  "payerAttenteAide": "Approve the payment on your phone (secret code). This page updates by itself.",
+  "payerDelai": "Still no confirmation. If you approved it, the payment will be recorded as soon as the operator confirms it: you can close this page.",
+  "payerContinuerSuivi": "Keep waiting",
+  "payerFermer": "Close",
+  "payerSucces": "Payment of {montant} confirmed. Thank you!",
+  "payerRefusee": "The payment did not go through. No amount was recorded.",
+  "payerExpiree": "The payment expired without confirmation. No amount was recorded.",
+  "payerAnomalie": "The amount confirmed by the operator differs from the one requested. Your manager will check.",
+  "errAgregateur": "The payment service is temporarily unavailable. Try again in a moment.",
+  "errPaiementEnLigneIndisponible": "Online payment is not available with your manager.",
+  "errTropDeTransactions": "You already have pending payments: approve them or wait.",
+  "@payerSucces": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  }
+}

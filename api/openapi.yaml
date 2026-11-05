@@ -1,0 +1,6038 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost
+  description: Generated server url
+paths:
+  /api/v1/utilisateurs/{id}:
+    get:
+      tags:
+      - utilisateur-controller
+      operationId: obtenir
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UtilisateurDto"
+    put:
+      tags:
+      - utilisateur-controller
+      operationId: modifier
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ModificationRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UtilisateurDto"
+    delete:
+      tags:
+      - utilisateur-controller
+      operationId: desactiver
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/signalements/{id}/statut:
+    put:
+      tags:
+      - signalement-controller
+      operationId: changerStatut
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StatutSignalementRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SignalementDto"
+  /api/v1/relances/parametres:
+    get:
+      tags:
+      - relance-controller
+      operationId: parametres
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ParametresRelanceDto"
+    put:
+      tags:
+      - relance-controller
+      operationId: modifier_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ParametresRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ParametresRelanceDto"
+  /api/v1/proprietaires-tiers/{id}:
+    get:
+      tags:
+      - proprietaire-controller
+      operationId: obtenir_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProprietaireDto"
+    put:
+      tags:
+      - proprietaire-controller
+      operationId: modifier_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProprietaireRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProprietaireDto"
+    delete:
+      tags:
+      - proprietaire-controller
+      operationId: archiver
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/prestataires/{id}:
+    get:
+      tags:
+      - prestataire-controller
+      operationId: obtenir_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PrestataireDto"
+    put:
+      tags:
+      - prestataire-controller
+      operationId: modifier_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrestataireRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PrestataireDto"
+    delete:
+      tags:
+      - prestataire-controller
+      operationId: archiver_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/paiements-en-ligne/fournisseurs/{code}:
+    put:
+      tags:
+      - paiement-en-ligne-controller
+      operationId: modifierFournisseur
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FournisseurRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FournisseurDto"
+  /api/v1/notifications/canaux/{canal}:
+    put:
+      tags:
+      - notification-controller
+      operationId: modifier_4
+      parameters:
+      - name: canal
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - SMS
+          - WHATSAPP
+          - EMAIL
+          - PUSH
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CanalRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CanalParametresDto"
+  /api/v1/mandats/{id}:
+    get:
+      tags:
+      - proprietaire-controller
+      operationId: mandat
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MandatDto"
+    put:
+      tags:
+      - proprietaire-controller
+      operationId: modifierMandat
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MandatRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MandatDto"
+  /api/v1/lots/{id}:
+    get:
+      tags:
+      - lot-controller
+      operationId: obtenir_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LotDto"
+    put:
+      tags:
+      - lot-controller
+      operationId: modifier_5
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LotRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LotDto"
+    delete:
+      tags:
+      - lot-controller
+      operationId: archiver_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/lots/{id}/statut:
+    put:
+      tags:
+      - lot-controller
+      operationId: changerStatut_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StatutRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LotDto"
+  /api/v1/locataires/{id}:
+    get:
+      tags:
+      - locataire-controller
+      operationId: obtenir_4
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LocataireDto"
+    put:
+      tags:
+      - locataire-controller
+      operationId: modifier_6
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocataireRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LocataireDto"
+    delete:
+      tags:
+      - locataire-controller
+      operationId: archiver_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/immeubles/{id}:
+    get:
+      tags:
+      - immeuble-controller
+      operationId: obtenir_5
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ImmeubleDto"
+    put:
+      tags:
+      - immeuble-controller
+      operationId: modifier_7
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImmeubleRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ImmeubleDto"
+    delete:
+      tags:
+      - immeuble-controller
+      operationId: archiver_4
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/garants/{id}:
+    put:
+      tags:
+      - locataire-controller
+      operationId: modifierGarant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GarantRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/GarantDto"
+    delete:
+      tags:
+      - locataire-controller
+      operationId: archiverGarant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/baux/{id}:
+    get:
+      tags:
+      - bail-controller
+      operationId: obtenir_6
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BailDto"
+    put:
+      tags:
+      - bail-controller
+      operationId: modifier_8
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BailRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BailDto"
+    delete:
+      tags:
+      - bail-controller
+      operationId: supprimer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+  /api/v1/baux/modele:
+    get:
+      tags:
+      - bail-controller
+      operationId: modele
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ModeleBailDto"
+    put:
+      tags:
+      - bail-controller
+      operationId: modifierModele
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ModeleRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ModeleBailDto"
+    delete:
+      tags:
+      - bail-controller
+      operationId: reinitialiserModele
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ModeleBailDto"
+  /api/v1/webhooks/{fournisseur}:
+    post:
+      tags:
+      - webhook-controller
+      operationId: recevoir
+      parameters:
+      - name: fournisseur
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Accuse"
+  /api/v1/utilisateurs:
+    get:
+      tags:
+      - utilisateur-controller
+      operationId: lister
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: nom
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseUtilisateurDto"
+    post:
+      tags:
+      - utilisateur-controller
+      operationId: creer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreationRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UtilisateurDto"
+  /api/v1/utilisateurs/{id}/mot-de-passe:
+    post:
+      tags:
+      - utilisateur-controller
+      operationId: reinitialiser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReinitialisationRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/v1/utilisateurs/{id}/deverrouiller:
+    post:
+      tags:
+      - utilisateur-controller
+      operationId: deverrouiller
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/signalements:
+    get:
+      tags:
+      - signalement-controller
+      operationId: listerSignalements
+      parameters:
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - NOUVEAU
+          - EN_COURS
+          - RESOLU
+          - REJETE
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseSignalementDto"
+    post:
+      tags:
+      - signalement-controller
+      operationId: creerSignalement
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                bailId:
+                  type: string
+                photo:
+                  type: string
+                  format: binary
+              required:
+              - description
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SignalementDto"
+  /api/v1/sauvegardes:
+    get:
+      tags:
+      - sauvegarde-controller
+      operationId: etat
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EtatSauvegardesDto"
+    post:
+      tags:
+      - sauvegarde-controller
+      operationId: sauvegarder
+      responses:
+        "202":
+          description: Accepted
+  /api/v1/sauvegardes/{id}/restauration:
+    post:
+      tags:
+      - sauvegarde-controller
+      operationId: restaurer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RestaurationRequete"
+        required: true
+      responses:
+        "202":
+          description: Accepted
+  /api/v1/reversements/{id}/valider:
+    post:
+      tags:
+      - reversement-controller
+      operationId: valider
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReversementDto"
+  /api/v1/reversements/{id}/payer:
+    post:
+      tags:
+      - reversement-controller
+      operationId: payer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaiementReversementRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReversementDto"
+  /api/v1/reversements/calculer:
+    post:
+      tags:
+      - reversement-controller
+      operationId: calculer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalculRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReversementDto"
+  /api/v1/relances:
+    get:
+      tags:
+      - relance-controller
+      operationId: historique
+      parameters:
+      - name: echeanceId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseRelanceDto"
+    post:
+      tags:
+      - relance-controller
+      operationId: relancer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EcheanceRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RelanceDto"
+  /api/v1/relances/executer:
+    post:
+      tags:
+      - relance-controller
+      operationId: executer
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BilanRelances"
+  /api/v1/proprietaires-tiers:
+    get:
+      tags:
+      - proprietaire-controller
+      operationId: lister_1
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: inclureArchives
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseProprietaireDto"
+    post:
+      tags:
+      - proprietaire-controller
+      operationId: creer_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProprietaireRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProprietaireDto"
+  /api/v1/proprietaires-tiers/{id}/mandats:
+    get:
+      tags:
+      - proprietaire-controller
+      operationId: mandats
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MandatDto"
+    post:
+      tags:
+      - proprietaire-controller
+      operationId: creerMandat
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MandatRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MandatDto"
+  /api/v1/prestataires:
+    get:
+      tags:
+      - prestataire-controller
+      operationId: lister_2
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: inclureArchives
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponsePrestataireDto"
+    post:
+      tags:
+      - prestataire-controller
+      operationId: creer_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrestataireRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PrestataireDto"
+  /api/v1/paiements:
+    get:
+      tags:
+      - paiement-controller
+      operationId: lister_3
+      parameters:
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: locataireId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: mode
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ESPECES
+          - VIREMENT
+          - MTN_MOMO
+          - ORANGE_MONEY
+      - name: du
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: au
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponsePaiementDto"
+    post:
+      tags:
+      - paiement-controller
+      operationId: enregistrer
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaiementRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaiementDto"
+  /api/v1/paiements/{id}/contre-passation:
+    post:
+      tags:
+      - paiement-controller
+      operationId: contrePasser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContrePassationRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaiementDto"
+  /api/v1/paiements-en-ligne:
+    get:
+      tags:
+      - paiement-en-ligne-controller
+      operationId: lister_4
+      parameters:
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - EN_ATTENTE
+          - CONFIRMEE
+          - ECHOUEE
+          - EXPIREE
+          - ANOMALIE
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseTransactionDto"
+    post:
+      tags:
+      - paiement-en-ligne-controller
+      operationId: initierPaiementEnLigne
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitiationRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TransactionDto"
+  /api/v1/notifications/journal/{id}/reessayer:
+    post:
+      tags:
+      - notification-controller
+      operationId: reessayer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+  /api/v1/notifications/canaux/{canal}/test:
+    post:
+      tags:
+      - notification-controller
+      operationId: tester
+      parameters:
+      - name: canal
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - SMS
+          - WHATSAPP
+          - EMAIL
+          - PUSH
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResultatTest"
+  /api/v1/notifications/appareils:
+    post:
+      tags:
+      - notification-controller
+      operationId: enregistrerAppareil
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppareilRequete"
+        required: true
+      responses:
+        "204":
+          description: No Content
+    delete:
+      tags:
+      - notification-controller
+      operationId: retirerAppareil
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+  /api/v1/mises-en-demeure:
+    get:
+      tags:
+      - relance-controller
+      operationId: lister_5
+      parameters:
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseMiseEnDemeureDto"
+    post:
+      tags:
+      - relance-controller
+      operationId: miseEnDemeure
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EcheanceRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MiseEnDemeureDto"
+  /api/v1/lots:
+    get:
+      tags:
+      - lot-controller
+      operationId: listerLots
+      parameters:
+      - name: proprietaireTiersId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: immeubleId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - LIBRE
+          - OCCUPE
+          - EN_TRAVAUX
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - APPARTEMENT
+          - STUDIO
+          - BOUTIQUE
+          - BUREAU
+          - TERRAIN
+      - name: ville
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: quartier
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: inclureArchives
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseLotDto"
+    post:
+      tags:
+      - lot-controller
+      operationId: creer_3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LotRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LotDto"
+  /api/v1/lots/{id}/photos:
+    get:
+      tags:
+      - lot-controller
+      operationId: photos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhotoDto"
+    post:
+      tags:
+      - lot-controller
+      operationId: ajouterPhoto
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: legende
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 200
+          minLength: 0
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fichier:
+                  type: string
+                  format: binary
+              required:
+              - fichier
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PhotoDto"
+  /api/v1/locataires:
+    get:
+      tags:
+      - locataire-controller
+      operationId: listerLocataires
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: inclureArchives
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseLocataireDto"
+    post:
+      tags:
+      - locataire-controller
+      operationId: creer_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocataireRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LocataireDto"
+  /api/v1/locataires/{id}/pieces:
+    get:
+      tags:
+      - locataire-controller
+      operationId: piecesLocataire
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PieceDto"
+    post:
+      tags:
+      - locataire-controller
+      operationId: ajouterPieceLocataire
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - CNI_RECTO
+          - CNI_VERSO
+          - PASSEPORT
+          - AUTRE
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fichier:
+                  type: string
+                  format: binary
+              required:
+              - fichier
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PieceDto"
+  /api/v1/locataires/{id}/garants:
+    get:
+      tags:
+      - locataire-controller
+      operationId: garants
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GarantDto"
+    post:
+      tags:
+      - locataire-controller
+      operationId: creerGarant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GarantRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/GarantDto"
+  /api/v1/licence:
+    get:
+      tags:
+      - licence-controller
+      operationId: etat_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EtatLicenceDto"
+    post:
+      tags:
+      - licence-controller
+      operationId: importer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImportRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EtatLicenceDto"
+  /api/v1/installation:
+    get:
+      tags:
+      - installation-controller
+      operationId: etat_2
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EtatInstallationDto"
+    post:
+      tags:
+      - installation-controller
+      operationId: installer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstallationRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EtatInstallationDto"
+  /api/v1/import:
+    post:
+      tags:
+      - import-controller
+      operationId: importer_1
+      parameters:
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - IMMEUBLES
+          - LOTS
+          - LOCATAIRES
+          - BAUX
+          - SOLDES
+      - name: empreinte
+        in: query
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fichier:
+                  type: string
+                  format: binary
+              required:
+              - fichier
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResultatImportDto"
+  /api/v1/import/previsualisation:
+    post:
+      tags:
+      - import-controller
+      operationId: previsualiser
+      parameters:
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - IMMEUBLES
+          - LOTS
+          - LOCATAIRES
+          - BAUX
+          - SOLDES
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fichier:
+                  type: string
+                  format: binary
+              required:
+              - fichier
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PrevisualisationDto"
+  /api/v1/immeubles:
+    get:
+      tags:
+      - immeuble-controller
+      operationId: lister_6
+      parameters:
+      - name: proprietaireTiersId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: ville
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: quartier
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: inclureArchives
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseImmeubleDto"
+    post:
+      tags:
+      - immeuble-controller
+      operationId: creer_5
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImmeubleRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ImmeubleDto"
+  /api/v1/immeubles/{id}/photos:
+    get:
+      tags:
+      - immeuble-controller
+      operationId: photos_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PhotoDto"
+    post:
+      tags:
+      - immeuble-controller
+      operationId: ajouterPhoto_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: legende
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 200
+          minLength: 0
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fichier:
+                  type: string
+                  format: binary
+              required:
+              - fichier
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PhotoDto"
+  /api/v1/garants/{id}/pieces:
+    get:
+      tags:
+      - locataire-controller
+      operationId: piecesGarant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PieceDto"
+    post:
+      tags:
+      - locataire-controller
+      operationId: ajouterPieceGarant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - CNI_RECTO
+          - CNI_VERSO
+          - PASSEPORT
+          - AUTRE
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fichier:
+                  type: string
+                  format: binary
+              required:
+              - fichier
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PieceDto"
+  /api/v1/echeances/generer:
+    post:
+      tags:
+      - echeance-controller
+      operationId: generer
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BilanGeneration"
+  /api/v1/depenses:
+    get:
+      tags:
+      - reversement-controller
+      operationId: listerDepenses
+      parameters:
+      - name: immeubleId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: proprietaireId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: mois
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseDepenseDto"
+    post:
+      tags:
+      - reversement-controller
+      operationId: enregistrer_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepenseRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DepenseDto"
+  /api/v1/depenses/{id}/annuler:
+    post:
+      tags:
+      - reversement-controller
+      operationId: annuler
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnnulationRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DepenseDto"
+  /api/v1/conformite/demandes:
+    get:
+      tags:
+      - conformite-controller
+      operationId: demandes
+      parameters:
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DemandeAnonymisationDto"
+    post:
+      tags:
+      - conformite-controller
+      operationId: demander
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemandeSaisie"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DemandeAnonymisationDto"
+  /api/v1/conformite/demandes/{id}/refus:
+    post:
+      tags:
+      - conformite-controller
+      operationId: refuser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefusRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DemandeAnonymisationDto"
+  /api/v1/conformite/demandes/{id}/execution:
+    post:
+      tags:
+      - conformite-controller
+      operationId: executer_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResultatAnonymisationDto"
+  /api/v1/conformite/consentements:
+    post:
+      tags:
+      - conformite-controller
+      operationId: enregistrer_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsentementSaisie"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ConsentementDto"
+  /api/v1/baux:
+    get:
+      tags:
+      - bail-controller
+      operationId: listerBaux
+      parameters:
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - BROUILLON
+          - ACTIF
+          - RESILIE
+          - TERMINE
+      - name: lotId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: locataireId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseBailDto"
+    post:
+      tags:
+      - bail-controller
+      operationId: creer_6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BailRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BailDto"
+  /api/v1/baux/{id}/resilier:
+    post:
+      tags:
+      - bail-controller
+      operationId: resilier
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResiliationRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BailDto"
+  /api/v1/baux/{id}/renouveler:
+    post:
+      tags:
+      - bail-controller
+      operationId: renouveler
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RenouvellementRequete"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BailDto"
+  /api/v1/baux/{id}/documents:
+    get:
+      tags:
+      - bail-controller
+      operationId: documents
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocumentBailDto"
+    post:
+      tags:
+      - bail-controller
+      operationId: genererDocument
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DocumentBailDto"
+  /api/v1/baux/{id}/activer:
+    post:
+      tags:
+      - bail-controller
+      operationId: activer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BailDto"
+  /api/v1/auth/refresh:
+    post:
+      tags:
+      - auth-controller
+      operationId: refresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReponseConnexion"
+  /api/v1/auth/otp/verifier:
+    post:
+      tags:
+      - auth-controller
+      operationId: verifierOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OtpVerification"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReponseConnexion"
+  /api/v1/auth/otp/demander:
+    post:
+      tags:
+      - auth-controller
+      operationId: demanderOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OtpDemande"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/v1/auth/mot-de-passe:
+    post:
+      tags:
+      - auth-controller
+      operationId: changerMotDePasse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangementMotDePasse"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/v1/auth/logout:
+    post:
+      tags:
+      - auth-controller
+      operationId: logout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/v1/auth/login:
+    post:
+      tags:
+      - auth-controller
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConnexionRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReponseConnexion"
+  /api/v1/tiers/recherche:
+    get:
+      tags:
+      - prestataire-controller
+      operationId: rechercher
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResultatRecherche"
+  /api/v1/tableau-de-bord/synthese:
+    get:
+      tags:
+      - dashboard-controller
+      operationId: synthese
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Synthese"
+  /api/v1/tableau-de-bord/baux-a-echeance:
+    get:
+      tags:
+      - dashboard-controller
+      operationId: bauxAEcheance
+      parameters:
+      - name: jours
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 60
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BailAEcheance"
+  /api/v1/tableau-de-bord/attendu-encaisse:
+    get:
+      tags:
+      - dashboard-controller
+      operationId: attenduEncaisse
+      parameters:
+      - name: mois
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 12
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Mois"
+  /api/v1/tableau-de-bord/arrieres:
+    get:
+      tags:
+      - dashboard-controller
+      operationId: arrieres
+      parameters:
+      - name: limite
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Arrieres"
+  /api/v1/signalements/{id}:
+    get:
+      tags:
+      - signalement-controller
+      operationId: obtenir_7
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SignalementDto"
+  /api/v1/sauvegardes/diagnostic:
+    get:
+      tags:
+      - sauvegarde-controller
+      operationId: diagnostic
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DiagnosticDto"
+  /api/v1/reversements:
+    get:
+      tags:
+      - reversement-controller
+      operationId: lister_7
+      parameters:
+      - name: proprietaireId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: mois
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseReversementDto"
+  /api/v1/reversements/{id}:
+    get:
+      tags:
+      - reversement-controller
+      operationId: obtenir_8
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReversementDto"
+  /api/v1/reversements/{id}/apercu:
+    get:
+      tags:
+      - reversement-controller
+      operationId: apercu
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: byte
+  /api/v1/paiements/caisse:
+    get:
+      tags:
+      - paiement-controller
+      operationId: caisse
+      parameters:
+      - name: jour
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CaisseLigne"
+  /api/v1/paiements-en-ligne/{id}:
+    get:
+      tags:
+      - paiement-en-ligne-controller
+      operationId: obtenirPaiementEnLigne
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TransactionDto"
+  /api/v1/paiements-en-ligne/fournisseurs:
+    get:
+      tags:
+      - paiement-en-ligne-controller
+      operationId: fournisseurs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FournisseurDto"
+  /api/v1/notifications/mobile-config:
+    get:
+      tags:
+      - notification-controller
+      operationId: configMobile
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ConfigMobileDto"
+  /api/v1/notifications/journal:
+    get:
+      tags:
+      - notification-controller
+      operationId: journal
+      parameters:
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - EN_ATTENTE
+          - ENVOYE
+          - ECHEC
+      - name: canal
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - SMS
+          - WHATSAPP
+          - EMAIL
+          - PUSH
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseMessageDto"
+  /api/v1/notifications/canaux:
+    get:
+      tags:
+      - notification-controller
+      operationId: canaux
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CanalParametresDto"
+  /api/v1/mon-compte:
+    get:
+      tags:
+      - paiement-controller
+      operationId: monCompte
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CompteLocataireDto"
+  /api/v1/locataires/{id}/compte:
+    get:
+      tags:
+      - paiement-controller
+      operationId: compte
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CompteLocataireDto"
+  /api/v1/import/modele:
+    get:
+      tags:
+      - import-controller
+      operationId: modele_1
+      parameters:
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          default: xlsx
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - IMMEUBLES
+          - LOTS
+          - LOCATAIRES
+          - BAUX
+          - SOLDES
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/v1/health:
+    get:
+      tags:
+      - health-controller
+      operationId: health
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /api/v1/fichiers/{id}:
+    get:
+      tags:
+      - fichier-controller
+      operationId: telecharger
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+  /api/v1/echeances:
+    get:
+      tags:
+      - echeance-controller
+      operationId: listerEcheances
+      parameters:
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: statut
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - A_VENIR
+          - DUE
+          - PARTIELLE
+          - PAYEE
+          - EN_RETARD
+          - ANNULEE
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseEcheanceDto"
+  /api/v1/documents-paiement:
+    get:
+      tags:
+      - document-controller
+      operationId: listerDocumentsPaiement
+      parameters:
+      - name: bailId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: locataireId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseDocumentDto"
+  /api/v1/conformite/registre:
+    get:
+      tags:
+      - conformite-controller
+      operationId: registre
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RegistreDto"
+  /api/v1/conformite/modeles-consentement:
+    get:
+      tags:
+      - conformite-controller
+      operationId: modeles
+      parameters:
+      - name: langue
+        in: query
+        required: false
+        schema:
+          type: string
+          default: fr
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ModeleConsentementDto"
+  /api/v1/conformite/demandes/{id}:
+    get:
+      tags:
+      - conformite-controller
+      operationId: demande
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DemandeAnonymisationDto"
+  /api/v1/conformite/consentements/{type}/{personneId}:
+    get:
+      tags:
+      - conformite-controller
+      operationId: situation
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - LOCATAIRE
+          - GARANT
+          - PROPRIETAIRE
+          - PRESTATAIRE
+      - name: personneId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SituationConsentementDto"
+  /api/v1/baux/{id}/apercu:
+    get:
+      tags:
+      - bail-controller
+      operationId: apercu_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: byte
+  /api/v1/auth/moi:
+    get:
+      tags:
+      - auth-controller
+      operationId: moi
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UtilisateurDto"
+  /api/v1/arrieres:
+    get:
+      tags:
+      - relance-controller
+      operationId: arrieres_1
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageReponseArriereDto"
+  /api/v1/pieces/{id}:
+    delete:
+      tags:
+      - locataire-controller
+      operationId: supprimerPiece
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+  /api/v1/photos/{id}:
+    delete:
+      tags:
+      - photo-controller
+      operationId: supprimer_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    ModificationRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        email:
+          type: string
+          maxLength: 200
+          minLength: 0
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - GESTIONNAIRE
+          - PROPRIETAIRE_TIERS
+          - LOCATAIRE
+          - PRESTATAIRE
+        actif:
+          type: boolean
+        deuxFacteursActif:
+          type: boolean
+      required:
+      - nom
+      - role
+    UtilisateurDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - GESTIONNAIRE
+          - PROPRIETAIRE_TIERS
+          - LOCATAIRE
+          - PRESTATAIRE
+        actif:
+          type: boolean
+        deuxFacteursActif:
+          type: boolean
+        verrouille:
+          type: boolean
+    StatutSignalementRequete:
+      type: object
+      properties:
+        statut:
+          type: string
+          enum:
+          - NOUVEAU
+          - EN_COURS
+          - RESOLU
+          - REJETE
+        note:
+          type: string
+          maxLength: 1000
+          minLength: 0
+      required:
+      - statut
+    SignalementDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        bailNumero:
+          type: string
+        lotId:
+          type: string
+          format: uuid
+        logement:
+          type: string
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        description:
+          type: string
+        statut:
+          type: string
+          enum:
+          - NOUVEAU
+          - EN_COURS
+          - RESOLU
+          - REJETE
+        photoFichierId:
+          type: string
+          format: uuid
+        noteGestion:
+          type: string
+        creeLe:
+          type: string
+          format: date-time
+    ParametresRequete:
+      type: object
+      properties:
+        actif:
+          type: boolean
+        niveaux:
+          type: array
+          items:
+            type: integer
+            format: int32
+        delaiMiseEnDemeureJours:
+          type: integer
+          format: int32
+      required:
+      - niveaux
+    ParametresRelanceDto:
+      type: object
+      properties:
+        actif:
+          type: boolean
+        niveaux:
+          type: array
+          items:
+            type: integer
+            format: int32
+        delaiMiseEnDemeureJours:
+          type: integer
+          format: int32
+    ProprietaireRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        email:
+          type: string
+          maxLength: 200
+          minLength: 0
+        adresse:
+          type: string
+          maxLength: 300
+          minLength: 0
+        modeReversement:
+          type: string
+          enum:
+          - VIREMENT
+          - MOBILE_MONEY
+          - ESPECES
+          - CHEQUE
+        coordonneesReversement:
+          type: string
+          maxLength: 300
+          minLength: 0
+        utilisateurId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+          maxLength: 2000
+          minLength: 0
+      required:
+      - nom
+    ProprietaireDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        adresse:
+          type: string
+        modeReversement:
+          type: string
+          enum:
+          - VIREMENT
+          - MOBILE_MONEY
+          - ESPECES
+          - CHEQUE
+        coordonneesReversement:
+          type: string
+        utilisateurId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+        archive:
+          type: boolean
+    PrestataireRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        metier:
+          type: string
+          maxLength: 100
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        email:
+          type: string
+          maxLength: 200
+          minLength: 0
+        adresse:
+          type: string
+          maxLength: 300
+          minLength: 0
+        utilisateurId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+          maxLength: 2000
+          minLength: 0
+      required:
+      - nom
+    PrestataireDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        metier:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        adresse:
+          type: string
+        utilisateurId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+        archive:
+          type: boolean
+    FournisseurRequete:
+      type: object
+      properties:
+        actif:
+          type: boolean
+        champs:
+          type: object
+          additionalProperties:
+            type: string
+    ChampDto:
+      type: object
+      properties:
+        nom:
+          type: string
+        secret:
+          type: boolean
+        requis:
+          type: boolean
+        valeur:
+          type: string
+        renseigne:
+          type: boolean
+    FournisseurDto:
+      type: object
+      properties:
+        code:
+          type: string
+        actif:
+          type: boolean
+        configure:
+          type: boolean
+        champs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChampDto"
+    CanalRequete:
+      type: object
+      properties:
+        actif:
+          type: boolean
+        champs:
+          type: object
+          additionalProperties:
+            type: string
+    CanalParametresDto:
+      type: object
+      properties:
+        canal:
+          type: string
+          enum:
+          - SMS
+          - WHATSAPP
+          - EMAIL
+          - PUSH
+        actif:
+          type: boolean
+        configure:
+          type: boolean
+        champs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChampDto"
+    MandatRequete:
+      type: object
+      properties:
+        tauxHonorairesBp:
+          type: integer
+          format: int32
+          maximum: 10000
+          minimum: 0
+        dateDebut:
+          type: string
+          format: date
+        dateFin:
+          type: string
+          format: date
+        notes:
+          type: string
+          maxLength: 1000
+          minLength: 0
+      required:
+      - dateDebut
+      - tauxHonorairesBp
+    MandatDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        proprietaireId:
+          type: string
+          format: uuid
+        tauxHonorairesBp:
+          type: integer
+          format: int32
+        dateDebut:
+          type: string
+          format: date
+        dateFin:
+          type: string
+          format: date
+        notes:
+          type: string
+    CompteurRequete:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - EAU
+          - ELECTRICITE
+          - GAZ
+        numero:
+          type: string
+          maxLength: 50
+          minLength: 0
+      required:
+      - numero
+      - type
+    LotRequete:
+      type: object
+      properties:
+        immeubleId:
+          type: string
+          format: uuid
+        reference:
+          type: string
+          maxLength: 50
+          minLength: 0
+        type:
+          type: string
+          enum:
+          - APPARTEMENT
+          - STUDIO
+          - BOUTIQUE
+          - BUREAU
+          - TERRAIN
+        surfaceM2:
+          type: number
+          minimum: 0
+        pieces:
+          type: integer
+          format: int32
+          maximum: 100
+          minimum: 0
+        loyerIndicatif:
+          type: integer
+          format: int64
+          minimum: 0
+        equipements:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+            minLength: 0
+          maxItems: 50
+          minItems: 0
+        compteurs:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompteurRequete"
+          maxItems: 10
+          minItems: 0
+      required:
+      - reference
+      - type
+    CompteurDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+          - EAU
+          - ELECTRICITE
+          - GAZ
+        numero:
+          type: string
+    LotDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        immeubleId:
+          type: string
+          format: uuid
+        immeubleNom:
+          type: string
+        ville:
+          type: string
+        quartier:
+          type: string
+        reference:
+          type: string
+        type:
+          type: string
+          enum:
+          - APPARTEMENT
+          - STUDIO
+          - BOUTIQUE
+          - BUREAU
+          - TERRAIN
+        surfaceM2:
+          type: number
+        pieces:
+          type: integer
+          format: int32
+        loyerIndicatif:
+          type: integer
+          format: int64
+        statut:
+          type: string
+          enum:
+          - LIBRE
+          - OCCUPE
+          - EN_TRAVAUX
+        equipements:
+          type: array
+          items:
+            type: string
+        compteurs:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompteurDto"
+        archive:
+          type: boolean
+    StatutRequete:
+      type: object
+      properties:
+        statut:
+          type: string
+          enum:
+          - LIBRE
+          - OCCUPE
+          - EN_TRAVAUX
+      required:
+      - statut
+    LocataireRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        profession:
+          type: string
+          maxLength: 100
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        email:
+          type: string
+          maxLength: 200
+          minLength: 0
+        adresse:
+          type: string
+          maxLength: 300
+          minLength: 0
+        dateNaissance:
+          type: string
+          format: date
+        numeroCni:
+          type: string
+          maxLength: 50
+          minLength: 0
+        utilisateurId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+          maxLength: 2000
+          minLength: 0
+      required:
+      - nom
+    LocataireDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        profession:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        adresse:
+          type: string
+        dateNaissance:
+          type: string
+          format: date
+        numeroCni:
+          type: string
+        utilisateurId:
+          type: string
+          format: uuid
+        notes:
+          type: string
+        archive:
+          type: boolean
+    ImmeubleRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        adresse:
+          type: string
+          maxLength: 300
+          minLength: 0
+        quartier:
+          type: string
+          maxLength: 100
+          minLength: 0
+        ville:
+          type: string
+          maxLength: 100
+          minLength: 0
+        latitude:
+          type: number
+          maximum: 90
+          minimum: -90
+        longitude:
+          type: number
+          maximum: 180
+          minimum: -180
+        description:
+          type: string
+          maxLength: 2000
+          minLength: 0
+        proprietaireTiersId:
+          type: string
+          format: uuid
+      required:
+      - adresse
+      - nom
+      - ville
+    ImmeubleDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        adresse:
+          type: string
+        quartier:
+          type: string
+        ville:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        description:
+          type: string
+        proprietaireTiersId:
+          type: string
+          format: uuid
+        archive:
+          type: boolean
+        nombreLots:
+          type: integer
+          format: int32
+        lotsLibres:
+          type: integer
+          format: int32
+        lotsOccupes:
+          type: integer
+          format: int32
+        lotsEnTravaux:
+          type: integer
+          format: int32
+    GarantRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        lien:
+          type: string
+          maxLength: 100
+          minLength: 0
+        profession:
+          type: string
+          maxLength: 100
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        adresse:
+          type: string
+          maxLength: 300
+          minLength: 0
+        numeroCni:
+          type: string
+          maxLength: 50
+          minLength: 0
+      required:
+      - nom
+      - telephone
+    GarantDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        locataireId:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        lien:
+          type: string
+        profession:
+          type: string
+        telephone:
+          type: string
+        adresse:
+          type: string
+        numeroCni:
+          type: string
+        archive:
+          type: boolean
+    BailRequete:
+      type: object
+      properties:
+        lotId:
+          type: string
+          format: uuid
+        locataireId:
+          type: string
+          format: uuid
+        garantIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          maxItems: 10
+          minItems: 0
+        dateDebut:
+          type: string
+          format: date
+        dateFin:
+          type: string
+          format: date
+        loyer:
+          type: integer
+          format: int64
+          minimum: 1
+        charges:
+          type: integer
+          format: int64
+          minimum: 0
+        periodicite:
+          type: string
+          enum:
+          - MENSUELLE
+          - TRIMESTRIELLE
+          - ANNUELLE
+        jourEcheance:
+          type: integer
+          format: int32
+          maximum: 31
+          minimum: 1
+        caution:
+          type: integer
+          format: int64
+          minimum: 0
+        moisAvance:
+          type: integer
+          format: int32
+          maximum: 24
+          minimum: 0
+        preavisMois:
+          type: integer
+          format: int32
+          maximum: 12
+          minimum: 0
+      required:
+      - dateDebut
+      - jourEcheance
+      - locataireId
+      - lotId
+      - loyer
+      - periodicite
+    BailDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        numero:
+          type: string
+        lotId:
+          type: string
+          format: uuid
+        lotReference:
+          type: string
+        immeubleNom:
+          type: string
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        bailPrecedentId:
+          type: string
+          format: uuid
+        statut:
+          type: string
+          enum:
+          - BROUILLON
+          - ACTIF
+          - RESILIE
+          - TERMINE
+        dateDebut:
+          type: string
+          format: date
+        dateFin:
+          type: string
+          format: date
+        loyer:
+          type: integer
+          format: int64
+        charges:
+          type: integer
+          format: int64
+        periodicite:
+          type: string
+          enum:
+          - MENSUELLE
+          - TRIMESTRIELLE
+          - ANNUELLE
+        jourEcheance:
+          type: integer
+          format: int32
+        caution:
+          type: integer
+          format: int64
+        moisAvance:
+          type: integer
+          format: int32
+        preavisMois:
+          type: integer
+          format: int32
+        dateNotificationPreavis:
+          type: string
+          format: date
+        dateSortie:
+          type: string
+          format: date
+        motifResiliation:
+          type: string
+        dateFinEffective:
+          type: string
+          format: date
+        garants:
+          type: array
+          items:
+            $ref: "#/components/schemas/GarantResume"
+    GarantResume:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        telephone:
+          type: string
+    ModeleRequete:
+      type: object
+      properties:
+        bailleurNom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        bailleurAdresse:
+          type: string
+          maxLength: 300
+          minLength: 0
+        preambule:
+          type: string
+          maxLength: 4000
+          minLength: 0
+        clauses:
+          type: string
+          maxLength: 20000
+          minLength: 0
+        piedDePage:
+          type: string
+          maxLength: 500
+          minLength: 0
+    ModeleBailDto:
+      type: object
+      properties:
+        bailleurNom:
+          type: string
+        bailleurAdresse:
+          type: string
+        preambule:
+          type: string
+        clauses:
+          type: string
+        piedDePage:
+          type: string
+        variables:
+          type: array
+          items:
+            type: string
+    Accuse:
+      type: object
+      properties:
+        resultat:
+          type: string
+          enum:
+          - TRAITE
+          - REJOUE
+          - IGNORE
+    CreationRequete:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        email:
+          type: string
+          maxLength: 200
+          minLength: 0
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - GESTIONNAIRE
+          - PROPRIETAIRE_TIERS
+          - LOCATAIRE
+          - PRESTATAIRE
+        deuxFacteursActif:
+          type: boolean
+        motDePasse:
+          type: string
+          maxLength: 100
+          minLength: 8
+      required:
+      - motDePasse
+      - nom
+      - role
+    ReinitialisationRequete:
+      type: object
+      properties:
+        motDePasse:
+          type: string
+          maxLength: 100
+          minLength: 8
+      required:
+      - motDePasse
+    RestaurationRequete:
+      type: object
+      properties:
+        confirmation:
+          type: string
+          minLength: 1
+      required:
+      - confirmation
+    ReversementDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        proprietaireId:
+          type: string
+          format: uuid
+        proprietaireNom:
+          type: string
+        periode:
+          type: string
+          format: date
+        statut:
+          type: string
+        numero:
+          type: string
+        loyersEncaisses:
+          type: integer
+          format: int64
+        chargesEncaissees:
+          type: integer
+          format: int64
+        brut:
+          type: integer
+          format: int64
+        honoraires:
+          type: integer
+          format: int64
+        tauxMoyenBp:
+          type: integer
+          format: int32
+        depenses:
+          type: integer
+          format: int64
+        net:
+          type: integer
+          format: int64
+        sansMandat:
+          type: boolean
+        fichierId:
+          type: string
+          format: uuid
+        calculeLe:
+          type: string
+          format: date-time
+        valideLe:
+          type: string
+          format: date-time
+        payeLe:
+          type: string
+          format: date
+        modePaiement:
+          type: string
+        referencePaiement:
+          type: string
+    PaiementReversementRequete:
+      type: object
+      properties:
+        mode:
+          type: string
+          minLength: 1
+        reference:
+          type: string
+          maxLength: 100
+          minLength: 0
+        date:
+          type: string
+          format: date
+      required:
+      - mode
+    CalculRequete:
+      type: object
+      properties:
+        mois:
+          type: string
+          minLength: 1
+      required:
+      - mois
+    EcheanceRequete:
+      type: object
+      properties:
+        echeanceId:
+          type: string
+          format: uuid
+      required:
+      - echeanceId
+    RelanceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        echeanceId:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        locataireId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+          - AUTO
+          - MANUELLE
+        niveau:
+          type: integer
+          format: int32
+        dateRelance:
+          type: string
+          format: date
+        resultat:
+          type: string
+          enum:
+          - EN_FILE
+          - AUCUN_CANAL
+          - IGNOREE
+        canal:
+          type: string
+          enum:
+          - SMS
+          - WHATSAPP
+          - EMAIL
+          - PUSH
+        statutEnvoi:
+          type: string
+          enum:
+          - EN_ATTENTE
+          - ENVOYE
+          - ECHEC
+        resteDu:
+          type: integer
+          format: int64
+        joursRetard:
+          type: integer
+          format: int32
+        creeLe:
+          type: string
+          format: date-time
+    BilanRelances:
+      type: object
+      properties:
+        examinees:
+          type: integer
+          format: int32
+        envoyees:
+          type: integer
+          format: int32
+        sansCanal:
+          type: integer
+          format: int32
+        ignorees:
+          type: integer
+          format: int32
+    PaiementRequete:
+      type: object
+      properties:
+        bailId:
+          type: string
+          format: uuid
+        montant:
+          type: integer
+          format: int64
+          minimum: 1
+        mode:
+          type: string
+          enum:
+          - ESPECES
+          - VIREMENT
+          - MTN_MOMO
+          - ORANGE_MONEY
+        reference:
+          type: string
+          maxLength: 100
+          minLength: 0
+        datePaiement:
+          type: string
+          format: date
+      required:
+      - bailId
+      - mode
+      - montant
+    PaiementDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        bailNumero:
+          type: string
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        type:
+          type: string
+        mode:
+          type: string
+          enum:
+          - ESPECES
+          - VIREMENT
+          - MTN_MOMO
+          - ORANGE_MONEY
+        montant:
+          type: integer
+          format: int64
+        datePaiement:
+          type: string
+          format: date
+        reference:
+          type: string
+        saisiPar:
+          type: string
+          format: uuid
+        saisiParNom:
+          type: string
+        motif:
+          type: string
+        contrePasse:
+          type: boolean
+        contrePassationDe:
+          type: string
+          format: uuid
+        creeLe:
+          type: string
+          format: date-time
+    ContrePassationRequete:
+      type: object
+      properties:
+        motif:
+          type: string
+          maxLength: 500
+          minLength: 0
+      required:
+      - motif
+    InitiationRequete:
+      type: object
+      properties:
+        bailId:
+          type: string
+          format: uuid
+        montant:
+          type: integer
+          format: int64
+          maximum: 20000000
+          minimum: 1
+        operateur:
+          type: string
+          enum:
+          - MTN_MOMO
+          - ORANGE_MONEY
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+      required:
+      - bailId
+      - montant
+      - operateur
+      - telephone
+    TransactionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        bailNumero:
+          type: string
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        operateur:
+          type: string
+          enum:
+          - MTN_MOMO
+          - ORANGE_MONEY
+        telephone:
+          type: string
+        montant:
+          type: integer
+          format: int64
+        statut:
+          type: string
+          enum:
+          - EN_ATTENTE
+          - CONFIRMEE
+          - ECHOUEE
+          - EXPIREE
+          - ANOMALIE
+        instructions:
+          type: string
+        erreur:
+          type: string
+        paiementId:
+          type: string
+          format: uuid
+        creeLe:
+          type: string
+          format: date-time
+        confirmeeLe:
+          type: string
+          format: date-time
+    TestRequete:
+      type: object
+      properties:
+        destinataire:
+          type: string
+          maxLength: 500
+          minLength: 0
+      required:
+      - destinataire
+    ResultatTest:
+      type: object
+      properties:
+        succes:
+          type: boolean
+        erreur:
+          type: string
+    AppareilRequete:
+      type: object
+      properties:
+        token:
+          type: string
+          maxLength: 4096
+          minLength: 0
+        plateforme:
+          type: string
+          minLength: 1
+      required:
+      - plateforme
+      - token
+    MiseEnDemeureDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        numero:
+          type: string
+        bailId:
+          type: string
+          format: uuid
+        bailNumero:
+          type: string
+        echeanceId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        montantArrieres:
+          type: integer
+          format: int64
+        delaiJours:
+          type: integer
+          format: int32
+        dateEmission:
+          type: string
+          format: date
+        fichierId:
+          type: string
+          format: uuid
+    PhotoDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cibleType:
+          type: string
+          enum:
+          - IMMEUBLE
+          - LOT
+        cibleId:
+          type: string
+          format: uuid
+        fichierId:
+          type: string
+          format: uuid
+        legende:
+          type: string
+        ordre:
+          type: integer
+          format: int32
+    PieceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cibleType:
+          type: string
+          enum:
+          - LOCATAIRE
+          - GARANT
+        cibleId:
+          type: string
+          format: uuid
+        fichierId:
+          type: string
+          format: uuid
+        typePiece:
+          type: string
+          enum:
+          - CNI_RECTO
+          - CNI_VERSO
+          - PASSEPORT
+          - AUTRE
+    ImportRequete:
+      type: object
+      properties:
+        contenu:
+          type: string
+          maxLength: 65536
+          minLength: 0
+      required:
+      - contenu
+    EtatLicenceDto:
+      type: object
+      properties:
+        etat:
+          type: string
+          enum:
+          - AUCUNE
+          - VALIDE
+          - EXPIREE
+          - INVALIDE
+          - REVOQUEE
+          - VERIFICATION_REQUISE
+        lectureSeule:
+          type: boolean
+        detail:
+          type: string
+        licenseId:
+          type: string
+        client:
+          type: string
+        palierLots:
+          type: integer
+          format: int32
+        dateDebut:
+          type: string
+          format: date
+        dateExpiration:
+          type: string
+          format: date
+        joursRestants:
+          type: integer
+          format: int64
+        alerteJours:
+          type: integer
+          format: int32
+        fonctionnalites:
+          type: array
+          items:
+            type: string
+        empreinteServeur:
+          type: string
+        verificationEnLigneActive:
+          type: boolean
+        derniereVerificationEnLigne:
+          type: string
+          format: date-time
+        joursDeGraceRestants:
+          type: integer
+          format: int64
+    Administrateur:
+      type: object
+      properties:
+        nom:
+          type: string
+          maxLength: 200
+          minLength: 0
+        telephone:
+          type: string
+          maxLength: 30
+          minLength: 0
+        email:
+          type: string
+          maxLength: 200
+          minLength: 0
+        motDePasse:
+          type: string
+          maxLength: 100
+          minLength: 8
+      required:
+      - motDePasse
+      - nom
+    InstallationRequete:
+      type: object
+      properties:
+        admin:
+          $ref: "#/components/schemas/Administrateur"
+        licence:
+          type: string
+          maxLength: 65536
+          minLength: 0
+      required:
+      - admin
+      - licence
+    EtatInstallationDto:
+      type: object
+      properties:
+        installee:
+          type: boolean
+        empreinteServeur:
+          type: string
+    ErreurImportDto:
+      type: object
+      properties:
+        feuille:
+          type: string
+        ligne:
+          type: integer
+          format: int32
+        colonne:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+    ResultatImportDto:
+      type: object
+      properties:
+        importe:
+          type: boolean
+        crees:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+        echeancesReprises:
+          type: integer
+          format: int32
+        erreurs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErreurImportDto"
+    PrevisualisationDto:
+      type: object
+      properties:
+        empreinte:
+          type: string
+        feuilles:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResumeFeuilleDto"
+        erreurs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErreurImportDto"
+        apercu:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              additionalProperties:
+                type: string
+        importable:
+          type: boolean
+    ResumeFeuilleDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - IMMEUBLES
+          - LOTS
+          - LOCATAIRES
+          - BAUX
+          - SOLDES
+        feuille:
+          type: string
+        lignes:
+          type: integer
+          format: int32
+    BilanGeneration:
+      type: object
+      properties:
+        baux:
+          type: integer
+          format: int32
+        echeancesCreees:
+          type: integer
+          format: int32
+        echeancesAjustees:
+          type: integer
+          format: int32
+        avancesImputees:
+          type: integer
+          format: int32
+        statutsMisAJour:
+          type: integer
+          format: int32
+    DepenseRequete:
+      type: object
+      properties:
+        immeubleId:
+          type: string
+          format: uuid
+        lotId:
+          type: string
+          format: uuid
+        dateDepense:
+          type: string
+          format: date
+        nature:
+          type: string
+          maxLength: 200
+          minLength: 0
+        montant:
+          type: integer
+          format: int64
+          minimum: 1
+        reference:
+          type: string
+          maxLength: 100
+          minLength: 0
+      required:
+      - dateDepense
+      - immeubleId
+      - montant
+      - nature
+    DepenseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        immeubleId:
+          type: string
+          format: uuid
+        immeubleNom:
+          type: string
+        lotId:
+          type: string
+          format: uuid
+        proprietaireId:
+          type: string
+          format: uuid
+        dateDepense:
+          type: string
+          format: date
+        nature:
+          type: string
+        montant:
+          type: integer
+          format: int64
+        reference:
+          type: string
+        statut:
+          type: string
+        motifAnnulation:
+          type: string
+    AnnulationRequete:
+      type: object
+      properties:
+        motif:
+          type: string
+          maxLength: 500
+          minLength: 0
+      required:
+      - motif
+    DemandeSaisie:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - LOCATAIRE
+          - GARANT
+          - PROPRIETAIRE
+          - PRESTATAIRE
+        personneId:
+          type: string
+          format: uuid
+        motif:
+          type: string
+    DemandeAnonymisationDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+          - LOCATAIRE
+          - GARANT
+          - PROPRIETAIRE
+          - PRESTATAIRE
+        personneId:
+          type: string
+          format: uuid
+        statut:
+          type: string
+        motif:
+          type: string
+        motifRefus:
+          type: string
+        recueLe:
+          type: string
+          format: date-time
+        recuePar:
+          type: string
+        traiteeLe:
+          type: string
+          format: date-time
+        traiteePar:
+          type: string
+        obstacles:
+          type: array
+          items:
+            $ref: "#/components/schemas/ObstacleDto"
+    ObstacleDto:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    RefusRequete:
+      type: object
+      properties:
+        motif:
+          type: string
+          minLength: 1
+      required:
+      - motif
+    ResultatAnonymisationDto:
+      type: object
+      properties:
+        demandeId:
+          type: string
+          format: uuid
+        piecesSupprimees:
+          type: integer
+          format: int32
+        conserve:
+          type: array
+          items:
+            type: string
+    ConsentementSaisie:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - LOCATAIRE
+          - GARANT
+          - PROPRIETAIRE
+          - PRESTATAIRE
+        personneId:
+          type: string
+          format: uuid
+        finalite:
+          type: string
+          enum:
+          - NOTIFICATIONS
+          - PIECES_IDENTITE
+          - TRANSMISSION_PROPRIETAIRE
+          - APPLICATION_MOBILE
+        accorde:
+          type: boolean
+        modeRecueil:
+          type: string
+          enum:
+          - PAPIER
+          - ELECTRONIQUE
+          - ORAL
+        referenceDocument:
+          type: string
+    ConsentementDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        finalite:
+          type: string
+          enum:
+          - NOTIFICATIONS
+          - PIECES_IDENTITE
+          - TRANSMISSION_PROPRIETAIRE
+          - APPLICATION_MOBILE
+        accorde:
+          type: boolean
+        versionModele:
+          type: string
+        modeRecueil:
+          type: string
+          enum:
+          - PAPIER
+          - ELECTRONIQUE
+          - ORAL
+        referenceDocument:
+          type: string
+        recueilliPar:
+          type: string
+        decideLe:
+          type: string
+          format: date-time
+    ResiliationRequete:
+      type: object
+      properties:
+        dateNotification:
+          type: string
+          format: date
+        dateSortie:
+          type: string
+          format: date
+        preavisReduitAccepte:
+          type: boolean
+        motif:
+          type: string
+          maxLength: 1000
+          minLength: 0
+    RenouvellementRequete:
+      type: object
+      properties:
+        dateFin:
+          type: string
+          format: date
+        loyer:
+          type: integer
+          format: int64
+          minimum: 1
+        charges:
+          type: integer
+          format: int64
+          minimum: 0
+        caution:
+          type: integer
+          format: int64
+          minimum: 0
+        moisAvance:
+          type: integer
+          format: int32
+          maximum: 24
+          minimum: 0
+    DocumentBailDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        fichierId:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          format: int32
+        genereLe:
+          type: string
+          format: date-time
+    RefreshRequete:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          minLength: 1
+      required:
+      - refreshToken
+    ReponseConnexion:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+          format: int64
+        tokenType:
+          type: string
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - GESTIONNAIRE
+          - PROPRIETAIRE_TIERS
+          - LOCATAIRE
+          - PRESTATAIRE
+        deuxFacteursRequis:
+          type: boolean
+    OtpVerification:
+      type: object
+      properties:
+        identifiant:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          maxLength: 6
+          minLength: 6
+      required:
+      - code
+      - identifiant
+    OtpDemande:
+      type: object
+      properties:
+        identifiant:
+          type: string
+          minLength: 1
+      required:
+      - identifiant
+    ChangementMotDePasse:
+      type: object
+      properties:
+        ancienMotDePasse:
+          type: string
+          minLength: 1
+        nouveauMotDePasse:
+          type: string
+          maxLength: 100
+          minLength: 8
+      required:
+      - ancienMotDePasse
+      - nouveauMotDePasse
+    ConnexionRequete:
+      type: object
+      properties:
+        identifiant:
+          type: string
+          minLength: 1
+        motDePasse:
+          type: string
+          minLength: 1
+      required:
+      - identifiant
+      - motDePasse
+    PageReponseUtilisateurDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/UtilisateurDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    ResultatRecherche:
+      type: object
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        telephone:
+          type: string
+    Occupation:
+      type: object
+      properties:
+        libres:
+          type: integer
+          format: int64
+        occupes:
+          type: integer
+          format: int64
+        enTravaux:
+          type: integer
+          format: int64
+        tauxBp:
+          type: integer
+          format: int32
+    Synthese:
+      type: object
+      properties:
+        occupation:
+          $ref: "#/components/schemas/Occupation"
+        attenduMois:
+          type: integer
+          format: int64
+        encaisseMois:
+          type: integer
+          format: int64
+        tauxRecouvrementMoisBp:
+          type: integer
+          format: int32
+        arrieresTotal:
+          type: integer
+          format: int64
+        echeancesEnRetard:
+          type: integer
+          format: int32
+        bauxAEcheance:
+          type: integer
+          format: int32
+    BailAEcheance:
+      type: object
+      properties:
+        bailId:
+          type: string
+          format: uuid
+        numero:
+          type: string
+        locataireNom:
+          type: string
+        logement:
+          type: string
+        dateFin:
+          type: string
+          format: date
+        joursRestants:
+          type: integer
+          format: int64
+        statut:
+          type: string
+    Mois:
+      type: object
+      properties:
+        mois:
+          type: string
+          format: date
+        attendu:
+          type: integer
+          format: int64
+        encaisse:
+          type: integer
+          format: int64
+        tauxBp:
+          type: integer
+          format: int32
+    Arrieres:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+        parBien:
+          type: array
+          items:
+            $ref: "#/components/schemas/LigneArriere"
+        parLocataire:
+          type: array
+          items:
+            $ref: "#/components/schemas/LigneArriere"
+    LigneArriere:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        libelle:
+          type: string
+        total:
+          type: integer
+          format: int64
+        echeances:
+          type: integer
+          format: int32
+    PageReponseSignalementDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/SignalementDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    EtatSauvegardesDto:
+      type: object
+      properties:
+        sauvegardes:
+          type: array
+          items:
+            $ref: "#/components/schemas/SauvegardeDto"
+        operation:
+          $ref: "#/components/schemas/OperationSauvegardeDto"
+        heureQuotidienne:
+          type: string
+        versionInstallee:
+          type: string
+    OperationSauvegardeDto:
+      type: object
+      properties:
+        operation:
+          type: string
+        statut:
+          type: string
+        id:
+          type: string
+        debut:
+          type: string
+          format: date-time
+        fin:
+          type: string
+          format: date-time
+        message:
+          type: string
+    SauvegardeDto:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          format: date-time
+        version:
+          type: string
+        etiquette:
+          type: string
+        tailleOctets:
+          type: integer
+          format: int64
+        objets:
+          type: integer
+          format: int64
+        externe:
+          type: string
+        restaurable:
+          type: boolean
+    DiagnosticDto:
+      type: object
+      properties:
+        versionApplication:
+          type: string
+        versionJava:
+          type: string
+        versionBase:
+          type: string
+        tailleBaseOctets:
+          type: integer
+          format: int64
+        disqueTotalOctets:
+          type: integer
+          format: int64
+        disqueLibreOctets:
+          type: integer
+          format: int64
+        etatLicence:
+          type: string
+        joursLicenceRestants:
+          type: integer
+          format: int64
+        derniereSauvegarde:
+          type: string
+          format: date-time
+        ageDerniereSauvegardeHeures:
+          type: integer
+          format: int64
+        copieExterne:
+          type: string
+        alertes:
+          type: array
+          items:
+            type: string
+    PageReponseReversementDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReversementDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponseRelanceDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelanceDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponseProprietaireDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProprietaireDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponsePrestataireDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PrestataireDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponsePaiementDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaiementDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    CaisseLigne:
+      type: object
+      properties:
+        agentId:
+          type: string
+          format: uuid
+        agentNom:
+          type: string
+        total:
+          type: integer
+          format: int64
+        operations:
+          type: integer
+          format: int32
+    PageReponseTransactionDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransactionDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    ConfigMobileDto:
+      type: object
+      properties:
+        push:
+          $ref: "#/components/schemas/PushMobile"
+    PushMobile:
+      type: object
+      properties:
+        projectId:
+          type: string
+        apiKey:
+          type: string
+        appId:
+          type: string
+        messagingSenderId:
+          type: string
+    MessageDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        canal:
+          type: string
+          enum:
+          - SMS
+          - WHATSAPP
+          - EMAIL
+          - PUSH
+        typeMessage:
+          type: string
+          enum:
+          - RECU_ESPECES
+          - QUITTANCE_EMISE
+          - RECU_EMIS
+          - RAPPEL_ECHEANCE
+          - RELANCE_IMPAYE
+          - MISE_EN_DEMEURE
+          - TEST
+        destinataire:
+          type: string
+        sujet:
+          type: string
+        corps:
+          type: string
+        statut:
+          type: string
+          enum:
+          - EN_ATTENTE
+          - ENVOYE
+          - ECHEC
+        tentatives:
+          type: integer
+          format: int32
+        prochaineTentative:
+          type: string
+          format: date-time
+        derniereErreur:
+          type: string
+        envoyeLe:
+          type: string
+          format: date-time
+        creeLe:
+          type: string
+          format: date-time
+    PageReponseMessageDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/MessageDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    BailCompte:
+      type: object
+      properties:
+        bailId:
+          type: string
+          format: uuid
+        numero:
+          type: string
+        statut:
+          type: string
+    CompteLocataireDto:
+      type: object
+      properties:
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        arrieres:
+          type: integer
+          format: int64
+        aVenir:
+          type: integer
+          format: int64
+        credit:
+          type: integer
+          format: int64
+        solde:
+          type: integer
+          format: int64
+        baux:
+          type: array
+          items:
+            $ref: "#/components/schemas/BailCompte"
+    PageReponseMiseEnDemeureDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/MiseEnDemeureDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponseLotDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/LotDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponseLocataireDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/LocataireDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponseImmeubleDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImmeubleDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    EcheanceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        periodeDebut:
+          type: string
+          format: date
+        periodeFin:
+          type: string
+          format: date
+        dateEcheance:
+          type: string
+          format: date
+        montant:
+          type: integer
+          format: int64
+        montantPaye:
+          type: integer
+          format: int64
+        reste:
+          type: integer
+          format: int64
+        statut:
+          type: string
+          enum:
+          - A_VENIR
+          - DUE
+          - PARTIELLE
+          - PAYEE
+          - EN_RETARD
+          - ANNULEE
+    PageReponseEcheanceDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/EcheanceDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    DocumentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        numero:
+          type: string
+        statut:
+          type: string
+        bailId:
+          type: string
+          format: uuid
+        bailNumero:
+          type: string
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        echeanceId:
+          type: string
+          format: uuid
+        paiementId:
+          type: string
+          format: uuid
+        periodeDebut:
+          type: string
+          format: date
+        periodeFin:
+          type: string
+          format: date
+        montant:
+          type: integer
+          format: int64
+        dateEmission:
+          type: string
+          format: date
+        fichierId:
+          type: string
+          format: uuid
+        motifAnnulation:
+          type: string
+    PageReponseDocumentDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    PageReponseDepenseDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/DepenseDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    RegistreDto:
+      type: object
+      properties:
+        version:
+          type: string
+        responsable:
+          type: string
+        note:
+          type: string
+        traitements:
+          type: array
+          items:
+            $ref: "#/components/schemas/TraitementDto"
+    TraitementDto:
+      type: object
+      properties:
+        id:
+          type: string
+        nom:
+          type: string
+        finalite:
+          type: string
+        baseLegale:
+          type: string
+        donnees:
+          type: array
+          items:
+            type: string
+        personnes:
+          type: array
+          items:
+            type: string
+        destinataires:
+          type: array
+          items:
+            type: string
+        conservation:
+          type: string
+        mesures:
+          type: array
+          items:
+            type: string
+    ModeleConsentementDto:
+      type: object
+      properties:
+        finalite:
+          type: string
+          enum:
+          - NOTIFICATIONS
+          - PIECES_IDENTITE
+          - TRANSMISSION_PROPRIETAIRE
+          - APPLICATION_MOBILE
+        version:
+          type: string
+        titre:
+          type: string
+        texte:
+          type: string
+    FinaliteSituationDto:
+      type: object
+      properties:
+        finalite:
+          type: string
+          enum:
+          - NOTIFICATIONS
+          - PIECES_IDENTITE
+          - TRANSMISSION_PROPRIETAIRE
+          - APPLICATION_MOBILE
+        statut:
+          type: string
+        derniere:
+          $ref: "#/components/schemas/ConsentementDto"
+    SituationConsentementDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - LOCATAIRE
+          - GARANT
+          - PROPRIETAIRE
+          - PRESTATAIRE
+        personneId:
+          type: string
+          format: uuid
+        finalites:
+          type: array
+          items:
+            $ref: "#/components/schemas/FinaliteSituationDto"
+        historique:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConsentementDto"
+    PageReponseBailDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/BailDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    ArriereDto:
+      type: object
+      properties:
+        echeanceId:
+          type: string
+          format: uuid
+        bailId:
+          type: string
+          format: uuid
+        bailNumero:
+          type: string
+        locataireId:
+          type: string
+          format: uuid
+        locataireNom:
+          type: string
+        logement:
+          type: string
+        periodeDebut:
+          type: string
+          format: date
+        periodeFin:
+          type: string
+          format: date
+        dateEcheance:
+          type: string
+          format: date
+        montant:
+          type: integer
+          format: int64
+        reste:
+          type: integer
+          format: int64
+        joursRetard:
+          type: integer
+          format: int32
+        derniereRelance:
+          $ref: "#/components/schemas/RelanceDto"
+        peutMiseEnDemeure:
+          type: boolean
+        miseEnDemeureId:
+          type: string
+          format: uuid
+    PageReponseArriereDto:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArriereDto"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64

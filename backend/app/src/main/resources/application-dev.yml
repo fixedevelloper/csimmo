@@ -1,0 +1,34 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,modulith
+
+springdoc:
+  swagger-ui:
+    enabled: true
+
+immogest:
+  stockage:
+    access-key: immogest
+    secret-key: immogest-secret
+    # Clé de DÉVELOPPEMENT uniquement
+    cle-chiffrement: ZGV2LW9ubHktY2xlLWFlcy0yNTYtYml0cy0hISEhISE=
+  securite:
+    # Secret de DÉVELOPPEMENT uniquement
+    jwt-secret: ZGV2LW9ubHktand0LXNlY3JldC1kZS1kZXZlbG9wcGVtZW50LTAxMjM0NTY3ODk=
+  licence:
+    # Paire de clés de DÉVELOPPEMENT : la clé privée ne signe que la licence de dev auto-installée.
+    # Le jar de production embarque la clé publique de l'éditeur (resource licence/cle-publique-editeur.txt),
+    # jamais celle-ci : une licence signée avec la clé de dev y est refusée.
+    cle-publique: MCowBQYDK2VwAyEAvvdXGzqsFD68Zj6VSEw4QV4hAOuLRJvAJsKF/UB9dsg=
+    dev-cle-privee: MC4CAQAwBQYDK2VwBCIEIGIC1pu0YOjbMSR9/5HaeEFAVhm+faAF7WxAM2wtC5G2
+    identifiant-machine-secours: dev-machine
+  dev:
+    installation-auto: true
+  paiementenligne:
+    # Développement : agrégateur simulé (aucun compte marchand requis)
+    simuler: true
+  notification:
+    # Développement : canaux simulés (rien n'est envoyé, aucun fournisseur requis)
+    simuler: true

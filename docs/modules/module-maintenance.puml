@@ -1,0 +1,38 @@
+@startuml
+set separator none
+title Maintenance
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("ImmoGestApplication.ImmoGestApplication_boundary", "ImmoGestApplication", $tags="") {
+  Component(ImmoGestApplication.ImmoGestApplication.Baux, "Baux", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Maintenance, "Maintenance", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Commun, "Commun", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Stockage, "Stockage", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Tiers, "Tiers", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Patrimoine, "Patrimoine", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Commun, "listens to", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Baux, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Patrimoine, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Patrimoine, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml

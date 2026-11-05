@@ -1,0 +1,7 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.shared`
+|Spring components
+|* `c.i.a.s.RenduPdf`
+|===

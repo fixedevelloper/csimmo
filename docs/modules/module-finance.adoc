@@ -1,0 +1,30 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.finance`
+|Spring components
+|_Services_
+
+* `c.i.a.f.DepenseService`
+* `c.i.a.f.DocumentService`
+* `c.i.a.f.EcheanceService`
+* `c.i.a.f.PaiementService`
+* `c.i.a.f.RepriseService`
+* `c.i.a.f.ReversementService`
+
+_Configuration properties_
+
+* `c.i.a.f.FinanceProperties`
+|Bean references
+|* `c.i.a.p.api.LecteurLots` (in Patrimoine)
+* `c.i.a.s.ActeurCourant` (in Commun)
+* `c.i.a.b.api.LecteurBaux` (in Baux)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+* `c.i.a.s.StockageService` (in Stockage)
+* `c.i.a.s.UtilisateurService` (in Sécurité)
+* `c.i.a.s.RenduPdf` (in Commun)
+|Events listened to
+|* `c.i.a.f.EvenementsPaiement.EcheancePayee` (async) 
+* `c.i.a.f.EvenementsPaiement.RecuAEmettre` (async) 
+* `c.i.a.s.BailActive` (async) 
+|===

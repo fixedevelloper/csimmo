@@ -1,0 +1,16 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.importation`
+|Spring components
+|_Services_
+
+* `c.i.a.i.ImportService`
+|Bean references
+|* `c.i.a.p.PatrimoineService` (in Patrimoine)
+* `c.i.a.t.LocataireService` (in Tiers)
+* `c.i.a.b.BailService` (in Baux)
+* `c.i.a.f.RepriseService` (in Finance)
+* `c.i.a.l.api.ControlePalier` (in Licence)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

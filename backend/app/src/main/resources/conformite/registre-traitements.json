@@ -1,0 +1,216 @@
+{
+  "version": "1.0",
+  "responsable": "Le client qui exploite l'installation (propriétaire ou agence) est le responsable du traitement. L'éditeur d'ImmoGest n'a pas accès aux données.",
+  "note": "Registre pré-rempli à partir des fonctions du logiciel, à compléter (identité du responsable, délégué à la protection des données, durées spécifiques) et à faire valider par votre conseil juridique avant déclaration auprès de l'autorité de protection des données.",
+  "traitements": [
+    {
+      "id": "T1",
+      "nom": "Gestion locative (locataires, garants, baux)",
+      "finalite": "Conclure, exécuter et suivre les contrats de location",
+      "baseLegale": "Exécution du contrat de location",
+      "donnees": [
+        "Identité (nom, date de naissance)",
+        "Coordonnées (téléphone, e-mail, adresse)",
+        "Profession",
+        "Numéro et copie de la pièce d'identité (chiffrés)",
+        "Garants (identité, téléphone, pièce d'identité)"
+      ],
+      "personnes": [
+        "Locataires",
+        "Garants"
+      ],
+      "destinataires": [
+        "Gestionnaires et administrateurs de l'installation",
+        "Propriétaire tiers, pour ses seuls biens"
+      ],
+      "conservation": "Durée du bail, puis 10 ans pour les documents comptables ; fiche effaçable par anonymisation une fois le bail terminé et les créances soldées",
+      "mesures": [
+        "Contrôle d'accès par rôle",
+        "Chiffrement AES-256-GCM des numéros et copies de pièces d'identité",
+        "Journal d'audit de toute modification",
+        "HTTPS",
+        "Sauvegardes chiffrées en transit, rétention 30 jours"
+      ]
+    },
+    {
+      "id": "T2",
+      "nom": "Encaissement des loyers et comptabilité",
+      "finalite": "Émettre quittances et reçus, suivre les échéances et les impayés, calculer les reversements aux propriétaires",
+      "baseLegale": "Obligation légale (comptabilité) et exécution du contrat",
+      "donnees": [
+        "Identité du locataire (rattachement)",
+        "Montants, dates et modes de paiement",
+        "Références de paiement"
+      ],
+      "personnes": [
+        "Locataires",
+        "Propriétaires tiers"
+      ],
+      "destinataires": [
+        "Gestionnaires",
+        "Propriétaire tiers concerné (relevés de gérance)"
+      ],
+      "conservation": "10 ans (jamais supprimés : annulation par contre-passation)",
+      "mesures": [
+        "Écritures immuables protégées en base",
+        "Journal d'audit conservé 10 ans",
+        "Contrôle d'accès par rôle"
+      ]
+    },
+    {
+      "id": "T3",
+      "nom": "Relances et notifications",
+      "finalite": "Rappeler les échéances, envoyer quittances, reçus et mises en demeure",
+      "baseLegale": "Exécution du contrat ; consentement pour les canaux de messagerie (NOTIFICATIONS)",
+      "donnees": [
+        "Nom",
+        "Téléphone ou e-mail",
+        "Contenu du message (montants, échéances)"
+      ],
+      "personnes": [
+        "Locataires"
+      ],
+      "destinataires": [
+        "Prestataires de messagerie choisis par le client (SMS, WhatsApp Business, e-mail, notifications push)"
+      ],
+      "conservation": "Journal des messages conservé tant que la fiche existe ; effacé à l'anonymisation",
+      "mesures": [
+        "Secrets des canaux chiffrés et jamais réaffichés",
+        "Un seul canal par message",
+        "File d'envoi journalisée"
+      ]
+    },
+    {
+      "id": "T4",
+      "nom": "Paiement en ligne (Mobile Money)",
+      "finalite": "Permettre au locataire de payer son loyer par Mobile Money",
+      "baseLegale": "Exécution du contrat",
+      "donnees": [
+        "Numéro Mobile Money (affiché masqué)",
+        "Montant",
+        "Références opérateur"
+      ],
+      "personnes": [
+        "Locataires"
+      ],
+      "destinataires": [
+        "Agrégateur de paiement choisi par le client"
+      ],
+      "conservation": "10 ans (pièce comptable)",
+      "mesures": [
+        "Paiement enregistré uniquement après confirmation de l'opérateur",
+        "Webhooks signés",
+        "Identifiants marchands chiffrés"
+      ]
+    },
+    {
+      "id": "T5",
+      "nom": "Propriétaires tiers et mandats de gérance",
+      "finalite": "Gérer les mandats, calculer les honoraires et reverser les loyers",
+      "baseLegale": "Exécution du contrat de mandat",
+      "donnees": [
+        "Identité et coordonnées",
+        "Coordonnées de reversement (compte bancaire ou Mobile Money)"
+      ],
+      "personnes": [
+        "Propriétaires tiers"
+      ],
+      "destinataires": [
+        "Gestionnaires et administrateurs"
+      ],
+      "conservation": "Durée du mandat, puis 10 ans pour les documents comptables",
+      "mesures": [
+        "Contrôle d'accès par rôle",
+        "Un propriétaire ne voit que ses biens"
+      ]
+    },
+    {
+      "id": "T6",
+      "nom": "Signalements de pannes et prestataires",
+      "finalite": "Recevoir et suivre les pannes signalées par les locataires",
+      "baseLegale": "Exécution du contrat de location",
+      "donnees": [
+        "Description et photo de la panne",
+        "Identité et coordonnées des prestataires"
+      ],
+      "personnes": [
+        "Locataires",
+        "Prestataires"
+      ],
+      "destinataires": [
+        "Gestionnaires"
+      ],
+      "conservation": "Tant que la fiche existe",
+      "mesures": [
+        "Photos contrôlées et redimensionnées",
+        "Accès limité aux gestionnaires et au locataire concerné"
+      ]
+    },
+    {
+      "id": "T7",
+      "nom": "Comptes utilisateurs et sécurité",
+      "finalite": "Authentifier les utilisateurs et tracer les actions",
+      "baseLegale": "Intérêt légitime (sécurité) et obligation légale (traçabilité comptable)",
+      "donnees": [
+        "Nom, téléphone ou e-mail",
+        "Mot de passe (condensé bcrypt)",
+        "Sessions, codes à usage unique",
+        "Journal d'audit (auteur, action, date)"
+      ],
+      "personnes": [
+        "Utilisateurs de l'installation"
+      ],
+      "destinataires": [
+        "Administrateurs"
+      ],
+      "conservation": "Compte : tant qu'il est actif ; journal d'audit : 10 ans",
+      "mesures": [
+        "Verrouillage après 5 échecs",
+        "Limitation de débit par adresse IP",
+        "Jetons à durée courte",
+        "Journal d'audit en ajout seul"
+      ]
+    },
+    {
+      "id": "T8",
+      "nom": "Vérification de la licence (éditeur)",
+      "finalite": "Vérifier la validité de la licence annuelle",
+      "baseLegale": "Exécution du contrat de licence",
+      "donnees": [
+        "Identifiant de licence",
+        "Empreinte technique du serveur",
+        "Version de l'application"
+      ],
+      "personnes": [
+        "Aucune personne physique identifiable"
+      ],
+      "destinataires": [
+        "Éditeur d'ImmoGest"
+      ],
+      "conservation": "Durée de la licence",
+      "mesures": [
+        "Aucune donnée de locataire, de propriétaire ou de paiement n'est transmise"
+      ]
+    },
+    {
+      "id": "T9",
+      "nom": "Sauvegardes",
+      "finalite": "Restaurer l'installation en cas de panne",
+      "baseLegale": "Intérêt légitime (continuité de service)",
+      "donnees": [
+        "Copie de l'ensemble des données de l'installation"
+      ],
+      "personnes": [
+        "Toutes les personnes concernées"
+      ],
+      "destinataires": [
+        "Administrateurs ; support externe désigné par le client pour la copie externe"
+      ],
+      "conservation": "30 jours (rotation automatique) ; une personne anonymisée peut subsister dans les sauvegardes antérieures jusqu'à leur rotation",
+      "mesures": [
+        "Clé de chiffrement sauvegardée séparément et chiffrée",
+        "Copie externe à protéger par le client"
+      ]
+    }
+  ]
+}

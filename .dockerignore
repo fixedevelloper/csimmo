@@ -1,0 +1,11 @@
+**/node_modules
+**/.next
+**/target
+**/.dart_tool
+mobile/
+license-web/
+.git
+deploy/.env
+deploy/generated
+web/playwright-report
+web/test-results

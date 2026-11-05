@@ -1,0 +1,26 @@
+[
+  {
+    "finalite": "NOTIFICATIONS",
+    "version": "1.0",
+    "titre": "Messages de rappel et documents par SMS, WhatsApp, e-mail ou notification",
+    "texte": "J'accepte que {RESPONSABLE} m'envoie, par SMS, WhatsApp, e-mail ou notification sur mon téléphone, les rappels d'échéance, mes quittances, reçus et courriers relatifs à ma location. Mon numéro et mon nom sont transmis au prestataire de messagerie choisi par {RESPONSABLE} pour cet envoi seulement. Je peux retirer cet accord à tout moment auprès de {RESPONSABLE}, sans effet sur mon contrat de location ; mes documents me seront alors remis en main propre."
+  },
+  {
+    "finalite": "PIECES_IDENTITE",
+    "version": "1.0",
+    "titre": "Conservation de ma pièce d'identité",
+    "texte": "J'accepte que {RESPONSABLE} conserve une copie numérique chiffrée de ma pièce d'identité et son numéro, pour établir et suivre mon contrat de location. Seules les personnes habilitées y accèdent. La copie est supprimée sur ma demande lorsque mon contrat est terminé et mes comptes soldés."
+  },
+  {
+    "finalite": "TRANSMISSION_PROPRIETAIRE",
+    "version": "1.0",
+    "titre": "Communication de mes informations au propriétaire du logement",
+    "texte": "J'accepte que {RESPONSABLE} communique mon identité, mes coordonnées et l'état de mes paiements au propriétaire du logement que je loue, lorsque ce dernier n'est pas {RESPONSABLE}, pour le suivi de la gérance de son bien."
+  },
+  {
+    "finalite": "APPLICATION_MOBILE",
+    "version": "1.0",
+    "titre": "Compte et application mobile",
+    "texte": "J'accepte la création d'un compte à mon nom pour consulter mes échéances, mes quittances et signaler des pannes depuis l'application mobile, ainsi que l'enregistrement de mon téléphone pour les notifications. Je peux demander à {RESPONSABLE} la fermeture de ce compte à tout moment."
+  }
+]

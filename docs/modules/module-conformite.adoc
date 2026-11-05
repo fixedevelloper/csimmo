@@ -1,0 +1,15 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.conformite`
+|Spring components
+|_Services_
+
+* `c.i.a.c.ConformiteService`
+|Bean references
+|* `c.i.a.t.AnonymisationService` (in Tiers)
+* `c.i.a.b.api.LecteurBaux` (in Baux)
+* `c.i.a.f.EcheanceService` (in Finance)
+* `c.i.a.p.PatrimoineService` (in Patrimoine)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

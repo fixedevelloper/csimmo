@@ -1,0 +1,21 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.patrimoine`
+|Spring components
+|_Services_
+
+* `c.i.a.p.PatrimoineService`
+
+_Others_
+
+* `c.i.a.p.api.LecteurLots` (via `c.i.a.p.infra.LecteurLotsImpl`)
+|Bean references
+|* `c.i.a.l.api.ControlePalier` (in Licence)
+* `c.i.a.s.StockageService` (in Stockage)
+* `c.i.a.s.ActeurCourant` (in Commun)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+|Events listened to
+|* `c.i.a.s.BailActive` (async) 
+* `c.i.a.s.BailTermine` (async) 
+|===

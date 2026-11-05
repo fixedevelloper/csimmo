@@ -1,0 +1,15 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.maintenance`
+|Spring components
+|_Services_
+
+* `c.i.a.m.SignalementService`
+|Bean references
+|* `c.i.a.b.api.LecteurBaux` (in Baux)
+* `c.i.a.p.api.LecteurLots` (in Patrimoine)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+* `c.i.a.s.StockageService` (in Stockage)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

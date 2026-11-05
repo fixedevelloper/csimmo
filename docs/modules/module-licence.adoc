@@ -1,0 +1,18 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.licence`
+|Spring components
+|_Services_
+
+* `c.i.a.l.InstallationService`
+* `c.i.a.l.LicenceService`
+
+_Others_
+
+* `c.i.a.l.api.ControlePalier` (via `c.i.a.l.infra.ControlePalierImpl`)
+* `c.i.a.l.ServeurLicencesClient` (via `c.i.a.l.infra.ServeurLicencesHttpClient`)
+|Bean references
+|* `c.i.a.s.UtilisateurService` (in Sécurité)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

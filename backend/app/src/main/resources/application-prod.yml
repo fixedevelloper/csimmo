@@ -1,0 +1,28 @@
+# Production : IMMOGEST_DB_URL / IMMOGEST_DB_USER / IMMOGEST_DB_PASSWORD, IMMOGEST_JWT_SECRET,
+# IMMOGEST_CLE_CHIFFREMENT et IMMOGEST_S3_* obligatoires (générés par install.sh).
+spring:
+  datasource:
+    url: ${IMMOGEST_DB_URL}
+    username: ${IMMOGEST_DB_USER}
+    password: ${IMMOGEST_DB_PASSWORD}
+
+server:
+  # Derrière Caddy : schéma et adresse du client réels (en-têtes X-Forwarded-*)
+  # « native » : Tomcat remplace l'adresse distante par celle de X-Forwarded-For posé par Caddy (proxy interne de confiance) ; nécessaire à la limitation de débit par IP
+  forward-headers-strategy: native
+
+immogest:
+  sauvegarde:
+    redemarrage-sur-demande: true
+  # true : installation sans Internet (IMMOGEST_RESEAU_LOCAL, positionné par install.sh --mode local)
+  reseau-local: ${IMMOGEST_RESEAU_LOCAL:false}
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: false

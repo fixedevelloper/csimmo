@@ -1,0 +1,19 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.bail`
+|Spring components
+|_Services_
+
+* `c.i.a.b.BailService`
+* `c.i.a.b.ModeleBailService`
+
+_Others_
+
+* `c.i.a.b.api.LecteurBaux` (via `c.i.a.b.infra.LecteurBauxImpl`)
+|Bean references
+|* `c.i.a.p.api.LecteurLots` (in Patrimoine)
+* `c.i.a.t.api.LecteurTiers` (in Tiers)
+* `c.i.a.s.StockageService` (in Stockage)
+* `c.i.a.s.ActeurCourant` (in Commun)
+|===

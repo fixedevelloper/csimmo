@@ -1,0 +1,245 @@
+{
+  "@@locale": "fr",
+  "appTitle": "ImmoGest",
+  "serveurTitre": "Votre serveur ImmoGest",
+  "serveurExplication": "Saisissez l'adresse du serveur de votre agence ou de votre propriétaire, ou scannez le QR code qui vous a été remis.",
+  "serveurUrlLabel": "Adresse du serveur",
+  "serveurUrlHint": "https://immo.exemple.cm",
+  "serveurContinuer": "Continuer",
+  "serveurVerification": "Vérification…",
+  "serveurScanner": "Scanner un QR code",
+  "serveurScanTitre": "Scanner le QR code",
+  "serveurScanAide": "Placez le QR code du serveur dans le cadre.",
+  "serveurCameraRefusee": "L'accès à la caméra est refusé. Saisissez l'adresse à la main.",
+  "serveurQrInvalide": "Ce QR code n'est pas une adresse ImmoGest.",
+  "connexionTitre": "Connexion",
+  "connexionServeur": "Serveur : {url}",
+  "identifiantLabel": "Téléphone ou e-mail",
+  "motDePasseLabel": "Mot de passe",
+  "seConnecter": "Se connecter",
+  "connexionEnCours": "Connexion…",
+  "connexionParSms": "Recevoir un code par SMS",
+  "connexionParMotDePasse": "Utiliser un mot de passe",
+  "recevoirCode": "Recevoir le code",
+  "codeLabel": "Code reçu par SMS",
+  "verifier": "Vérifier",
+  "deuxFacteursInfo": "Un code à 6 chiffres vous a été envoyé par SMS.",
+  "codeEnvoye": "Si ce numéro est enregistré, un code vient d'être envoyé par SMS.",
+  "retour": "Retour",
+  "changerServeur": "Changer de serveur",
+  "champRequis": "Ce champ est obligatoire",
+  "codeSixChiffres": "Le code comporte 6 chiffres",
+  "deconnexion": "Se déconnecter",
+  "bienvenue": "Bienvenue, {nom}",
+  "bientotDisponible": "Cet espace sera disponible prochainement.",
+  "espaceLocataire": "Mon espace locataire",
+  "espaceAgent": "Espace gestion",
+  "espacePrestataire": "Espace prestataire",
+  "espaceProprietaire": "Espace propriétaire",
+  "chargement": "Chargement…",
+  "reessayer": "Réessayer",
+  "errInconnue": "Une erreur inattendue est survenue. Réessayez.",
+  "errServeurIndisponible": "Impossible de joindre le serveur. Vérifiez votre connexion et l'adresse.",
+  "errServeurNonImmogest": "Cette adresse ne répond pas comme un serveur ImmoGest.",
+  "errUrlInvalide": "Adresse invalide. Exemple : https://immo.exemple.cm",
+  "errUrlHttpRefusee": "Une adresse publique doit commencer par https:// (connexion sécurisée).",
+  "errIdentifiantsInvalides": "Identifiant ou mot de passe incorrect.",
+  "errCompteVerrouille": "Compte temporairement verrouillé après trop d'échecs. Réessayez dans 15 minutes.",
+  "errCompteDesactive": "Ce compte est désactivé.",
+  "errOtpInvalide": "Code invalide ou expiré.",
+  "errAccesRefuse": "Vous n'avez pas les droits nécessaires.",
+  "errSessionExpiree": "Votre session a expiré. Reconnectez-vous.",
+  "errLicenceExpiree": "La licence de l'application a expiré : consultation seulement.",
+  "@connexionServeur": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "@bienvenue": {
+    "placeholders": {
+      "nom": {
+        "type": "String"
+      }
+    }
+  },
+  "ongletAccueil": "Accueil",
+  "ongletBaux": "Mes baux",
+  "ongletDocuments": "Quittances",
+  "ongletSignaler": "Signaler",
+  "soldeDu": "Solde à régler",
+  "soldeAJour": "Vous êtes à jour",
+  "arrieres": "Loyers échus impayés",
+  "aVenir": "À venir",
+  "credit": "Crédit non imputé",
+  "payer": "Payer",
+  "payerBientot": "Le paiement par Mobile Money sera bientôt disponible.",
+  "aucunBail": "Aucun bail pour le moment.",
+  "bailActif": "En cours",
+  "bailResilie": "Résilié",
+  "bailTermine": "Terminé",
+  "bailBrouillon": "Brouillon",
+  "echeances": "Échéances",
+  "echeancePayee": "Payée",
+  "echeanceEnRetard": "En retard",
+  "echeancePartielle": "Partielle",
+  "echeanceDue": "À payer",
+  "echeanceAVenir": "À venir",
+  "loyerMensuel": "Loyer mensuel",
+  "chargesMensuelles": "Charges mensuelles",
+  "caution": "Caution",
+  "debutBail": "Début du bail",
+  "finBail": "Fin du bail",
+  "sansDateFin": "Sans date de fin",
+  "sortiePrevue": "Sortie prévue",
+  "avantLe": "avant le {date}",
+  "resteAPayer": "reste {montant}",
+  "aucunDocument": "Aucune quittance ni aucun reçu pour le moment.",
+  "quittance": "Quittance",
+  "recu": "Reçu",
+  "signalerTitre": "Signaler une panne",
+  "signalerDescription": "Décrivez la panne",
+  "signalerDescriptionCourte": "Décrivez la panne en quelques mots (5 caractères minimum).",
+  "photoCamera": "Prendre une photo",
+  "photoGalerie": "Galerie",
+  "retirerPhoto": "Retirer la photo",
+  "signalerEnvoyer": "Envoyer le signalement",
+  "envoiEnCours": "Envoi…",
+  "signalementEnvoye": "Signalement envoyé. Votre gestionnaire va le traiter.",
+  "mesSignalements": "Mes signalements",
+  "aucunSignalement": "Aucun signalement pour le moment.",
+  "signalementNouveau": "Reçu",
+  "signalementEnCours": "En cours",
+  "signalementResolu": "Résolu",
+  "signalementRejete": "Rejeté",
+  "errSignalementBailRequis": "Précisez le bail concerné.",
+  "errSignalementAucunBail": "Vous n'avez aucun bail en cours.",
+  "errSignalementLimite": "Trop de signalements en attente : patientez jusqu'à leur prise en charge.",
+  "errSignalementDescription": "Décrivez la panne en 5 à 2000 caractères.",
+  "errFichierInvalide": "Cette photo n'est pas acceptée (formats JPEG, PNG ou WebP, 10 Mo au plus).",
+  "errLocataireIntrouvable": "Aucune fiche locataire n'est rattachée à votre compte. Contactez votre gestionnaire.",
+  "@avantLe": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@resteAPayer": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  },
+  "ongletEncaisser": "Encaisser",
+  "ongletAEnvoyer": "À envoyer",
+  "ongletLots": "Lots",
+  "ongletLocataires": "Locataires",
+  "donneesDu": "Données du {date}",
+  "donneesAbsentes": "Aucune donnée enregistrée sur ce téléphone.",
+  "donneesAbsentesAide": "Actualisez les données (avec du réseau) pour pouvoir saisir sans réseau ensuite.",
+  "actualiserDonnees": "Actualiser",
+  "donneesActualisees": "Données actualisées.",
+  "donneesAnciennes": "Les données précédentes restent utilisables.",
+  "rechercherLocataire": "Rechercher un locataire",
+  "aucunLocataire": "Aucun locataire trouvé.",
+  "changer": "Changer",
+  "aucunBailLocataire": "Ce locataire n'a aucun bail enregistré.",
+  "choisirBailErreur": "Choisissez le bail concerné.",
+  "mensuel": "{montant} par mois",
+  "montantFcfa": "Montant encaissé (FCFA)",
+  "montantInvalide": "Saisissez un montant entier en FCFA.",
+  "enregistrerEncaissement": "Enregistrer l'encaissement",
+  "encaissementEnregistre": "Encaissement enregistré sur le téléphone. Il sera envoyé dès que possible.",
+  "recuSmsInfo": "Le reçu SMS est envoyé au locataire quand l'encaissement arrive sur le serveur.",
+  "synchroniserMaintenant": "Envoyer maintenant",
+  "fileVide": "Aucun encaissement saisi récemment.",
+  "statutEnAttente": "En attente",
+  "statutEnvoye": "Envoyé",
+  "statutRejete": "Refusé",
+  "supprimerSaisie": "Supprimer la saisie",
+  "saisieSupprimee": "Saisie supprimée.",
+  "abandonImpossible": "Impossible : cet encaissement a déjà été présenté au serveur et a pu y être enregistré.",
+  "synchroTerminee": "Envoi terminé : {envoyes} envoyé(s), {rejetes} refusé(s).",
+  "synchroInterrompue": "{raison} {restants} encaissement(s) restent en attente.",
+  "deconnexionAvecFile": "{n} encaissement(s) non envoyé(s) seront conservés sur ce téléphone et envoyés à votre prochaine connexion avec ce compte.",
+  "annuler": "Annuler",
+  "rechercherLot": "Rechercher un lot",
+  "aucunLot": "Aucun lot.",
+  "lotLibre": "Libre",
+  "lotOccupe": "Occupé",
+  "lotEnTravaux": "En travaux",
+  "errBailIntrouvable": "Bail introuvable : l'encaissement ne peut pas être enregistré.",
+  "errPaiementInvalide": "Montant ou informations invalides.",
+  "errPaiementDateFuture": "La date du paiement est dans le futur : vérifiez l'heure du téléphone.",
+  "errIdempotence": "Cette saisie a déjà été utilisée pour un autre montant.",
+  "@donneesDu": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@mensuel": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  },
+  "@synchroTerminee": {
+    "placeholders": {
+      "envoyes": {
+        "type": "int"
+      },
+      "rejetes": {
+        "type": "int"
+      }
+    }
+  },
+  "@synchroInterrompue": {
+    "placeholders": {
+      "raison": {
+        "type": "String"
+      },
+      "restants": {
+        "type": "int"
+      }
+    }
+  },
+  "@deconnexionAvecFile": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "payerTitre": "Payer mon loyer",
+  "payerBail": "Bail à payer",
+  "payerTelephone": "Numéro Mobile Money qui paie",
+  "payerTelephoneInvalide": "Saisissez un numéro valide, au format international.",
+  "payerConfirmer": "Payer",
+  "operateurMtn": "MTN MoMo",
+  "operateurOrange": "Orange Money",
+  "payerAttenteTitre": "En attente de votre validation",
+  "payerAttenteAide": "Validez le paiement sur votre téléphone (code secret). Cette page se met à jour toute seule.",
+  "payerDelai": "Toujours pas de confirmation. Si vous avez validé, le paiement sera enregistré dès que l'opérateur le confirmera : vous pouvez fermer cette page.",
+  "payerContinuerSuivi": "Continuer à attendre",
+  "payerFermer": "Fermer",
+  "payerSucces": "Paiement de {montant} confirmé. Merci !",
+  "payerRefusee": "Le paiement n'a pas abouti. Aucun montant n'a été enregistré.",
+  "payerExpiree": "Le paiement a expiré sans confirmation. Aucun montant n'a été enregistré.",
+  "payerAnomalie": "Le montant confirmé par l'opérateur diffère de celui demandé. Votre gestionnaire va vérifier.",
+  "errAgregateur": "Le service de paiement est momentanément indisponible. Réessayez dans quelques instants.",
+  "errPaiementEnLigneIndisponible": "Le paiement en ligne n'est pas disponible chez votre gestionnaire.",
+  "errTropDeTransactions": "Vous avez déjà des paiements en attente : validez-les ou patientez.",
+  "@payerSucces": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  }
+}

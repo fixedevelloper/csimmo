@@ -1,0 +1,19 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.securite`
+|Spring components
+|_Services_
+
+* `c.i.a.s.AuthService`
+* `c.i.a.s.UtilisateurService`
+
+_Others_
+
+* `c.i.a.s.OtpSender` (via `c.i.a.s.infra.ConsoleOtpSender`)
+* `c.i.a.s.OtpSender` (via `c.i.a.s.infra.OtpSenderIndisponible`)
+|Bean references
+|* `c.i.a.s.ActeurCourant` (in Commun)
+|Events listened to
+|* `c.i.a.s.PersonneAnonymisee` (async) 
+|===

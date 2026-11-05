@@ -1,0 +1,26 @@
+[
+  {
+    "finalite": "NOTIFICATIONS",
+    "version": "1.0",
+    "titre": "Reminders and documents by SMS, WhatsApp, e-mail or notification",
+    "texte": "I agree that {RESPONSABLE} sends me, by SMS, WhatsApp, e-mail or phone notification, payment reminders, receipts and letters about my tenancy. My number and name are passed to the messaging provider chosen by {RESPONSABLE} for this sending only. I may withdraw this consent at any time with {RESPONSABLE}, without effect on my lease; my documents will then be handed to me in person."
+  },
+  {
+    "finalite": "PIECES_IDENTITE",
+    "version": "1.0",
+    "titre": "Keeping my identity document",
+    "texte": "I agree that {RESPONSABLE} keeps an encrypted digital copy of my identity document and its number, to draw up and follow my lease. Only authorised people can access it. The copy is deleted on my request once my lease has ended and my accounts are settled."
+  },
+  {
+    "finalite": "TRANSMISSION_PROPRIETAIRE",
+    "version": "1.0",
+    "titre": "Sharing my information with the owner of the property",
+    "texte": "I agree that {RESPONSABLE} shares my identity, contact details and payment status with the owner of the property I rent, when the owner is not {RESPONSABLE}, to follow the management of their property."
+  },
+  {
+    "finalite": "APPLICATION_MOBILE",
+    "version": "1.0",
+    "titre": "Account and mobile application",
+    "texte": "I agree to the creation of an account in my name to view my instalments and receipts and report faults from the mobile application, and to registering my phone for notifications. I may ask {RESPONSABLE} to close this account at any time."
+  }
+]

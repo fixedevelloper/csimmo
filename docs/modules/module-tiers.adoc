@@ -1,0 +1,22 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.tiers`
+|Spring components
+|_Services_
+
+* `c.i.a.t.AnonymisationService`
+* `c.i.a.t.LocataireService`
+* `c.i.a.t.PrestataireService`
+* `c.i.a.t.ProprietaireService`
+* `c.i.a.t.RechercheTiersService`
+
+_Others_
+
+* `c.i.a.t.api.LecteurTiers` (via `c.i.a.t.infra.LecteurTiersImpl`)
+|Bean references
+|* `c.i.a.s.ChiffrementDonnees` (in Stockage)
+* `c.i.a.s.StockageService` (in Stockage)
+* `c.i.a.s.ActeurCourant` (in Commun)
+* `c.i.a.s.UtilisateurService` (in Sécurité)
+|===
