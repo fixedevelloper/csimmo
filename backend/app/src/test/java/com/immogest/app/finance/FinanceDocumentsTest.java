@@ -58,11 +58,15 @@ class FinanceDocumentsTest {
     UUID bail;
     LocalDate aujourdhui;
 
+    /** Début du test : on ne compte que les lignes d'audit créées depuis (le journal est immuable, jamais purgé entre deux tests : un compte global dépend de l'ordre d'exécution). */
+    java.time.OffsetDateTime debutTest;
+
     @BeforeEach
     void preparer() throws Exception {
         aujourdhui = LocalDate.now(ZoneId.of("Africa/Douala"));
         attendreOutboxVide();
         jdbc.execute("TRUNCATE fin_document, fin_compteur_numero, fin_imputation, fin_paiement, fin_echeance, bail_document, bail_garant, bail, patrimoine_photo, compteur, lot_equipement, lot, immeuble, garant, tiers_piece, locataire CASCADE");
+        debutTest = java.time.OffsetDateTime.now();
         immeuble = id(mvc.perform(post("/api/v1/immeubles").with(ADMIN).contentType(MediaType.APPLICATION_JSON)
                 .content(json("nom", "Résidence Quittances", "adresse", "12 rue des Palmiers", "ville", "Douala"))));
         locataire = nouveauLocataire(null);
@@ -251,6 +255,6 @@ class FinanceDocumentsTest {
         payer(MENSUEL);
         attendre("QUITTANCE", 1);
         await().atMost(Duration.ofSeconds(10)).untilAsserted(() ->
-                assertThat(jdbc.queryForObject("SELECT count(*) FROM audit_log WHERE action = 'FINANCE.QUITTANCE_EMIS'", Long.class)).isEqualTo(1));
+                assertThat(jdbc.queryForObject("SELECT count(*) FROM audit_log WHERE action = 'FINANCE.QUITTANCE_EMIS' AND date >= ?", Long.class, debutTest)).isEqualTo(1));
     }
 }

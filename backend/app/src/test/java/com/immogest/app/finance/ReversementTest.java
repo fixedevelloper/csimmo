@@ -64,6 +64,9 @@ class ReversementTest {
     UUID bailB;
     UUID compteA;
 
+    /** Début du test : on ne compte que les lignes d'audit créées depuis (le journal est immuable, jamais purgé entre deux tests : un compte global dépend de l'ordre d'exécution). */
+    java.time.OffsetDateTime debutTest;
+
     @BeforeEach
     void preparer() throws Exception {
         aujourdhui = LocalDate.now(ZoneId.of("Africa/Douala"));
@@ -74,6 +77,7 @@ class ReversementTest {
             // publications en échec : sans effet ici
         }
         jdbc.execute("TRUNCATE fin_reversement, fin_depense, fin_compteur_numero, rel_relance, rel_mise_en_demeure, notif_message, fin_document, fin_imputation, fin_paiement, fin_echeance, bail_document, bail_garant, bail, patrimoine_photo, compteur, lot_equipement, lot, immeuble, garant, tiers_piece, mandat, proprietaire_tiers, locataire CASCADE");
+        debutTest = java.time.OffsetDateTime.now();
         compteA = utilisateurs.creer(new UtilisateurService.Saisie("Compte A", "+237" + TEL.incrementAndGet(), null, Role.PROPRIETAIRE_TIERS, true, false), "Motdepasse123").id();
         proprietaireA = proprietaire("Mme Ngono", 1000, compteA);
         proprietaireB = proprietaire("M. Fotso", 500, null);
@@ -326,7 +330,7 @@ class ReversementTest {
         mvc.perform(post("/api/v1/reversements/{id}/payer", a).with(ADMIN).contentType(MediaType.APPLICATION_JSON).content(json("mode", "ESPECES")))
                 .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("REVERSEMENT_NON_PAYABLE"));
         await().atMost(Duration.ofSeconds(10)).untilAsserted(() -> assertThat(jdbc.queryForObject(
-                "SELECT count(*) FROM audit_log WHERE action IN ('FINANCE.REVERSEMENT_VALIDE', 'FINANCE.REVERSEMENT_PAYE')", Long.class)).isEqualTo(2));
+                "SELECT count(*) FROM audit_log WHERE action IN ('FINANCE.REVERSEMENT_VALIDE', 'FINANCE.REVERSEMENT_PAYE') AND date >= ?", Long.class, debutTest)).isEqualTo(2));
     }
 
     // ================================================================== dépenses

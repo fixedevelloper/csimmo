@@ -68,6 +68,9 @@ class PaiementEnLigneTest {
     UUID bail;
     RequestPostProcessor moi;
 
+    /** Début du test : on ne compte que les lignes d'audit créées depuis (le journal est immuable, jamais purgé entre deux tests : un compte global dépend de l'ordre d'exécution). */
+    java.time.OffsetDateTime debutTest;
+
     @BeforeEach
     void preparer() throws Exception {
         aujourdhui = LocalDate.now(ZoneId.of("Africa/Douala"));
@@ -77,6 +80,7 @@ class PaiementEnLigneTest {
             // sans effet ici
         }
         jdbc.execute("TRUNCATE ol_webhook_recu, ol_transaction, ol_fournisseur, mnt_signalement, notif_message, fin_document, fin_compteur_numero, fin_imputation, fin_paiement, fin_echeance, bail_document, bail_garant, bail, patrimoine_photo, compteur, lot_equipement, lot, immeuble, garant, tiers_piece, locataire CASCADE");
+        debutTest = java.time.OffsetDateTime.now();
         registre.reinitialiser();
         immeuble = id(mvc.perform(post("/api/v1/immeubles").with(ADMIN).contentType(MediaType.APPLICATION_JSON).content(json("nom", "Résidence MoMo", "adresse", "1 rue", "ville", "Douala"))));
         compte = utilisateurs.creer(new UtilisateurService.Saisie("Compte", "+237" + TEL.incrementAndGet(), null, Role.LOCATAIRE, true, false), "Motdepasse123").id();
@@ -368,7 +372,7 @@ class PaiementEnLigneTest {
         assertThat(statut(t.path("id").asText())).isEqualTo("ANOMALIE");
         assertThat(paiementsCrees()).isZero();
         await().atMost(Duration.ofSeconds(10)).untilAsserted(() ->
-                assertThat(jdbc.queryForObject("SELECT count(*) FROM audit_log WHERE action = 'PAIEMENT_EN_LIGNE.ANOMALIE'", Long.class)).isEqualTo(1));
+                assertThat(jdbc.queryForObject("SELECT count(*) FROM audit_log WHERE action = 'PAIEMENT_EN_LIGNE.ANOMALIE' AND date >= ?", Long.class, debutTest)).isEqualTo(1));
     }
 
     // ================================================================== vérification de statut (filet de sécurité)
