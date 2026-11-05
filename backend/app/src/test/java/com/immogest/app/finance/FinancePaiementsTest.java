@@ -69,7 +69,7 @@ class FinancePaiementsTest {
     /** Laisse finir les listeners asynchrones du test précédent (quittances…) avant de vider les tables, sinon TRUNCATE attend leurs verrous. */
     private void attendreOutboxVide() {
         try {
-            await().atMost(Duration.ofSeconds(20)).until(() -> jdbc.queryForObject("SELECT count(*) FROM event_publication WHERE completion_date IS NULL", Long.class) == 0);
+            await().atMost(Duration.ofSeconds(20)).until(() -> jdbc.queryForObject("SELECT count(*) FROM event_publication WHERE completion_date IS NULL AND publication_date > now() - interval '30 seconds'", Long.class) == 0);
         } catch (org.awaitility.core.ConditionTimeoutException ignore) {
             // des publications restées en échec ne doivent pas bloquer les tests suivants
         }

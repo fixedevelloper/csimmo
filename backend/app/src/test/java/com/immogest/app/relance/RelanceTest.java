@@ -75,7 +75,7 @@ class RelanceTest {
 
     private void attendreOutboxVide() {
         try {
-            await().atMost(Duration.ofSeconds(20)).until(() -> jdbc.queryForObject("SELECT count(*) FROM event_publication WHERE completion_date IS NULL", Long.class) == 0);
+            await().atMost(Duration.ofSeconds(20)).until(() -> jdbc.queryForObject("SELECT count(*) FROM event_publication WHERE completion_date IS NULL AND publication_date > now() - interval '30 seconds'", Long.class) == 0);
         } catch (org.awaitility.core.ConditionTimeoutException ignore) {
             // publications en échec : sans effet sur ces tests
         }
