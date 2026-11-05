@@ -104,7 +104,7 @@ jobs:
 
       # 2. Analyse des failles : informative sur main, BLOQUANTE sur un tag de release (CRITICAL et HIGH ayant un correctif)
       - name: Analyse des failles (Trivy)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: analyse/${{ matrix.image }}:${{ github.sha }}
           severity: CRITICAL,HIGH
