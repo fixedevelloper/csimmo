@@ -1,2 +1,14 @@
 # Failles connues acceptées, une par ligne : « CVE-AAAA-NNNN  # raison, responsable, date de revue ».
 # Une ligne sans raison ni date de revue n'a pas sa place ici.
+
+# CVE-2026-47884 : spring-webmvc 6.2.19, exécution de code à distance via XsltView (limitation de chemin).
+#   Spring Framework 6.2.19 est la dernière version de la branche 6.2 ; le correctif n'existe qu'en 7.0.9 (Spring Boot 4).
+#   Non exploitable ici : l'API est REST (JSON), le backend n'utilise ni XsltView, ni ViewResolver, ni ModelAndView (vérifié par recherche dans le code, 2026-11-05).
+#   Responsable : fixedevelloper. Revue au plus tard le 2026-12-05, ou dès qu'une 6.2.x corrective paraît ; migration vers Spring Boot 4 à planifier.
+CVE-2026-47884 exp:2026-12-05
+
+# CVE-2026-47890 : spring-webmvc 6.2.19, corruption de flux Server-Sent Events avec vues.
+#   Même situation : correctif seulement en 7.0.9.
+#   Non exploitable ici : le backend n'utilise ni SseEmitter, ni text/event-stream, ni WebFlux (vérifié par recherche dans le code, 2026-11-05).
+#   Responsable : fixedevelloper. Revue au plus tard le 2026-12-05.
+CVE-2026-47890 exp:2026-12-05
