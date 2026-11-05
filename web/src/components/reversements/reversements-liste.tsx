@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
@@ -60,9 +60,7 @@ export function ReversementsListe() {
       entete: t("statut"),
       cellule: (r) => (
         <span className="flex flex-col gap-1">
-          <Badge variant={r.statut === "PAYE" ? "default" : r.statut === "VALIDE" ? "secondary" : "outline"} data-testid="statut-reversement">
-            {r.statut ? t(`statuts.${r.statut}`) : ""}
-          </Badge>
+          <StatutPastille statut={r.statut} libelle={r.statut ? t(`statuts.${r.statut}`) : ""} testid="statut-reversement" />
           {r.sansMandat ? <span className="text-xs text-destructive">{t("sansMandat")}</span> : null}
           {r.numero ? <span className="text-xs text-muted-foreground">{r.numero}</span> : null}
         </span>

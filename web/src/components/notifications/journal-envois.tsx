@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import { useJournal } from "@/hooks/use-notifications";
@@ -45,9 +45,7 @@ export function JournalEnvois() {
       id: "statut",
       entete: t("statut"),
       cellule: (m) => (
-        <Badge variant={m.statut === "ENVOYE" ? "default" : m.statut === "ECHEC" ? "destructive" : "secondary"} data-testid="statut-message">
-          {m.statut ? t(`statuts.${m.statut}`) : ""}
-        </Badge>
+        <StatutPastille statut={m.statut} libelle={m.statut ? t(`statuts.${m.statut}`) : ""} testid="statut-message" />
       ),
     },
     { id: "essais", entete: t("essais"), cellule: (m) => m.tentatives },

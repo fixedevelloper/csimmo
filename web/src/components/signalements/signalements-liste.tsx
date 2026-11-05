@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
@@ -68,9 +68,7 @@ export function SignalementsListe() {
       entete: t("statut"),
       cellule: (s) => (
         <span className="flex flex-col gap-1">
-          <Badge variant={s.statut === "NOUVEAU" ? "destructive" : s.statut === "EN_COURS" ? "secondary" : "outline"} data-testid="statut-signalement">
-            {s.statut ? t(`statuts.${s.statut}`) : ""}
-          </Badge>
+          <StatutPastille statut={s.statut} libelle={s.statut ? t(`statuts.${s.statut}`) : ""} testid="statut-signalement" />
           {s.noteGestion ? <span className="text-xs text-muted-foreground">{s.noteGestion}</span> : null}
         </span>
       ),

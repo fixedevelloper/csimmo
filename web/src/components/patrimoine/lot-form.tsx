@@ -85,7 +85,7 @@ export function LotForm({ immeubleId, lot }: { immeubleId?: string; lot?: LotDto
   }
 
   return (
-    <form onSubmit={form.handleSubmit(enregistrer)} noValidate className="max-w-2xl">
+    <form onSubmit={form.handleSubmit(enregistrer)} noValidate className="max-w-3xl rounded-xl border bg-card p-6 shadow-carte">
       <FieldGroup>
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField control={form.control} name="reference" label={t("reference")} autoFocus />
@@ -139,7 +139,7 @@ export function LotForm({ immeubleId, lot }: { immeubleId?: string; lot?: LotDto
             {erreur}
           </p>
         ) : null}
-        <div className="flex gap-2">
+        <div className="flex gap-2 border-t pt-4">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? t("enregistrement") : t("enregistrer")}
           </Button>

@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useErrorMessage } from "@/hooks/use-error-message";
@@ -68,7 +68,7 @@ export function ConformiteLocataire({ locataireId }: { locataireId: string }) {
           {data?.finalites?.map((f) => (
             <li key={f.finalite} className="flex flex-wrap items-center gap-3 text-sm">
               <span className="min-w-56 font-medium">{t(`finalites.${f.finalite}`)}</span>
-              <Badge variant={f.statut === "ACCORDE" ? "default" : f.statut === "REFUSE" ? "destructive" : "secondary"}>{t(`statuts.${f.statut}`)}</Badge>
+              <StatutPastille statut={f.statut} libelle={t(`statuts.${f.statut}`)} />
               {f.derniere?.decideLe ? <span className="text-muted-foreground">{new Date(f.derniere.decideLe).toLocaleDateString(locale)}</span> : null}
               <Button size="sm" variant="outline" onClick={() => void decider(f.finalite!, true)}>
                 {t("accord")}

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -87,7 +87,7 @@ export function Depenses() {
     {
       id: "statut",
       entete: t("statut"),
-      cellule: (d) => (d.statut === "ANNULEE" ? <Badge variant="outline" title={d.motifAnnulation}>{t("annuleeBadge")}</Badge> : <Badge variant="secondary">{t("imputee")}</Badge>),
+      cellule: (d) => (d.statut === "ANNULEE" ? <StatutPastille statut="ANNULEE" libelle={t("annuleeBadge")} title={d.motifAnnulation} /> : <StatutPastille statut="IMPUTEE" libelle={t("imputee")} />),
     },
     {
       id: "actions",

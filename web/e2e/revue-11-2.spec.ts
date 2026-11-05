@@ -113,6 +113,7 @@ test("conformité : consentement, demande d'effacement, anonymisation par l'admi
 
   await page.goto(`/locataires/${id}`);
   await expect(page.getByText("Paul Chrome Secret").first()).toBeVisible();
+  await page.getByRole("tab", { name: "Conformité" }).click();
   await expect(page.getByText("Données personnelles et consentements")).toBeVisible();
   await page.getByRole("button", { name: "Enregistrer l'accord" }).first().click();
   const ligne = page.locator("li", { hasText: "Messages (SMS, WhatsApp, e-mail)" });

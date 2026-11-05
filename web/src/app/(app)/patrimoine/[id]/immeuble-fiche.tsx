@@ -3,6 +3,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+
+import { PageHeader } from "@/components/page-header";
+import { StatutPastille } from "@/components/statut-pastille";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -67,26 +70,23 @@ export function ImmeubleFiche() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link href="/patrimoine" className="text-sm text-muted-foreground underline underline-offset-2">
-          {t("retourListe")}
-        </Link>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-semibold">{immeuble.nom}</h1>
-          {!immeuble.archive ? (
-            <div className="flex gap-2">
+      <PageHeader
+        retour={{ href: "/patrimoine", libelle: t("retourListe") }}
+        titre={immeuble.nom}
+        statut={immeuble.archive ? <StatutPastille statut="TERMINE" libelle={t("archive")} /> : undefined}
+        actions={
+          !immeuble.archive ? (
+            <>
               <Link href={`/patrimoine/${id}/modifier`} className={buttonVariants({ variant: "outline" })}>
                 {t("modifier")}
               </Link>
               <Button variant="outline" onClick={() => setConfirmation(true)}>
                 {t("archiver")}
               </Button>
-            </div>
-          ) : (
-            <span className="text-sm text-muted-foreground">{t("archive")}</span>
-          )}
-        </div>
-      </div>
+            </>
+          ) : undefined
+        }
+      />
       {erreur ? (
         <p role="alert" className="text-sm text-destructive">
           {erreur}

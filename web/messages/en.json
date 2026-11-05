@@ -502,6 +502,7 @@
     "choisirPhoto": "Choose a photo"
   },
   "tiers": {
+    "onglets": { "infos": "Information", "garantsPieces": "Guarantors and documents", "conformite": "Compliance" },
     "recherche": "Search (name, phone)",
     "rechercher": "Search",
     "nom": "Name",
@@ -589,6 +590,7 @@
     "compte": "Account"
   },
   "baux": {
+    "onglets": { "conditions": "Terms", "echeances": "Instalments", "documents": "Documents" },
     "titre": "Leases",
     "nouveau": "New lease",
     "aucun": "No lease.",

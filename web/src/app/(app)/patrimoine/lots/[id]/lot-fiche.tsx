@@ -3,6 +3,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+
+import { PageHeader } from "@/components/page-header";
+import { StatutPastille } from "@/components/statut-pastille";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -66,17 +69,14 @@ export function LotFiche() {
   const occupe = lot.statut === "OCCUPE";
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link href={`/patrimoine/${lot.immeubleId}`} className="text-sm text-muted-foreground underline underline-offset-2">
-          {t("retourImmeuble")} — {lot.immeubleNom}
-        </Link>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="flex items-center gap-3 text-2xl font-semibold">
-            {lot.reference}
-            <StatutBadge statut={lot.statut} />
-          </h1>
-          {!lot.archive ? (
-            <div className="flex flex-wrap gap-2">
+      <PageHeader
+        retour={{ href: `/patrimoine/${lot.immeubleId}`, libelle: `${t("retourImmeuble")} — ${lot.immeubleNom}` }}
+        titre={lot.reference}
+        statut={<StatutBadge statut={lot.statut} />}
+        sousTitre={occupe ? t("statutBail") : undefined}
+        actions={
+          !lot.archive ? (
+            <>
               <Link href={`/patrimoine/lots/${id}/modifier`} className={buttonVariants({ variant: "outline" })}>
                 {t("modifier")}
               </Link>
@@ -90,13 +90,12 @@ export function LotFiche() {
                   {t("archiver")}
                 </Button>
               ) : null}
-            </div>
+            </>
           ) : (
-            <span className="text-sm text-muted-foreground">{t("archive")}</span>
-          )}
-        </div>
-        {occupe ? <p className="text-sm text-muted-foreground">{t("statutBail")}</p> : null}
-      </div>
+            <StatutPastille statut="TERMINE" libelle={t("archive")} />
+          )
+        }
+      />
       {erreur ? (
         <p role="alert" className="text-sm text-destructive">
           {erreur}

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { useTransactionsEnLigne } from "@/hooks/use-paiement-en-ligne";
 import { formaterFcfa } from "@/lib/baux";
 import type { components } from "@/lib/api/schema";
@@ -31,9 +31,7 @@ export function TransactionsListe() {
       id: "statut",
       entete: t("statut"),
       cellule: (x) => (
-        <Badge variant={x.statut === "CONFIRMEE" ? "default" : x.statut === "ANOMALIE" ? "destructive" : "secondary"} data-testid="statut-transaction">
-          {x.statut ? t(`statuts.${x.statut}`) : ""}
-        </Badge>
+        <StatutPastille statut={x.statut} libelle={x.statut ? t(`statuts.${x.statut}`) : ""} testid="statut-transaction" />
       ),
     },
   ];

@@ -75,8 +75,9 @@ export function FicheForm({ champs, valeurs = {}, contactRequis = false, onSubmi
   }
 
   return (
-    <form onSubmit={form.handleSubmit(soumettre)} noValidate className="max-w-2xl">
+    <form onSubmit={form.handleSubmit(soumettre)} noValidate className="max-w-3xl rounded-xl border bg-card p-6 shadow-carte">
       <FieldGroup>
+        <div className="grid gap-4 sm:grid-cols-2">
         {champs.map((c, index) => {
           if (c.type === "select") {
             return <SelectField key={c.nom} control={form.control} name={c.nom} label={c.libelle} options={c.options ?? []} />;
@@ -88,7 +89,7 @@ export function FicheForm({ champs, valeurs = {}, contactRequis = false, onSubmi
                 control={form.control}
                 name={c.nom}
                 render={({ field }) => (
-                  <Field>
+                  <Field className="sm:col-span-2">
                     <FieldLabel htmlFor={c.nom}>{c.libelle}</FieldLabel>
                     <Textarea {...field} id={c.nom} rows={3} />
                     {c.aide ? <FieldDescription>{c.aide}</FieldDescription> : null}
@@ -98,18 +99,19 @@ export function FicheForm({ champs, valeurs = {}, contactRequis = false, onSubmi
             );
           }
           return (
-            <div key={c.nom}>
+            <div key={c.nom} className={c.nom === "nom" || c.nom === "adresse" ? "sm:col-span-2" : undefined}>
               <TextField control={form.control} name={c.nom} label={c.libelle} type={c.type ?? "text"} autoFocus={index === 0} />
               {c.aide ? <FieldDescription className="mt-1">{c.aide}</FieldDescription> : null}
             </div>
           );
         })}
+        </div>
         {erreur ? (
           <p role="alert" className="text-sm text-destructive">
             {erreur}
           </p>
         ) : null}
-        <div className="flex gap-2">
+        <div className="flex gap-2 border-t pt-4">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? t("enregistrement") : t("enregistrer")}
           </Button>

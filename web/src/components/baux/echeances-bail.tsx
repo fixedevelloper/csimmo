@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEcheances } from "@/hooks/use-baux";
 import { formaterFcfa } from "@/lib/baux";
@@ -30,9 +30,7 @@ export function EcheancesBail({ bailId }: { bailId: string }) {
       id: "statut",
       entete: t("statut"),
       cellule: (e) => (
-        <Badge variant={e.statut === "PAYEE" ? "default" : e.statut === "EN_RETARD" ? "destructive" : "secondary"} data-testid="statut-echeance">
-          {e.statut ? t(`statuts.${e.statut}`) : ""}
-        </Badge>
+        <StatutPastille statut={e.statut} libelle={e.statut ? t(`statuts.${e.statut}`) : ""} testid="statut-echeance" />
       ),
     },
   ];

@@ -74,7 +74,8 @@ test("locataire → CNI → garant → pièce chiffrée → recherche", async ({
   await expect(page.getByRole("heading", { name: nom, level: 1 })).toBeVisible();
   await expect(page.getByTestId("numero-cni")).toHaveText("CNI-E2E-998877");
 
-  // Garant
+  // Garant (onglet « Garants et pièces »)
+  await page.getByRole("tab", { name: "Garants et pièces" }).click();
   await page.getByRole("button", { name: "Ajouter un garant" }).click();
   await page.getByLabel("Nom", { exact: true }).fill("Marie Mbarga");
   await page.getByLabel("Lien avec le locataire").fill("Mère");

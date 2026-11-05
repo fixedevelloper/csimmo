@@ -64,11 +64,14 @@ test("bail : assistant en 4 étapes → PDF → activation → chevauchement ref
   await page.getByRole("button", { name: "Activer", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Activer" }).click();
   await expect(page.getByTestId("statut-bail")).toHaveText("Actif");
+  await page.getByRole("tab", { name: "Documents" }).click();
   await expect(page.getByText("Exemplaire n° 1")).toBeVisible();
+  await page.getByRole("tab", { name: "Échéances" }).click();
 
   // échéances générées à l'activation (événement asynchrone) : les 2 mois d'avance soldent les deux premières
   await expect(async () => {
     await page.reload();
+    await page.getByRole("tab", { name: "Échéances" }).click();
     await expect(page.getByTestId("statut-echeance").first()).toHaveText("Payée", { timeout: 3000 });
   }).toPass({ timeout: 30_000 });
   await expect(page.getByTestId("statut-echeance").nth(1)).toHaveText("Payée");

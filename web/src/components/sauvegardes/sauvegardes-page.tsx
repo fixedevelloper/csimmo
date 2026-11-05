@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -129,7 +129,7 @@ export function SauvegardesPage() {
                   <td>{s.version}</td>
                   <td>{formaterOctets(s.tailleOctets, locale)}</td>
                   <td>
-                    <Badge variant={s.externe === "OK" ? "default" : s.externe === "ECHEC" ? "destructive" : "secondary"}>{t(`externe.${s.externe}`)}</Badge>
+                    <StatutPastille statut={s.externe} libelle={t(`externe.${s.externe}`)} />
                   </td>
                   <td className="text-right">
                     <Button

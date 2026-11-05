@@ -12,7 +12,10 @@ import { DocumentsPaiement } from "@/components/finance/documents-paiement";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { ErrorDisplay } from "@/components/error-display";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/page-header";
+import { InfoList, Section } from "@/components/section";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBail, useDocumentsBail } from "@/hooks/use-baux";
@@ -67,93 +70,123 @@ export function BailFiche({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="flex items-center gap-3 text-2xl font-semibold">
-          {bail.numero} <BailStatutBadge statut={bail.statut} />
-        </h1>
-        <div className="flex flex-wrap gap-2">
-          <a href={urlApercuBail(id)} target="_blank" rel="noopener noreferrer" className="inline-flex h-8 items-center rounded-lg border px-3 text-sm">
-            {t("apercuPdf")}
-          </a>
-          {brouillon ? (
-            <>
-              <Button onClick={() => setConfirmation("activer")}>{t("activer")}</Button>
-              <Button variant="outline" onClick={() => setConfirmation("supprimer")}>
-                {t("supprimer")}
-              </Button>
-            </>
-          ) : null}
-          {actif ? (
-            <>
-              {bail.dateFin ? (
-                <Button variant="outline" onClick={() => setPanneau("renouveler")}>
-                  {t("renouveler")}
+      <PageHeader
+        retour={{ href: "/baux", libelle: t("titre") }}
+        titre={bail.numero}
+        statut={<BailStatutBadge statut={bail.statut} />}
+        actions={
+          <>
+            <a href={urlApercuBail(id)} target="_blank" rel="noopener noreferrer" className="inline-flex h-8 items-center rounded-lg border px-3 text-sm">
+              {t("apercuPdf")}
+            </a>
+            {brouillon ? (
+              <>
+                <Button onClick={() => setConfirmation("activer")}>{t("activer")}</Button>
+                <Button variant="outline" onClick={() => setConfirmation("supprimer")}>
+                  {t("supprimer")}
                 </Button>
-              ) : null}
-              <Button variant="outline" onClick={() => setPanneau("resilier")}>
-                {t("resilier")}
-              </Button>
-            </>
-          ) : null}
-        </div>
-      </div>
+              </>
+            ) : null}
+            {actif ? (
+              <>
+                {bail.dateFin ? (
+                  <Button variant="outline" onClick={() => setPanneau("renouveler")}>
+                    {t("renouveler")}
+                  </Button>
+                ) : null}
+                <Button variant="outline" onClick={() => setPanneau("resilier")}>
+                  {t("resilier")}
+                </Button>
+              </>
+            ) : null}
+          </>
+        }
+      />
 
-      {erreur ? (
+      {!panneau && erreur ? (
         <p role="alert" className="text-sm text-destructive">
           {erreur}
         </p>
       ) : null}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("conditions")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid grid-cols-[12rem_1fr] gap-x-4 gap-y-2 text-sm">
-            <dt className="text-muted-foreground">{t("lot")}</dt>
-            <dd>
-              {bail.immeubleNom} — {bail.lotReference}
-            </dd>
-            <dt className="text-muted-foreground">{t("locataire")}</dt>
-            <dd>{bail.locataireNom}</dd>
-            <dt className="text-muted-foreground">{t("garants")}</dt>
-            <dd>{(bail.garants ?? []).map((g) => g.nom).join(", ") || "—"}</dd>
-            <dt className="text-muted-foreground">{t("periode")}</dt>
-            <dd>
-              {bail.dateDebut} → {bail.dateFin ?? t("sansFin")}
-            </dd>
-            <dt className="text-muted-foreground">{t("loyer")}</dt>
-            <dd>{formaterFcfa(bail.loyer, locale)}</dd>
-            <dt className="text-muted-foreground">{t("charges")}</dt>
-            <dd>{formaterFcfa(bail.charges, locale)}</dd>
-            <dt className="text-muted-foreground">{t("periodicite")}</dt>
-            <dd>{bail.periodicite ? t(`periodicites.${bail.periodicite}`) : "—"}</dd>
-            <dt className="text-muted-foreground">{t("jourEcheance")}</dt>
-            <dd>{bail.jourEcheance}</dd>
-            <dt className="text-muted-foreground">{t("caution")}</dt>
-            <dd>{formaterFcfa(bail.caution, locale)}</dd>
-            <dt className="text-muted-foreground">{t("moisAvance")}</dt>
-            <dd>{bail.moisAvance}</dd>
-            <dt className="text-muted-foreground">{t("preavisMois")}</dt>
-            <dd>{bail.preavisMois}</dd>
-            {bail.dateSortie ? (
-              <>
-                <dt className="text-muted-foreground">{t("dateSortie")}</dt>
-                <dd>
-                  {bail.dateSortie} ({t("notifieLe", { date: bail.dateNotificationPreavis ?? "" })}) — {bail.motifResiliation}
-                </dd>
-              </>
-            ) : null}
-          </dl>
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="conditions">
+        <TabsList variant="line" className="h-10 border-b">
+          <TabsTrigger value="conditions">{t("onglets.conditions")}</TabsTrigger>
+          {!brouillon ? <TabsTrigger value="echeances">{t("onglets.echeances")}</TabsTrigger> : null}
+          {!brouillon ? <TabsTrigger value="documents">{t("onglets.documents")}</TabsTrigger> : null}
+        </TabsList>
+        <TabsContent value="conditions" className="pt-4">
+          <Section titre={t("conditions")}>
+          <InfoList
+            items={[
+              { libelle: t("lot"), valeur: `${bail.immeubleNom} — ${bail.lotReference}` },
+              { libelle: t("locataire"), valeur: bail.locataireNom },
+              { libelle: t("garants"), valeur: (bail.garants ?? []).map((g) => g.nom).join(", ") },
+              { libelle: t("periode"), valeur: `${bail.dateDebut} → ${bail.dateFin ?? t("sansFin")}` },
+              { libelle: t("loyer"), valeur: formaterFcfa(bail.loyer, locale) },
+              { libelle: t("charges"), valeur: formaterFcfa(bail.charges, locale) },
+              { libelle: t("periodicite"), valeur: bail.periodicite ? t(`periodicites.${bail.periodicite}`) : undefined },
+              { libelle: t("jourEcheance"), valeur: bail.jourEcheance },
+              { libelle: t("caution"), valeur: formaterFcfa(bail.caution, locale) },
+              { libelle: t("moisAvance"), valeur: bail.moisAvance },
+              { libelle: t("preavisMois"), valeur: bail.preavisMois },
+              ...(bail.dateSortie
+                ? [{ libelle: t("dateSortie"), valeur: `${bail.dateSortie} (${t("notifieLe", { date: bail.dateNotificationPreavis ?? "" })}) — ${bail.motifResiliation}` }]
+                : []),
+            ]}
+          />
+          </Section>
+        </TabsContent>
+        {!brouillon ? (
+          <TabsContent value="echeances" className="pt-4">
+            <EcheancesBail bailId={id} />
+          </TabsContent>
+        ) : null}
+        {!brouillon ? (
+          <TabsContent value="documents" className="flex flex-col gap-6 pt-4">
+      {!brouillon ? (
+        <Section titre={t("quittancesRecus")}>
+            <DocumentsPaiement bailId={id} />
+          </Section>
+      ) : null}
 
-      {panneau === "resilier" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("resilier")}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex max-w-xl flex-col gap-3">
+      {!brouillon ? (
+        <Section titre={t("documents")}>
+          <div className="flex flex-col gap-2 text-sm">
+            {(documents.data ?? []).length === 0 ? <p className="text-muted-foreground">{t("aucunDocument")}</p> : null}
+            {(documents.data ?? []).map((d) => (
+              <a key={d.id} href={urlPhoto(d.fichierId ?? "")} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">
+                {t("exemplaire", { version: d.version ?? 0 })} — {d.genereLe ? new Date(d.genereLe).toLocaleString(locale) : ""}
+              </a>
+            ))}
+            <div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  void executer(async () => {
+                    deballer(await api.POST("/api/v1/baux/{id}/documents", { params: { path: { id } } }));
+                    await rafraichir();
+                  })
+                }
+              >
+                {t("genererExemplaire")}
+              </Button>
+            </div>
+          </div>
+        </Section>
+      ) : null}
+
+          </TabsContent>
+        ) : null}
+      </Tabs>
+
+      <Sheet open={panneau === "resilier"} onOpenChange={(o) => !o && setPanneau(null)}>
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{t("resilier")}</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-3 px-4 pb-4">{panneau === "resilier" && erreur ? <p role="alert" className="text-sm text-destructive">{erreur}</p> : null}
             <label className="flex flex-col gap-1 text-sm">
               {t("dateNotification")}
               <Input type="date" value={notification} onChange={(e) => setNotification(e.target.value)} />
@@ -197,16 +230,15 @@ export function BailFiche({ id }: { id: string }) {
                 {t("annuler")}
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {panneau === "renouveler" ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("renouveler")}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex max-w-xl flex-col gap-3">
+          </div>
+        </SheetContent>
+      </Sheet>
+      <Sheet open={panneau === "renouveler"} onOpenChange={(o) => !o && setPanneau(null)}>
+        <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>{t("renouveler")}</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-3 px-4 pb-4">{panneau === "renouveler" && erreur ? <p role="alert" className="text-sm text-destructive">{erreur}</p> : null}
             <p className="text-sm text-muted-foreground">{t("renouvellementAide")}</p>
             <label className="flex flex-col gap-1 text-sm">
               {t("dateFin")}
@@ -240,52 +272,9 @@ export function BailFiche({ id }: { id: string }) {
                 {t("annuler")}
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {!brouillon ? <EcheancesBail bailId={id} /> : null}
-
-      {!brouillon ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("quittancesRecus")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DocumentsPaiement bailId={id} />
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {!brouillon ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("documents")}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2 text-sm">
-            {(documents.data ?? []).length === 0 ? <p className="text-muted-foreground">{t("aucunDocument")}</p> : null}
-            {(documents.data ?? []).map((d) => (
-              <a key={d.id} href={urlPhoto(d.fichierId ?? "")} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">
-                {t("exemplaire", { version: d.version ?? 0 })} — {d.genereLe ? new Date(d.genereLe).toLocaleString(locale) : ""}
-              </a>
-            ))}
-            <div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  void executer(async () => {
-                    deballer(await api.POST("/api/v1/baux/{id}/documents", { params: { path: { id } } }));
-                    await rafraichir();
-                  })
-                }
-              >
-                {t("genererExemplaire")}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <ConfirmDialog
         open={confirmation === "activer"}

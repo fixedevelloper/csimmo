@@ -502,6 +502,7 @@
     "choisirPhoto": "Choisir une photo"
   },
   "tiers": {
+    "onglets": { "infos": "Informations", "garantsPieces": "Garants et pièces", "conformite": "Conformité" },
     "recherche": "Rechercher (nom, téléphone)",
     "rechercher": "Rechercher",
     "nom": "Nom",
@@ -589,6 +590,7 @@
     "compte": "Compte"
   },
   "baux": {
+    "onglets": { "conditions": "Conditions", "echeances": "Échéances", "documents": "Documents" },
     "titre": "Baux",
     "nouveau": "Nouveau bail",
     "aucun": "Aucun bail.",

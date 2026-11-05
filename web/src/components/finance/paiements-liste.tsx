@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
@@ -70,12 +70,12 @@ export function PaiementsListe({ locataireId }: { locataireId?: string }) {
       cellule: (p) =>
         p.type === "CONTRE_PASSATION" ? (
           <span className="text-sm" title={p.motif}>
-            <Badge variant="outline">{t("contrePassation")}</Badge> {p.motif}
+            <StatutPastille statut="CONTRE_PASSATION" libelle={t("contrePassation")} /> {p.motif}
           </span>
         ) : p.contrePasse ? (
-          <Badge variant="outline">{t("annule")}</Badge>
+          <StatutPastille statut="ANNULE" libelle={t("annule")} />
         ) : (
-          <Badge variant="secondary">{t("valide")}</Badge>
+          <StatutPastille statut="OK" libelle={t("valide")} />
         ),
     },
     {

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
@@ -87,7 +87,7 @@ export function ConformitePage() {
             <li key={d.id} className="rounded-lg border p-3 text-sm" data-testid="demande">
               <div className="flex flex-wrap items-center gap-2">
                 <strong>{t(`types.${d.type}`)}</strong>
-                <Badge variant={d.statut === "EXECUTEE" ? "default" : d.statut === "REFUSEE" ? "destructive" : "secondary"}>{t(`statutsDemande.${d.statut}`)}</Badge>
+                <StatutPastille statut={d.statut} libelle={t(`statutsDemande.${d.statut}`)} />
                 <span className="text-muted-foreground">{d.recueLe ? new Date(d.recueLe).toLocaleDateString(locale) : ""}</span>
               </div>
               {d.motif ? <p>{d.motif}</p> : null}

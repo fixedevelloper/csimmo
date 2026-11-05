@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
-import { Badge } from "@/components/ui/badge";
+import { StatutPastille } from "@/components/statut-pastille";
 import { useDocumentsPaiement } from "@/hooks/use-finance";
 import { formaterFcfa } from "@/lib/baux";
 import { urlDocument, type DocumentDto } from "@/lib/finance";
@@ -32,11 +32,9 @@ export function DocumentsPaiement({ bailId, locataireId }: { bailId?: string; lo
       entete: t("statut"),
       cellule: (d) =>
         d.statut === "ANNULE" ? (
-          <Badge variant="outline" title={d.motifAnnulation}>
-            {t("annule")}
-          </Badge>
+          <StatutPastille statut="ANNULE" libelle={t("annule")} title={d.motifAnnulation} />
         ) : (
-          <Badge variant="secondary">{t("emis")}</Badge>
+          <StatutPastille statut="EMIS" libelle={t("emis")} />
         ),
     },
     {

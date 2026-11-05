@@ -96,7 +96,7 @@ export function ImmeubleForm({ immeuble }: { immeuble?: ImmeubleDto }) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(enregistrer)} noValidate className="max-w-2xl">
+    <form onSubmit={form.handleSubmit(enregistrer)} noValidate className="max-w-3xl rounded-xl border bg-card p-6 shadow-carte">
       <FieldGroup>
         <TextField control={form.control} name="nom" label={t("nom")} autoFocus />
         <TextField control={form.control} name="adresse" label={t("adresse")} autoComplete="street-address" />
@@ -133,7 +133,7 @@ export function ImmeubleForm({ immeuble }: { immeuble?: ImmeubleDto }) {
             {erreur}
           </p>
         ) : null}
-        <div className="flex gap-2">
+        <div className="flex gap-2 border-t pt-4">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? t("enregistrement") : t("enregistrer")}
           </Button>

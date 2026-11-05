@@ -51,8 +51,9 @@ test("tableau de bord : un impayé et un bail qui se termine apparaissent dans l
   await expect(page.getByRole("link", { name: nomLocataire })).toBeVisible();
   // le bail à échéance sous 60 jours est listé
   await expect(page.getByText(`Résidence Pilotage ${suffixe} — P1`)).toBeVisible();
-  // les barres du graphique existent (12 mois)
-  await expect(page.getByTestId("barre-attendu")).toHaveCount(12);
+  // le graphique existe (Recharts) et son tableau accessible porte les 12 mois
+  await expect(page.getByRole("img", { name: /Loyers attendus et encaissés/ })).toBeVisible();
+  await expect(page.locator("figure table tbody tr")).toHaveCount(12);
 
   await page.getByRole("link", { name: nomLocataire }).click();
   await expect(page.getByRole("heading", { name: "Compte locataire" })).toBeVisible();
