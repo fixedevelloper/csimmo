@@ -81,6 +81,8 @@ jobs:
   # Mise à jour réelle avec l'archive : précédente release → nouvelle. Ignoré (avec message) tant qu'aucune release précédente n'existe.
   mise-a-jour:
     needs: [archive]
+    # Condition explicite : sans elle le job est ignoré dès qu'un ancêtre l'est (ici « images », absent en répétition), et « publier » ne partirait jamais
+    if: ${{ !cancelled() && needs.archive.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
