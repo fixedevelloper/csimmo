@@ -14,7 +14,10 @@ RUN --mount=type=cache,target=/root/.m2 \
  && cp "$(ls app/target/app-*.jar | grep -v -E 'original|proguard' | head -n1)" /out/app.jar
 
 FROM eclipse-temurin:21-jre
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+ # apt 3.2.1 corrige CVE-2026-109518 (HIGH) présent dans eclipse-temurin:21-jre ; inutile dès que l'image de base l'embarque
+ && apt-get install -y --no-install-recommends --only-upgrade apt \
+ && rm -rf /var/lib/apt/lists/* \
  && useradd --system --uid 10001 --no-create-home immogest
 COPY --from=build /out/app.jar /app/app.jar
 USER immogest

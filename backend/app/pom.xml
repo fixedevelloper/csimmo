@@ -85,6 +85,13 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
+      <exclusions>
+        <!-- client HTTP asynchrone : le code n'utilise que S3Client (synchrone, Apache). Retire Netty de l'image (6 failles HIGH/CRITICAL). -->
+        <exclusion>
+          <groupId>software.amazon.awssdk</groupId>
+          <artifactId>netty-nio-client</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.tika</groupId>
