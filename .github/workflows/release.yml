@@ -1,0 +1,139 @@
+name: Release
+
+# Publier une version :  git tag v1.4.0 && git push origin v1.4.0
+#   1. construit, analyse (bloquant), publie et signe les images (images.yml appelé) ; refuse la clé publique provisoire ;
+#   2. fabrique l'archive immogest-1.4.0.tar.gz à partir des images PUBLIÉES (jamais reconstruites), la signe ;
+#   3. teste la mise à jour avec cette archive depuis la version précédente (donnée, fichiers, archive falsifiée, retour arrière) ;
+#   4. crée la GitHub Release avec l'archive, sa somme SHA-256 et sa signature.
+# Répétition sans publier : Actions > Release > Run workflow (version « 0.0.0-essai », étiquette source « edge ») : fabrique et signe l'archive,
+# teste la mise à jour, ne crée JAMAIS de Release (réservé à un vrai tag).
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version de l'archive (ex. 0.0.0-essai)"
+        required: true
+      source_tag:
+        description: "Étiquette des images à empaqueter (edge, sha-xxxxxxx…)"
+        required: true
+        default: edge
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # Sur un tag : toute la chaîne d'images (contrôle de clé, construction, analyse bloquante, signature, installation des images publiées)
+  images:
+    if: github.ref_type == 'tag'
+    uses: ./.github/workflows/images.yml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+  archive:
+    needs: [images]
+    if: ${{ !cancelled() && (needs.images.result == 'success' || needs.images.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+      id-token: write      # signature de l'archive (cosign, sans clé)
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version et étiquette source
+        id: v
+        run: |
+          if [ "${{ github.ref_type }}" = tag ]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"; echo "source=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"; echo "source=${{ inputs.source_tag }}" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Archive à partir des images publiées
+        working-directory: deploy
+        run: |
+          ./package-release.sh "${{ steps.v.outputs.version }}" --prefixe "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/immogest" --source-tag "${{ steps.v.outputs.source }}"
+      - uses: sigstore/cosign-installer@v3
+      - name: Signature de l'archive (cosign, sans clé)
+        working-directory: deploy/dist
+        run: cosign sign-blob --yes --bundle "immogest-${{ steps.v.outputs.version }}.tar.gz.bundle" "immogest-${{ steps.v.outputs.version }}.tar.gz"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archive-${{ steps.v.outputs.version }}
+          path: deploy/dist/*
+          retention-days: 30
+
+  # Mise à jour réelle avec l'archive : précédente release → nouvelle. Ignoré (avec message) tant qu'aucune release précédente n'existe.
+  mise-a-jour:
+    needs: [archive]
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive précédente
+        id: prec
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prec=$(gh release list --limit 1 --exclude-drafts --exclude-pre-releases --json tagName --jq '.[0].tagName // empty')
+          if [ -z "$prec" ]; then echo "::notice::Aucune release précédente : test de mise à jour ignoré (première version)."; echo "existe=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          mkdir -p precedente && gh release download "$prec" --pattern 'immogest-*.tar.gz' --pattern 'immogest-*.tar.gz.sha256' --dir precedente
+          echo "existe=true" >> "$GITHUB_OUTPUT"
+      - if: steps.prec.outputs.existe == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: archive-${{ needs.archive.outputs.version }}
+          path: nouvelle
+      - if: steps.prec.outputs.existe == 'true'
+        run: deploy/tests/mise-a-jour-archives.sh precedente/immogest-*.tar.gz "nouvelle/immogest-${{ needs.archive.outputs.version }}.tar.gz"
+      - if: failure()
+        run: docker compose -p immogest-essai logs --tail 100 2>/dev/null || true
+
+  publier:
+    needs: [archive, mise-a-jour]
+    if: ${{ !cancelled() && needs.archive.result == 'success' && needs.mise-a-jour.result == 'success' && github.ref_type == 'tag' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # création de la Release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: archive-${{ needs.archive.outputs.version }}
+          path: dist
+      - name: Release GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.archive.outputs.version }}
+        run: |
+          cat > notes.md <<NOTES
+          ## ImmoGest ${VERSION}
+
+          Installation ou mise à jour hors ligne : \`deploy/update.sh --archive immogest-${VERSION}.tar.gz --sha256 <somme du fichier .sha256>\` (voir \`docs/GUIDE-INSTALLATION.md\`).
+          La somme SHA-256 est vérifiée avant toute modification. L'archive est signée (\`.bundle\`, cosign sans clé) :
+
+          \`\`\`
+          cosign verify-blob immogest-${VERSION}.tar.gz --bundle immogest-${VERSION}.tar.gz.bundle \\
+            --certificate-identity-regexp '^https://github.com/${GITHUB_REPOSITORY}/\\.github/workflows/release\\.yml@refs/' \\
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com
+          \`\`\`
+          NOTES
+          pre=""; case "$VERSION" in *-*) pre="--prerelease" ;; esac
+          gh release create "${GITHUB_REF_NAME}" dist/* --title "ImmoGest ${VERSION}" --notes-file notes.md --generate-notes $pre --verify-tag

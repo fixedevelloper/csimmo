@@ -2,7 +2,8 @@ name: Images
 
 # Construit, analyse, publie et signe les images Docker (registre GHCR).
 #   - fusion sur main  → ghcr.io/<propriétaire>/immogest-<image>:edge et :sha-<court>
-#   - tag vX.Y.Z       → :X.Y.Z, :X.Y, :latest, avec analyse bloquante des failles et contrôle de la clé publique de l'éditeur
+#   - tag vX.Y.Z       → appelé par release.yml (workflow_call) : :X.Y.Z, :X.Y, :latest, avec analyse bloquante des failles et contrôle de la clé
+#                        publique de l'éditeur. Un tag ne déclenche PAS ce workflow directement (sinon deux constructions en parallèle).
 # Les pull requests sont validées par ci.yml (job « packaging » : construction + installation de bout en bout).
 
 on:
@@ -15,7 +16,7 @@ on:
       - ".github/dependabot.yml"
       - ".github/workflows/codeql.yml"
       - "mobile/**"
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  workflow_call:
   workflow_dispatch:
 
 permissions:

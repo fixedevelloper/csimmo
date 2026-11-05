@@ -98,7 +98,7 @@ info "Sauvegarde $SAUVEGARDE_ID faite"
 
 # ------------------------------------------------------------------ 3. mise en place
 for s in app web sauvegarde; do docker image inspect "immogest/$s:$ANCIENNE" >/dev/null 2>&1 && docker tag "immogest/$s:$ANCIENNE" "immogest/$s:avant-mise-a-jour"; done
-FICHIERS="docker-compose.yml Caddyfile.domaine Caddyfile.local Caddyfile.tunnel install.sh update.sh backup.sh restore.sh package.sh diagnostic.sh Dockerfile.app Dockerfile.web Dockerfile.sauvegarde"
+FICHIERS="docker-compose.yml Caddyfile.domaine Caddyfile.local Caddyfile.tunnel install.sh update.sh backup.sh restore.sh package.sh package-release.sh diagnostic.sh Dockerfile.app Dockerfile.web Dockerfile.sauvegarde"
 rm -rf .avant-mise-a-jour; mkdir .avant-mise-a-jour
 for f in $FICHIERS .env; do [ -f "$f" ] && cp -p "$f" .avant-mise-a-jour/; done
 if [ "$SOURCES" = 1 ]; then

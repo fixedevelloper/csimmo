@@ -7,7 +7,8 @@
 | Workflow | Quand | Fait quoi |
 | --- | --- | --- |
 | `ci.yml` | PR et fusions sur `main` | Backend (`mvnw verify`), web et portail éditeur (lint, types, tests, build), **audit des dépendances** (HIGH/CRITICAL bloquants), scénarios Playwright, mobile, **construction des images + installation de bout en bout** (`packaging`), construction des images de l'éditeur, mise à jour N-1 → N |
-| `images.yml` | fusion sur `main`, tag `vX.Y.Z` | Construit, **analyse (Trivy)**, **publie sur GHCR**, **signe (cosign)** les 5 images, puis **installe les images publiées** et vérifie qu'elles servent l'application |
+| `images.yml` | fusion sur `main` ; appelé par `release.yml` sur un tag | Construit, **analyse (Trivy)**, **publie sur GHCR**, **signe (cosign)** les 5 images, puis **installe les images publiées** et vérifie qu'elles servent l'application |
+| `release.yml` | tag `vX.Y.Z` ; manuel (répétition) | Appelle `images.yml`, fabrique l'**archive** à partir des images publiées, la **signe**, **teste la mise à jour** avec cette archive depuis la release précédente, puis crée la **GitHub Release** |
 | `codeql.yml` | **manuel seulement** (désactivé) | Analyse statique Java et TypeScript : indisponible sur un dépôt privé sans GitHub Advanced Security (« Code scanning is not enabled »). Déclencheurs à remettre si le dépôt devient public ou si GHAS est activé |
 | `dependabot.yml` | chaque semaine | PR groupées de mises à jour (Maven, npm ×2, pub, Docker, Actions) |
 
@@ -37,11 +38,18 @@ Aucun secret n'est nécessaire à ce stade : la publication utilise le `GITHUB_T
 
 ## Publier une version
 
-1. **Renseigner la clé publique de l'éditeur** dans `backend/app/src/main/resources/licence/cle-publique-editeur.txt` (sinon le tag est refusé par `garde-release`).
+1. **Renseigner la clé publique de l'éditeur** dans `backend/app/src/main/resources/licence/cle-publique-editeur.txt` (sinon le tag est refusé par le contrôle de `images.yml`).
 2. Mettre `CHANGELOG.md` à jour, fusionner sur `main`, attendre la CI verte.
-3. `git tag v1.4.0 && git push origin v1.4.0`.
-4. `images.yml` : contrôle de la clé → construction → **analyse bloquante** (CRITICAL/HIGH corrigeables) → publication → signature → installation des images publiées.
-5. Si une faille connue est acceptée, l'inscrire dans `.trivyignore` **avec sa raison et sa date de revue**.
+3. `git tag v1.4.0 && git push origin v1.4.0`. **`release.yml`** enchaîne :
+   1. `images.yml` : contrôle de la clé → construction → **analyse bloquante** (CRITICAL/HIGH corrigeables) → publication → signature → installation des images publiées ;
+   2. **archive** `immogest-1.4.0.tar.gz` (`deploy/package-release.sh`) à partir des images **publiées** (jamais reconstruites : on livre exactement ce qui a été analysé et signé), avec `RELEASE.txt` (révision git, condensés des images) et sa somme `.sha256` ; signature de l'archive (`.bundle`, cosign sans clé) ;
+   3. **test de mise à jour réel** (`deploy/tests/mise-a-jour-archives.sh`) : installe l'archive de la release précédente, crée des données et un fichier, met à jour avec la nouvelle archive, vérifie santé, base et fichiers, **refuse une archive falsifiée**, vérifie le **retour arrière** sur un échec simulé. Ignoré (avec un message) pour la toute première version ;
+   4. **GitHub Release** : archive, somme et signature en pièces jointes (version contenant un tiret, ex. `1.4.0-rc1` : « pré-release »).
+4. Si une faille connue est acceptée, l'inscrire dans `.trivyignore` **avec sa raison et sa date de revue**.
+
+**Répétition sans rien publier** : Actions > Release > Run workflow, version `0.0.0-essai`, étiquette source `edge` (ou `sha-xxxxxxx`). Fabrique et signe l'archive à partir de ces images et la garde 30 jours en artefact ; ne crée **jamais** de Release (réservé à un vrai tag).
+
+**Test local sans GitHub** : `deploy/package-release.sh 0.0.1 --local --source-tag <étiquette locale>` (deux fois, deux versions), puis `PORT_HTTP=18081 PORT_HTTPS=18443 deploy/tests/mise-a-jour-archives.sh dist/immogest-0.0.1.tar.gz dist/immogest-0.0.2.tar.gz` (projet Docker isolé `immogest-essai`, détruit à la fin).
 
 ## Vérifier une image avant de l'installer
 
@@ -69,9 +77,11 @@ cd deploy && ./install.sh --mode domaine --site immo.exemple.cm --version 1.4.0 
 
 ## Ce qui n'est pas encore fait
 
-- **Archive de release et publication de la version dans le serveur de licences** (phase 3) : `package.sh` est à rejouer dans un workflow de release, qui attache l'archive et sa somme à la GitHub Release et appelle l'API de publication des versions. Il faut décider d'un jeton d'API pour le serveur de licences (il n'a aujourd'hui qu'une connexion par mot de passe).
+- **Téléchargement par les clients** : dans un dépôt **privé**, les pièces jointes d'une Release ne se téléchargent pas sans authentification GitHub, or `update.sh --url` fait un `curl` simple. Il faut décider où héberger l'archive pour les clients : un stockage objet (S3, B2…) en lecture publique ou par lien signé, alimenté par le workflow, **ou** continuer à remettre l'archive (clé USB, lien d'envoi) avec sa somme. Tant que ce n'est pas tranché, `update.sh --archive` fonctionne, pas la mise à jour « en un clic » depuis le serveur de licences.
+- **Publication de la version dans le serveur de licences** (`POST /api/v1/versions`) : dépend du point précédent (URL à enregistrer) et d'un jeton d'API (il n'a aujourd'hui qu'une connexion par mot de passe).
 - **Déploiement du staging et de l'éditeur** (phase 4) : pas de serveur ni de compose pour `license-server` / `license-web`.
 - **Application mobile** (phase 5) : pas de build Android en CI.
 - **Audit des dépendances Java** (OWASP dependency-check) : seul Dependabot les surveille.
-- **Actions épinglées par condensé** (`uses: …@<sha>`) plutôt que par version majeure : durcissement à faire une fois le dépôt en place (Dependabot tient alors les condensés à jour).
+- **Actions épinglées par condensé** (`uses: …@<sha>`) plutôt que par version majeure.
 - **arm64** : non construit.
+- **Première release réelle** : jamais exécutée (bloquée par la clé publique de l'éditeur) ; seule la répétition et l'essai local ont été vérifiés.

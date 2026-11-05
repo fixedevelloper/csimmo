@@ -10,6 +10,7 @@
 #                      --s3-access-key ... --s3-secret-key ... [--s3-region ...]
 #                  --port-http N --port-https N (si 80 / 443 sont déjà utilisés)
 # Autres options : --version X --licence-serveur-url URL --cle-publique BASE64 --images-prebuilt (tirer les images au lieu de les construire)
+#                  --images-chargees (images déjà dans Docker, ex. `docker load` d'une archive de release : ni pull ni construction)
 #                  --pas-de-demarrage --yes (aucune question)
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -36,6 +37,7 @@ while [ $# -gt 0 ]; do
     --licence-serveur-url) LICENCE_URL="${2:-}"; shift 2 ;;
     --cle-publique) CLE_PUBLIQUE="${2:-}"; shift 2 ;;
     --images-prebuilt) PREBUILT=1; shift ;;
+    --images-chargees) PREBUILT=2; shift ;;
     --pas-de-demarrage) DEMARRER=0; shift ;;
     --yes) YES=1; shift ;;
     -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
@@ -183,7 +185,10 @@ fi
 
 # ------------------------------------------------------------------ démarrage
 if [ "$DEMARRER" = 0 ]; then info "Configuration écrite. Démarrage : cd deploy && docker compose up -d --build"; exit 0; fi
-if [ "$PREBUILT" = 1 ]; then
+if [ "$PREBUILT" = 2 ]; then
+  info "Images déjà chargées : aucune construction ni téléchargement"
+  docker compose up -d --no-build
+elif [ "$PREBUILT" = 1 ]; then
   info "Téléchargement des images"; docker compose pull app web sauvegarde
   docker compose up -d --no-build   # jamais de construction locale : on installe exactement les images publiées
 else
