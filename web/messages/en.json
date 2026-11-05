@@ -84,6 +84,13 @@
     "aucunBail": "No lease ends soon.",
     "dansJours": "in {n} d",
     "sortieAnnoncee": "move-out announced",
+    "occupation": {
+      "titre": "Portfolio occupancy",
+      "occupe": "occupied",
+      "occupes": "Occupied",
+      "libres": "Vacant",
+      "travaux": "Under works"
+    },
     "serie": {
       "titre": "Rent expected and collected by due month (12 months)",
       "attendu": "Expected",

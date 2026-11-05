@@ -1,60 +1,67 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { abreger, formaterTaux, type MoisDto } from "@/lib/dashboard";
 import { formaterFcfa } from "@/lib/baux";
 
-const H = 180;
-const LARGEUR_GROUPE = 56;
-
 /**
- * Barres groupées « attendu / encaissé » par mois, en SVG (aucune bibliothèque de graphiques). Le tableau masqué en dessous donne
- * les mêmes chiffres aux lecteurs d'écran.
+ * Barres groupées « attendu / encaissé » par mois (Recharts, ADR 0008). Le tableau masqué en dessous donne les mêmes chiffres
+ * aux lecteurs d'écran ; le conteneur porte le rôle « img » et son libellé.
  */
 export function BarresAttenduEncaisse({ mois }: { mois: MoisDto[] }) {
   const t = useTranslations("dashboard.serie");
   const locale = useLocale();
-  const max = Math.max(1, ...mois.map((m) => Math.max(m.attendu ?? 0, m.encaisse ?? 0)));
-  const largeur = mois.length * LARGEUR_GROUPE + 48;
-  const echelle = (v: number) => (v / max) * H;
   const etiquette = (iso?: string) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString(locale, { month: "short" }) : "");
+  const donnees = mois.map((m) => ({ ...m, libelle: etiquette(m.mois), attendu: m.attendu ?? 0, encaisse: m.encaisse ?? 0 }));
 
   return (
     <figure className="flex flex-col gap-2">
-      <svg role="img" aria-label={t("titre")} viewBox={`0 0 ${largeur} ${H + 34}`} className="h-64 w-full">
-        <title>{t("titre")}</title>
-        {[0, 0.5, 1].map((f) => (
-          <g key={f}>
-            <line x1={44} x2={largeur} y1={H - f * H} y2={H - f * H} stroke="currentColor" strokeOpacity={0.12} />
-            <text x={40} y={H - f * H + 4} textAnchor="end" fontSize={10} fill="currentColor" fillOpacity={0.6}>
-              {abreger(max * f, locale)}
-            </text>
-          </g>
-        ))}
-        {mois.map((m, i) => {
-          const x = 48 + i * LARGEUR_GROUPE;
-          return (
-            <g key={m.mois}>
-              <rect x={x} y={H - echelle(m.attendu ?? 0)} width={20} height={echelle(m.attendu ?? 0)} className="fill-muted-foreground/40" data-testid="barre-attendu">
-                <title>{`${etiquette(m.mois)} — ${t("attendu")} : ${formaterFcfa(m.attendu, locale)}`}</title>
-              </rect>
-              <rect x={x + 22} y={H - echelle(m.encaisse ?? 0)} width={20} height={echelle(m.encaisse ?? 0)} className="fill-primary" data-testid="barre-encaisse">
-                <title>{`${etiquette(m.mois)} — ${t("encaisse")} : ${formaterFcfa(m.encaisse, locale)}`}</title>
-              </rect>
-              <text x={x + 21} y={H + 16} textAnchor="middle" fontSize={11} fill="currentColor">
-                {etiquette(m.mois)}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+      <div role="img" aria-label={t("titre")} className="h-64 w-full">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <BarChart data={donnees} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} barGap={3} barCategoryGap="22%">
+            <CartesianGrid vertical={false} stroke="currentColor" strokeOpacity={0.1} />
+            <XAxis dataKey="libelle" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: "currentColor", fillOpacity: 0.7 }} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              width={48}
+              tickFormatter={(v: number) => abreger(v, locale)}
+              tick={{ fontSize: 11, fill: "currentColor", fillOpacity: 0.6 }}
+            />
+            <Tooltip
+              cursor={{ fill: "currentColor", fillOpacity: 0.06 }}
+              content={({ active, payload }) => {
+                const m = active ? (payload?.[0]?.payload as (typeof donnees)[number] | undefined) : undefined;
+                if (!m) return null;
+                return (
+                  <div className="rounded-lg border bg-popover px-3 py-2 text-xs text-popover-foreground shadow-carte">
+                    <p className="mb-1 font-semibold capitalize">{new Date(`${m.mois}T00:00:00`).toLocaleDateString(locale, { month: "long", year: "numeric" })}</p>
+                    <p className="tabular">
+                      {t("attendu")} : <strong>{formaterFcfa(m.attendu, locale)}</strong>
+                    </p>
+                    <p className="tabular">
+                      {t("encaisse")} : <strong>{formaterFcfa(m.encaisse, locale)}</strong>
+                    </p>
+                    <p className="tabular text-muted-foreground">
+                      {t("taux")} : {formaterTaux(m.tauxBp, locale)}
+                    </p>
+                  </div>
+                );
+              }}
+            />
+            <Bar dataKey="attendu" name={t("attendu")} fill="var(--muted-foreground)" fillOpacity={0.35} radius={[4, 4, 0, 0]} isAnimationActive animationDuration={600} />
+            <Bar dataKey="encaisse" name={t("encaisse")} fill="var(--primary)" radius={[4, 4, 0, 0]} isAnimationActive animationDuration={600} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
       <figcaption className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <span className="inline-block size-3 rounded-sm bg-muted-foreground/40" aria-hidden /> {t("attendu")}
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block size-2.5 rounded-sm bg-muted-foreground/40" aria-hidden /> {t("attendu")}
         </span>
-        <span className="flex items-center gap-1">
-          <span className="inline-block size-3 rounded-sm bg-primary" aria-hidden /> {t("encaisse")}
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block size-2.5 rounded-sm bg-primary" aria-hidden /> {t("encaisse")}
         </span>
       </figcaption>
       <table className="sr-only">

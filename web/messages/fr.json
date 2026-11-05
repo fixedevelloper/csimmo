@@ -84,6 +84,13 @@
     "aucunBail": "Aucun bail n'arrive à échéance prochainement.",
     "dansJours": "dans {n} j",
     "sortieAnnoncee": "sortie annoncée",
+    "occupation": {
+      "titre": "Occupation du parc",
+      "occupe": "occupé",
+      "occupes": "Occupés",
+      "libres": "Libres",
+      "travaux": "En travaux"
+    },
     "serie": {
       "titre": "Loyers attendus et encaissés par mois d'échéance (12 mois)",
       "attendu": "Attendu",

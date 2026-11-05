@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
@@ -43,12 +44,12 @@ export function DataTable<T>({ colonnes, donnees, chargement, onPageChange, idLi
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-lg border">
+      <div className="overflow-hidden rounded-xl border bg-card shadow-carte">
         <Table>
-          <TableHeader>
-            <TableRow>
+          <TableHeader className="bg-muted/50">
+            <TableRow className="hover:bg-transparent">
               {colonnes.map((c) => (
-                <TableHead key={c.id} className={c.className}>
+                <TableHead key={c.id} className={`h-10 text-xs font-semibold uppercase tracking-wide text-muted-foreground ${c.className ?? ""}`}>
                   {c.entete}
                 </TableHead>
               ))}
@@ -67,13 +68,16 @@ export function DataTable<T>({ colonnes, donnees, chargement, onPageChange, idLi
               ))
             ) : lignes.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={colonnes.length} className="h-24 text-center text-muted-foreground">
-                  {messageVide ?? t("aucunResultat")}
+                <TableCell colSpan={colonnes.length} className="h-32 text-center text-muted-foreground">
+                  <span className="flex flex-col items-center gap-2">
+                    <Inbox className="size-6 opacity-60" aria-hidden />
+                    {messageVide ?? t("aucunResultat")}
+                  </span>
                 </TableCell>
               </TableRow>
             ) : (
               lignes.map((ligne) => (
-                <TableRow key={idLigne(ligne)}>
+                <TableRow key={idLigne(ligne)} className="transition-colors hover:bg-muted/40">
                   {colonnes.map((c) => (
                     <TableCell key={c.id} className={c.className}>
                       {c.cellule(ligne)}
@@ -90,6 +94,7 @@ export function DataTable<T>({ colonnes, donnees, chargement, onPageChange, idLi
         <div className="flex items-center gap-2">
           <span>{t("page", { page: page + 1, total: nbPages })}</span>
           <Button variant="outline" size="sm" disabled={page <= 0 || chargement} onClick={() => onPageChange(page - 1)}>
+            <ChevronLeft aria-hidden />
             {t("precedent")}
           </Button>
           <Button
@@ -99,6 +104,7 @@ export function DataTable<T>({ colonnes, donnees, chargement, onPageChange, idLi
             onClick={() => onPageChange(page + 1)}
           >
             {t("suivant")}
+            <ChevronRight aria-hidden />
           </Button>
         </div>
       </div>
