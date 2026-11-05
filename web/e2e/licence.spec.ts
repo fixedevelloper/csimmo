@@ -38,7 +38,7 @@ test("importer un fichier qui n'est pas une licence affiche une erreur traduite"
   await page.getByLabel("Contenu de la licence").fill("ceci n'est pas une licence");
   await page.getByRole("button", { name: "Importer la licence" }).click();
 
-  await expect(page.getByText("Ce fichier n'est pas une licence ImmoGest lisible.")).toBeVisible();
+  await expect(page.getByText("Ce fichier n'est pas une licence CSImmo lisible.")).toBeVisible();
   await expect(page.getByTestId("etat-licence")).toHaveText("Valide");
 });
 

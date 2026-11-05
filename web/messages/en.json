@@ -1,6 +1,6 @@
 {
   "app": {
-    "nom": "ImmoGest",
+    "nom": "CSImmo",
     "description": "Rental property management"
   },
   "nav": {
@@ -21,7 +21,7 @@
   },
   "auth": {
     "titre": "Sign in",
-    "sousTitre": "Sign in to your ImmoGest workspace",
+    "sousTitre": "Sign in to your CSImmo workspace",
     "identifiant": "Phone or e-mail",
     "motDePasse": "Password",
     "seConnecter": "Sign in",
@@ -136,7 +136,7 @@
     "FICHIER_IMAGE_ILLISIBLE": "Unreadable image.",
     "LICENCE_EXPIREE": "The licence has expired: the application is read-only.",
     "LICENCE_PALIER_ATTEINT": "The number of units allowed by your licence has been reached.",
-    "LICENCE_FORMAT_INVALIDE": "This file is not a readable ImmoGest licence.",
+    "LICENCE_FORMAT_INVALIDE": "This file is not a readable CSImmo licence.",
     "LICENCE_SIGNATURE_INVALIDE": "The licence signature is invalid: the file was modified or not issued by the publisher.",
     "LICENCE_MAUVAISE_EMPREINTE": "This licence was issued for another server. Ask the publisher for a transfer.",
     "LICENCE_PAS_ENCORE_VALIDE": "This licence has not started yet.",
@@ -285,7 +285,7 @@
     "TROP_DE_REQUETES": "Too many requests: try again in a moment."
   },
   "installation": {
-    "titre": "ImmoGest setup",
+    "titre": "CSImmo setup",
     "sousTitre": "It only takes a few minutes: import your licence, then create the administrator account.",
     "licenceTitre": "1. Licence",
     "empreinteTitre": "This server's fingerprint",
@@ -312,7 +312,7 @@
     "confirmationDifferente": "The passwords do not match",
     "installer": "Finish setup",
     "installationEnCours": "Setting up…",
-    "indisponible": "The ImmoGest server cannot be reached. Check that it is running, then reload the page."
+    "indisponible": "The CSImmo server cannot be reached. Check that it is running, then reload the page."
   },
   "parametres": {
     "titre": "Settings",
@@ -1084,7 +1084,7 @@
     },
     "diagnostic": "Diagnostics",
     "diag": {
-      "version": "ImmoGest version",
+      "version": "CSImmo version",
       "java": "Java",
       "base": "Database",
       "disque": "Disk space",

@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { LogoComplet } from "@/components/marque-logo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { etatInstallation } from "@/lib/auth/installation";
 import { LoginForm } from "./login-form";
@@ -18,7 +19,7 @@ export default async function LoginPage() {
         <LanguageSwitcher />
       </div>
       <div className="text-center">
-        <p className="text-2xl font-semibold">{t("app.nom")}</p>
+        <LogoComplet alt={t("app.nom")} className="mb-2" />
         <p className="text-muted-foreground">{t("auth.sousTitre")}</p>
       </div>
       <Suspense>

@@ -27,6 +27,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { LicenceBanner } from "@/components/licence-banner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { LogoCompact } from "@/components/marque-logo";
 import { useInactivityLogout } from "@/hooks/use-inactivity-logout";
 import { useMe } from "@/hooks/use-me";
 import { cn } from "cn";
@@ -83,7 +84,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       >
         <div className="flex h-14 items-center justify-between px-4">
-          <span className="text-lg font-semibold">{t("app.nom")}</span>
+          <LogoCompact nom={t("app.nom")} />
           <Button
             variant="ghost"
             size="icon"

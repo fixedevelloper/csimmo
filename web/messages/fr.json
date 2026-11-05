@@ -1,6 +1,6 @@
 {
   "app": {
-    "nom": "ImmoGest",
+    "nom": "CSImmo",
     "description": "Gestion immobilière locative"
   },
   "nav": {
@@ -21,7 +21,7 @@
   },
   "auth": {
     "titre": "Connexion",
-    "sousTitre": "Connectez-vous à votre espace ImmoGest",
+    "sousTitre": "Connectez-vous à votre espace CSImmo",
     "identifiant": "Téléphone ou e-mail",
     "motDePasse": "Mot de passe",
     "seConnecter": "Se connecter",
@@ -136,7 +136,7 @@
     "FICHIER_IMAGE_ILLISIBLE": "Image illisible.",
     "LICENCE_EXPIREE": "La licence a expiré : l'application est en lecture seule.",
     "LICENCE_PALIER_ATTEINT": "Le nombre de lots autorisé par votre licence est atteint.",
-    "LICENCE_FORMAT_INVALIDE": "Ce fichier n'est pas une licence ImmoGest lisible.",
+    "LICENCE_FORMAT_INVALIDE": "Ce fichier n'est pas une licence CSImmo lisible.",
     "LICENCE_SIGNATURE_INVALIDE": "La signature de la licence est invalide : le fichier a été modifié ou n'a pas été émis par l'éditeur.",
     "LICENCE_MAUVAISE_EMPREINTE": "Cette licence a été émise pour un autre serveur. Demandez un transfert à l'éditeur.",
     "LICENCE_PAS_ENCORE_VALIDE": "Cette licence n'a pas encore commencé.",
@@ -285,7 +285,7 @@
     "TROP_DE_REQUETES": "Trop de requêtes : réessayez dans quelques instants."
   },
   "installation": {
-    "titre": "Installation d'ImmoGest",
+    "titre": "Installation d'CSImmo",
     "sousTitre": "Quelques minutes suffisent : importez votre licence puis créez le compte administrateur.",
     "licenceTitre": "1. Licence",
     "empreinteTitre": "Empreinte de ce serveur",
@@ -312,7 +312,7 @@
     "confirmationDifferente": "Les mots de passe ne correspondent pas",
     "installer": "Terminer l'installation",
     "installationEnCours": "Installation…",
-    "indisponible": "Le serveur ImmoGest est injoignable. Vérifiez qu'il est démarré, puis rechargez la page."
+    "indisponible": "Le serveur CSImmo est injoignable. Vérifiez qu'il est démarré, puis rechargez la page."
   },
   "parametres": {
     "titre": "Paramètres",
@@ -1084,7 +1084,7 @@
     },
     "diagnostic": "Diagnostic",
     "diag": {
-      "version": "Version d'ImmoGest",
+      "version": "Version d'CSImmo",
       "java": "Java",
       "base": "Base de données",
       "disque": "Espace disque",
