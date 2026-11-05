@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/error/error_messages.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import 'server_setup_actions.dart';
 
@@ -52,15 +53,11 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l.appTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            Text(l.serveurTitre, style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 8),
-            Text(l.serveurExplication),
-            const SizedBox(height: 24),
+            EnteteMarque(titre: l.serveurTitre, sousTitre: l.serveurExplication),
             TextField(
               key: const Key('champ-serveur'),
               controller: _controller,
@@ -69,7 +66,6 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
               decoration: InputDecoration(
                 labelText: l.serveurUrlLabel,
                 hintText: l.serveurUrlHint,
-                border: const OutlineInputBorder(),
               ),
               onSubmitted: (_) => _valider(),
             ),

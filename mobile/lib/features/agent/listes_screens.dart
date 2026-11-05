@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import 'cache_terrain.dart';
 
@@ -29,7 +30,7 @@ class _LotsScreenState extends ConsumerState<LotsScreen> {
         padding: const EdgeInsets.all(12),
         child: TextField(
           key: const Key('recherche-lots'),
-          decoration: InputDecoration(labelText: l.rechercherLot, prefixIcon: const Icon(Icons.search), border: const OutlineInputBorder()),
+          decoration: InputDecoration(labelText: l.rechercherLot, prefixIcon: const Icon(Icons.search),),
           onChanged: (v) => setState(() => _q = v),
         ),
       ),
@@ -38,16 +39,16 @@ class _LotsScreenState extends ConsumerState<LotsScreen> {
           future: ref.read(cacheTerrainProvider).lots(_q),
           builder: (context, snap) {
             final lots = snap.data ?? const [];
-            if (snap.connectionState != ConnectionState.done) return const Center(child: CircularProgressIndicator());
-            if (lots.isEmpty) return Center(child: Text(l.aucunLot, key: const Key('aucun-lot')));
-            return ListView.separated(
+            if (snap.connectionState != ConnectionState.done) return const ListeSquelette();
+            if (lots.isEmpty) return EtatVide(icone: Icons.apartment_outlined, texte: l.aucunLot, cleTexte: const Key('aucun-lot'));
+            return ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               itemCount: lots.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (_, i) => ListTile(
+              itemBuilder: (_, i) => Card(child: ListTile(
                 key: Key('lot-${lots[i].id}'),
                 title: Text('${lots[i].immeubleNom} — ${lots[i].reference}'),
-                trailing: Chip(label: Text(_statut(l, lots[i].statut))),
-              ),
+                trailing: PastilleStatut(texte: _statut(l, lots[i].statut), ton: switch (lots[i].statut) { 'OCCUPE' => Ton.succes, 'EN_TRAVAUX' => Ton.info, _ => Ton.alerte }),
+              )),
             );
           },
         ),
@@ -75,7 +76,7 @@ class _LocatairesScreenState extends ConsumerState<LocatairesScreen> {
         padding: const EdgeInsets.all(12),
         child: TextField(
           key: const Key('recherche-locataires'),
-          decoration: InputDecoration(labelText: l.rechercherLocataire, prefixIcon: const Icon(Icons.search), border: const OutlineInputBorder()),
+          decoration: InputDecoration(labelText: l.rechercherLocataire, prefixIcon: const Icon(Icons.search),),
           onChanged: (v) => setState(() => _q = v),
         ),
       ),
@@ -84,12 +85,12 @@ class _LocatairesScreenState extends ConsumerState<LocatairesScreen> {
           future: ref.read(cacheTerrainProvider).chercherLocataires(_q, limite: 100),
           builder: (context, snap) {
             final liste = snap.data ?? const [];
-            if (snap.connectionState != ConnectionState.done) return const Center(child: CircularProgressIndicator());
-            if (liste.isEmpty) return Center(child: Text(l.aucunLocataire, key: const Key('aucun-locataire-liste')));
-            return ListView.separated(
+            if (snap.connectionState != ConnectionState.done) return const ListeSquelette();
+            if (liste.isEmpty) return EtatVide(icone: Icons.people_outline, texte: l.aucunLocataire, cleTexte: const Key('aucun-locataire-liste'));
+            return ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               itemCount: liste.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (_, i) => ListTile(key: Key('liste-locataire-${liste[i].id}'), title: Text(liste[i].nom), subtitle: liste[i].telephone == null ? null : Text(liste[i].telephone!)),
+              itemBuilder: (_, i) => Card(child: ListTile(key: Key('liste-locataire-${liste[i].id}'), title: Text(liste[i].nom), subtitle: liste[i].telephone == null ? null : Text(liste[i].telephone!))),
             );
           },
         ),

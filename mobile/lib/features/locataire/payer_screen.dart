@@ -8,6 +8,7 @@ import 'package:immogest_api/immogest_api.dart';
 import '../../core/error/app_error.dart';
 import '../../core/error/error_messages.dart';
 import '../../core/id/uuid.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import 'formatage.dart';
 import 'locataire_repository.dart';
@@ -146,7 +147,7 @@ class _PayerScreenState extends ConsumerState<PayerScreen> {
         padding: const EdgeInsets.all(16),
         child: switch (_phase) {
           _Phase.formulaire || _Phase.envoi => baux.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Column(children: [Squelette(hauteur: 56, rayon: 14), SizedBox(height: 12), Squelette(hauteur: 56, rayon: 14), SizedBox(height: 12), Squelette(hauteur: 56, rayon: 14)]),
               error: (e, _) => Center(child: Text(errorMessage(l, e))),
               data: (liste) {
                 final payables = liste.where((b) => b.statut != BailDtoStatutEnum.TERMINE || liste.length == 1).toList();
@@ -158,7 +159,7 @@ class _PayerScreenState extends ConsumerState<PayerScreen> {
                         DropdownButtonFormField<String>(
                           key: const Key('champ-bail'),
                           initialValue: _bailId,
-                          decoration: InputDecoration(labelText: l.payerBail, border: const OutlineInputBorder()),
+                          decoration: InputDecoration(labelText: l.payerBail,),
                           items: [for (final b in payables) DropdownMenuItem(value: b.id, child: Text('${b.immeubleNom ?? ''} — ${b.lotReference ?? ''}'))],
                           onChanged: (v) => setState(() => _bailId = v),
                         ),
@@ -168,7 +169,7 @@ class _PayerScreenState extends ConsumerState<PayerScreen> {
                         controller: _montant,
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]'))],
-                        decoration: InputDecoration(labelText: l.montantFcfa, border: const OutlineInputBorder()),
+                        decoration: InputDecoration(labelText: l.montantFcfa,),
                         validator: (v) {
                           final n = int.tryParse((v ?? '').replaceAll(RegExp(r'\s'), ''));
                           return n == null || n <= 0 || n > 20000000 ? l.montantInvalide : null;
@@ -189,14 +190,17 @@ class _PayerScreenState extends ConsumerState<PayerScreen> {
                         key: const Key('champ-telephone-paiement'),
                         controller: _telephone,
                         keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(labelText: l.payerTelephone, hintText: '+237 6XX XX XX XX', border: const OutlineInputBorder()),
+                        decoration: InputDecoration(labelText: l.payerTelephone, hintText: '+237 6XX XX XX XX',),
                         validator: (v) => RegExp(r'^\+?[0-9 .\-()]{9,20}$').hasMatch((v ?? '').trim()) ? null : l.payerTelephoneInvalide,
                       ),
                     ]),
                   ),
                   if (_erreur != null) Padding(padding: const EdgeInsets.only(top: 12), child: Text(_erreur!, key: const Key('erreur-paiement'), style: TextStyle(color: Theme.of(context).colorScheme.error))),
                   const SizedBox(height: 16),
-                  FilledButton(key: const Key('confirmer-paiement'), onPressed: _phase == _Phase.envoi ? null : () => _payer(payables), child: Text(_phase == _Phase.envoi ? l.envoiEnCours : l.payerConfirmer)),
+                  FilledButton(key: const Key('confirmer-paiement'), onPressed: _phase == _Phase.envoi ? null : () {
+                    HapticFeedback.mediumImpact();
+                    _payer(payables);
+                  }, child: Text(_phase == _Phase.envoi ? l.envoiEnCours : l.payerConfirmer)),
                 ]);
               },
             ),
@@ -221,7 +225,7 @@ class _Suivi extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return Center(
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        if (!delaiDepasse) const CircularProgressIndicator(),
+        if (!delaiDepasse) const SizedBox(width: 56, height: 56, child: CircularProgressIndicator(strokeWidth: 5)),
         const SizedBox(height: 16),
         Text(l.payerAttenteTitre, key: const Key('paiement-en-attente'), style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
         const SizedBox(height: 8),
@@ -258,7 +262,11 @@ class _Fin extends StatelessWidget {
     };
     return Center(
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(ok ? Icons.check_circle : Icons.error, size: 64, color: ok ? Colors.green : Theme.of(context).colorScheme.error),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: (ok ? const Color(0xFF16A34A) : Theme.of(context).colorScheme.error).withValues(alpha: 0.12)),
+          child: Icon(ok ? Icons.check_circle : Icons.error, size: 64, color: ok ? const Color(0xFF16A34A) : Theme.of(context).colorScheme.error),
+        ),
         const SizedBox(height: 12),
         Text(message, key: Key(ok ? 'paiement-confirme' : 'paiement-echoue'), textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 16),

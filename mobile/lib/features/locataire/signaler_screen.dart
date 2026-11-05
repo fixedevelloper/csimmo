@@ -5,6 +5,7 @@ import 'package:immogest_api/immogest_api.dart';
 import '../../core/error/app_error.dart';
 import '../../core/error/error_messages.dart';
 import '../../core/platform/plateforme.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import 'formatage.dart';
 import 'locataire_repository.dart';
@@ -14,6 +15,13 @@ String _statutSignalement(AppLocalizations l, SignalementDtoStatutEnum? s) => sw
       SignalementDtoStatutEnum.RESOLU => l.signalementResolu,
       SignalementDtoStatutEnum.REJETE => l.signalementRejete,
       _ => l.signalementNouveau,
+    };
+
+Ton _tonSignalement(SignalementDtoStatutEnum? s) => switch (s) {
+      SignalementDtoStatutEnum.EN_COURS => Ton.info,
+      SignalementDtoStatutEnum.RESOLU => Ton.succes,
+      SignalementDtoStatutEnum.REJETE => Ton.neutre,
+      _ => Ton.danger,
     };
 
 /// Signalement d'une panne (description + photo facultative) et suivi des signalements déjà faits.
@@ -83,7 +91,7 @@ class _SignalerScreenState extends ConsumerState<SignalerScreen> {
           minLines: 3,
           maxLines: 6,
           maxLength: 2000,
-          decoration: InputDecoration(labelText: l.signalerDescription, border: const OutlineInputBorder()),
+          decoration: InputDecoration(labelText: l.signalerDescription,),
           validator: (v) => (v ?? '').trim().length < 5 ? l.signalerDescriptionCourte : null,
         ),
       ),
@@ -103,22 +111,22 @@ class _SignalerScreenState extends ConsumerState<SignalerScreen> {
       if (_erreur != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(_erreur!, key: const Key('erreur-signalement'), style: TextStyle(color: Theme.of(context).colorScheme.error))),
       const SizedBox(height: 12),
       FilledButton(key: const Key('envoyer-signalement'), onPressed: _envoi ? null : _envoyer, child: Text(_envoi ? l.envoiEnCours : l.signalerEnvoyer)),
-      const Divider(height: 32),
-      Text(l.mesSignalements, style: Theme.of(context).textTheme.titleMedium),
+      const SizedBox(height: 28),
+      Text(l.mesSignalements, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+      const SizedBox(height: 8),
       precedents.when(
-        loading: () => const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+        loading: () => const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Squelette(hauteur: 64, rayon: 16)),
         error: (e, _) => Text(errorMessage(l, e), key: const Key('erreur-signalements')),
         data: (liste) => liste.isEmpty
             ? Padding(padding: const EdgeInsets.all(8), child: Text(l.aucunSignalement, key: const Key('aucun-signalement')))
             : Column(children: [
                 for (final s in liste)
-                  ListTile(
+                  Card(child: ListTile(
                     key: Key('signalement-${s.id}'),
-                    contentPadding: EdgeInsets.zero,
                     title: Text(s.description ?? '', maxLines: 2, overflow: TextOverflow.ellipsis),
                     subtitle: Text('${formaterDate(s.creeLe, locale)}${s.noteGestion == null ? '' : ' · ${s.noteGestion}'}'),
-                    trailing: Chip(label: Text(_statutSignalement(l, s.statut))),
-                  ),
+                    trailing: PastilleStatut(texte: _statutSignalement(l, s.statut), ton: _tonSignalement(s.statut)),
+                  )),
               ]),
       ),
     ]);

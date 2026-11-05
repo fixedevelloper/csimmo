@@ -4,6 +4,7 @@ import 'package:immogest_api/immogest_api.dart';
 
 import '../../core/error/app_error.dart';
 import '../../core/error/error_messages.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import 'formatage.dart';
 import 'locataire_repository.dart';
@@ -47,21 +48,20 @@ class _DocumentsScreenState extends ConsumerState<DocumentsScreen> {
         } catch (_) {}
       },
       child: documents.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ListeSquelette(),
         error: (e, _) => ListView(padding: const EdgeInsets.all(24), children: [
           Text(errorMessage(l, e), key: const Key('erreur-documents'), textAlign: TextAlign.center),
           FilledButton(onPressed: () => ref.invalidate(mesDocumentsProvider), child: Text(l.reessayer)),
         ]),
         data: (liste) => liste.isEmpty
-            ? ListView(padding: const EdgeInsets.all(24), children: [Text(l.aucunDocument, key: const Key('aucun-document'), textAlign: TextAlign.center)])
-            : ListView.separated(
-                padding: const EdgeInsets.all(8),
+            ? ListView(children: [EtatVide(icone: Icons.receipt_long_outlined, texte: l.aucunDocument, cleTexte: const Key('aucun-document'))])
+            : ListView.builder(
+                padding: const EdgeInsets.all(16),
                 itemCount: liste.length,
-                separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (_, i) {
                   final d = liste[i];
                   final quittance = d.type == 'QUITTANCE';
-                  return ListTile(
+                  return Card(child: ListTile(
                     key: Key('document-${d.id}'),
                     leading: Icon(quittance ? Icons.receipt_long : Icons.receipt_outlined),
                     title: Text('${quittance ? l.quittance : l.recu} ${d.numero ?? ''}'),
@@ -72,7 +72,7 @@ class _DocumentsScreenState extends ConsumerState<DocumentsScreen> {
                         ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.download),
                     onTap: _enCours == null ? () => _ouvrir(d) : null,
-                  );
+                  ));
                 },
               ),
       ),

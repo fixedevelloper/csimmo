@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/error/error_messages.dart';
 import '../../core/providers.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import 'auth_actions.dart';
 
@@ -89,15 +90,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final l = AppLocalizations.of(context);
     final serveur = ref.watch(serverSettingsProvider) ?? '';
     return Scaffold(
-      appBar: AppBar(title: Text(l.connexionTitre)),
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              Text(l.connexionServeur(serveur), style: Theme.of(context).textTheme.bodySmall),
-              const SizedBox(height: 16),
+              EnteteMarque(titre: l.connexionTitre, sousTitre: l.connexionServeur(serveur)),
               if (_etape == _Etape.code) ...[
                 Text(_info ?? l.deuxFacteursInfo),
                 const SizedBox(height: 16),
@@ -106,7 +105,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   controller: _code,
                   keyboardType: TextInputType.number,
                   autofillHints: const [AutofillHints.oneTimeCode],
-                  decoration: InputDecoration(labelText: l.codeLabel, border: const OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: l.codeLabel,),
                   validator: (v) => RegExp(r'^\d{6}$').hasMatch((v ?? '').trim()) ? null : l.codeSixChiffres,
                   onFieldSubmitted: (_) => _verifier(),
                 ),
@@ -117,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   autofillHints: const [AutofillHints.username],
-                  decoration: InputDecoration(labelText: l.identifiantLabel, border: const OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: l.identifiantLabel,),
                   validator: (v) => _requis(v, l),
                 ),
                 if (_etape == _Etape.motDePasse) ...[
@@ -127,7 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _motDePasse,
                     obscureText: true,
                     autofillHints: const [AutofillHints.password],
-                    decoration: InputDecoration(labelText: l.motDePasseLabel, border: const OutlineInputBorder()),
+                    decoration: InputDecoration(labelText: l.motDePasseLabel,),
                     validator: (v) => (v == null || v.isEmpty) ? l.champRequis : null,
                     onFieldSubmitted: (_) => _connecter(),
                   ),

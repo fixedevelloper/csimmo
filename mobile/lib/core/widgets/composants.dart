@@ -180,3 +180,33 @@ class TitreMarque extends StatelessWidget {
         Flexible(child: Text(texte, key: cleTexte, overflow: TextOverflow.ellipsis)),
       ]);
 }
+
+/// En-tête des écrans avant connexion : icône de la marque, titre et sous-titre.
+class EnteteMarque extends StatelessWidget {
+  const EnteteMarque({super.key, required this.titre, this.sousTitre});
+
+  final String titre;
+  final String? sousTitre;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = Theme.of(context).colorScheme;
+    return Column(children: [
+      const SizedBox(height: 16),
+      Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), boxShadow: [BoxShadow(color: c.primary.withValues(alpha: 0.25), blurRadius: 18, offset: const Offset(0, 8))]),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(22),
+          child: Image.asset('assets/brand/icone.png', width: 84, height: 84, errorBuilder: (_, _, _) => const SizedBox(width: 84, height: 84)),
+        ),
+      ),
+      const SizedBox(height: 18),
+      Text(titre, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+      if (sousTitre != null) ...[
+        const SizedBox(height: 6),
+        Text(sousTitre!, textAlign: TextAlign.center, style: TextStyle(color: c.onSurfaceVariant)),
+      ],
+      const SizedBox(height: 24),
+    ]);
+  }
+}

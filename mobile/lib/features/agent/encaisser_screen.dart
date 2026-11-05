@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/db/app_database.dart';
 import '../../core/error/app_error.dart';
 import '../../core/error/error_messages.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth_repository.dart';
 import '../locataire/formatage.dart';
@@ -139,19 +141,21 @@ class _EncaisserScreenState extends ConsumerState<EncaisserScreen> {
         TextField(
           key: const Key('recherche-locataire'),
           controller: _recherche,
-          decoration: InputDecoration(labelText: l.rechercherLocataire, prefixIcon: const Icon(Icons.search), border: const OutlineInputBorder()),
+          decoration: InputDecoration(labelText: l.rechercherLocataire, prefixIcon: const Icon(Icons.search),),
           onChanged: _chercher,
         ),
         const SizedBox(height: 8),
-        if (_resultats.isEmpty) Padding(padding: const EdgeInsets.all(16), child: Text(maj == null ? l.donneesAbsentesAide : l.aucunLocataire, key: const Key('aucun-locataire'), textAlign: TextAlign.center)),
+        if (_resultats.isEmpty) EtatVide(icone: Icons.person_search_outlined, texte: maj == null ? l.donneesAbsentesAide : l.aucunLocataire, cleTexte: const Key('aucun-locataire')),
         for (final r in _resultats)
-          ListTile(key: Key('locataire-${r.id}'), title: Text(r.nom), subtitle: r.telephone == null ? null : Text(r.telephone!), onTap: () => _choisirLocataire(r)),
+          Card(child: ListTile(key: Key('locataire-${r.id}'), title: Text(r.nom), subtitle: r.telephone == null ? null : Text(r.telephone!), trailing: const Icon(Icons.chevron_right), onTap: () => _choisirLocataire(r))),
       ] else ...[
-        ListTile(
-          key: const Key('locataire-choisi'),
-          contentPadding: EdgeInsets.zero,
-          title: Text(_locataire!.nom, style: Theme.of(context).textTheme.titleMedium),
-          trailing: TextButton(onPressed: () => setState(() => _locataire = null), child: Text(l.changer)),
+        Card(
+          child: ListTile(
+            key: const Key('locataire-choisi'),
+            leading: CircleAvatar(backgroundColor: Theme.of(context).colorScheme.primaryContainer, child: Icon(Icons.person, color: Theme.of(context).colorScheme.primary)),
+            title: Text(_locataire!.nom, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+            trailing: TextButton(onPressed: () => setState(() => _locataire = null), child: Text(l.changer)),
+          ),
         ),
         if (_baux.isEmpty)
           Text(l.aucunBailLocataire, key: const Key('aucun-bail-locataire'))
@@ -161,12 +165,12 @@ class _EncaisserScreenState extends ConsumerState<EncaisserScreen> {
             onChanged: (id) => setState(() => _bail = _baux.firstWhere((b) => b.id == id)),
             child: Column(children: [
               for (final b in _baux)
-                RadioListTile<String>(
+                Card(child: RadioListTile<String>(
                   key: Key('bail-${b.id}'),
                   value: b.id,
                   title: Text(b.libelle),
                   subtitle: Text('${b.numero} · ${l.mensuel(formaterFcfa(b.montantMensuel, locale))}'),
-                ),
+                )),
             ]),
           ),
         Form(
@@ -175,7 +179,7 @@ class _EncaisserScreenState extends ConsumerState<EncaisserScreen> {
             key: const Key('champ-montant'),
             controller: _montant,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: l.montantFcfa, border: const OutlineInputBorder()),
+            decoration: InputDecoration(labelText: l.montantFcfa,),
             validator: (v) {
               final n = int.tryParse((v ?? '').replaceAll(RegExp(r'\s'), ''));
               return n == null || n <= 0 ? l.montantInvalide : null;
@@ -186,7 +190,10 @@ class _EncaisserScreenState extends ConsumerState<EncaisserScreen> {
         const SizedBox(height: 12),
         FilledButton.icon(
           key: const Key('enregistrer-encaissement'),
-          onPressed: _enregistrement || _baux.isEmpty ? null : _enregistrer,
+          onPressed: _enregistrement || _baux.isEmpty ? null : () {
+            HapticFeedback.mediumImpact();
+            _enregistrer();
+          },
           icon: const Icon(Icons.save),
           label: Text(l.enregistrerEncaissement),
         ),
