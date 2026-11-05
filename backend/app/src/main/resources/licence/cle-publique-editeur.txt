@@ -5,3 +5,4 @@
 # puis coller ici le contenu de licence-public.key (une seule ligne). La clé PRIVÉE ne quitte jamais l'éditeur.
 #
 # Tant que cette ligne est absente, l'application refuse toute licence (sauf si IMMOGEST_LICENCE_CLE_PUBLIQUE est définie).
+MCowBQYDK2VwAyEAM1t3NvDC0sPDhViYiOGJ0HsNYpONqSawZlx60uJ+ppA=

@@ -4,7 +4,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+## [0.1.0] - 2026-11-05
+
+Première version.
+
 ### Ajouté
+- Clé publique de l'éditeur (Ed25519) renseignée dans `cle-publique-editeur.txt` : sans elle, le contrôle de `images.yml` refuse toute release et l'application refuse toute licence.
 - Étape 0.1 : squelette du monorepo (backend Maven multi-module, web, license-web, mobile Flutter), `deploy/docker-compose.dev.yml`, CI GitHub Actions, ADR 0001 et 0002.
 - Étape 0.2 : socle backend `app` (profils dev/test/prod, Flyway V1 avec registre d'événements Modulith et `audit_log` en ajout seul, `ProblemDetail` avec code métier, `BaseEntity`, modules `shared` et `audit`, `ModularityTests`, export OpenAPI, `/api/v1/health`).
 - Étape 0.2b : module `stockage` (S3 via AWS SDK v2, création du bucket au démarrage, `StockageService`, entité `Fichier`, `GET /api/v1/fichiers/{id}` avec contrôle d'accès et URL présignée optionnelle, détection du type par Tika, redimensionnement à 1600 px, chiffrement AES-256-GCM des fichiers sensibles), tests sur conteneur SeaweedFS.
