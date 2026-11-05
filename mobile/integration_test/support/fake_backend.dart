@@ -66,52 +66,52 @@ class FakeBackend {
     try {
       switch ((req.method, chemin)) {
         case ('GET', '/api/v1/health'):
-          return _json(req, 200, {'status': 'UP'});
+          return await _json(req, 200, {'status': 'UP'});
         case ('POST', '/api/v1/auth/login'):
           loginsAppeles++;
           final u = _utilisateurs[(json['identifiant'] as String? ?? '').toLowerCase()];
           if (u == null || u.motDePasse != json['motDePasse']) {
-            return _probleme(req, 401, 'IDENTIFIANTS_INVALIDES');
+            return await _probleme(req, 401, 'IDENTIFIANTS_INVALIDES');
           }
           if (u.deuxFacteurs) {
             _otpDemandes.add((json['identifiant'] as String).toLowerCase());
-            return _json(req, 200, {'deuxFacteursRequis': true});
+            return await _json(req, 200, {'deuxFacteursRequis': true});
           }
-          return _json(req, 200, _session(u));
+          return await _json(req, 200, _session(u));
         case ('POST', '/api/v1/auth/otp/demander'):
           final id = (json['identifiant'] as String? ?? '').toLowerCase();
           if (_utilisateurs[id] != null && !(_utilisateurs[id]!.motDePasse != null && _utilisateurs[id]!.role == 'GESTIONNAIRE')) {
             _otpDemandes.add(id);
           }
-          return _json(req, 202, null); // ne révèle jamais si le compte existe
+          return await _json(req, 202, null); // ne révèle jamais si le compte existe
         case ('POST', '/api/v1/auth/otp/verifier'):
           final id = (json['identifiant'] as String? ?? '').toLowerCase();
           final u = _utilisateurs[id];
           if (u == null || !_otpDemandes.contains(id) || json['code'] != codeOtp) {
-            return _probleme(req, 401, 'OTP_INVALIDE');
+            return await _probleme(req, 401, 'OTP_INVALIDE');
           }
           _otpDemandes.remove(id);
-          return _json(req, 200, _session(u));
+          return await _json(req, 200, _session(u));
         case ('POST', '/api/v1/auth/refresh'):
           refreshAppeles++;
           final jeton = json['refreshToken'] as String? ?? '';
           if (_refreshRevoques.contains(jeton)) {
             _refreshActifs.clear(); // réutilisation : toute la session est révoquée
-            return _probleme(req, 401, 'REFRESH_TOKEN_REUTILISE');
+            return await _probleme(req, 401, 'REFRESH_TOKEN_REUTILISE');
           }
           final u = _refreshActifs.remove(jeton);
-          if (u == null) return _probleme(req, 401, 'REFRESH_TOKEN_INVALIDE');
+          if (u == null) return await _probleme(req, 401, 'REFRESH_TOKEN_INVALIDE');
           _refreshRevoques.add(jeton);
-          return _json(req, 200, _session(u));
+          return await _json(req, 200, _session(u));
         case ('POST', '/api/v1/auth/logout'):
           final jeton = json['refreshToken'] as String? ?? '';
           if (_refreshActifs.remove(jeton) != null) _refreshRevoques.add(jeton);
-          return _json(req, 204, null);
+          return await _json(req, 204, null);
         case ('GET', '/api/v1/auth/moi'):
           final jeton = (req.headers.value('authorization') ?? '').replaceFirst('Bearer ', '');
           final u = _acces[jeton];
-          if (u == null) return _probleme(req, 401, 'TOKEN_EXPIRE');
-          return _json(req, 200, {
+          if (u == null) return await _probleme(req, 401, 'TOKEN_EXPIRE');
+          return await _json(req, 200, {
             'id': '00000000-0000-0000-0000-000000000001',
             'nom': u.nom,
             'telephone': u.telephone,
@@ -122,7 +122,7 @@ class FakeBackend {
             'verrouille': false,
           });
       }
-      return _probleme(req, 404, 'HTTP_404');
+      return await _probleme(req, 404, 'HTTP_404');
     } catch (_) {
       await _probleme(req, 500, 'ERREUR_INTERNE');
     }
