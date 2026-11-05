@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import { enApiError } from "@/lib/api/errors";
 import type { components } from "@/lib/api/schema";
+import { EnteteParametres } from "@/components/entete-parametres";
 
 type Previsualisation = components["schemas"]["PrevisualisationDto"];
 type Resultat = components["schemas"]["ResultatImportDto"];
@@ -94,8 +95,7 @@ export function ImportPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{t("titre")}</h1>
-      <p className="text-sm text-muted-foreground">{t("intro")}</p>
+      <EnteteParametres titre={t("titre")} sousTitre={t("intro")} />
 
       <section aria-labelledby="etape1" className="flex flex-col gap-2">
         <h2 id="etape1" className="text-lg font-semibold">

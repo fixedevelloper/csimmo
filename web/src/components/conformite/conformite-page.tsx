@@ -14,6 +14,7 @@ import { useMe } from "@/hooks/use-me";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import type { components } from "@/lib/api/schema";
+import { EnteteParametres } from "@/components/entete-parametres";
 
 type Demande = components["schemas"]["DemandeAnonymisationDto"];
 
@@ -69,7 +70,7 @@ export function ConformitePage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold">{t("titre")}</h1>
+      <EnteteParametres titre={t("titre")} />
       {erreur ? (
         <p role="alert" className="text-sm text-destructive">
           {erreur}

@@ -8,6 +8,7 @@ import { JournalEnvois } from "@/components/notifications/journal-envois";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCanaux } from "@/hooks/use-notifications";
 import { useMe } from "@/hooks/use-me";
+import { EnteteParametres } from "@/components/entete-parametres";
 
 export function NotificationsPage() {
   const t = useTranslations("notifications");
@@ -16,7 +17,7 @@ export function NotificationsPage() {
   const { data, error, refetch } = useCanaux();
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold">{t("titre")}</h1>
+      <EnteteParametres titre={t("titre")} />
       {admin ? (
         <section className="flex flex-col gap-4" aria-label={t("canauxTitre")}>
           <p className="text-sm text-muted-foreground">{t("intro")}</p>

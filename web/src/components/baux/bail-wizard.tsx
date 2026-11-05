@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { Check } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -142,10 +143,18 @@ export function BailWizard() {
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
-      <ol className="flex flex-wrap gap-2 text-sm" aria-label={t("etapes.titre")}>
+      <ol className="flex items-center gap-2 text-sm" aria-label={t("etapes.titre")}>
         {[1, 2, 3, 4].map((n) => (
-          <li key={n} aria-current={n === etape ? "step" : undefined} className={n === etape ? "font-semibold" : "text-muted-foreground"}>
-            {n}. {t(`etapes.e${n}`)}
+          <li key={n} aria-current={n === etape ? "step" : undefined} className="flex flex-1 items-center gap-2 last:flex-none">
+            <span
+              className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
+                n < etape ? "bg-primary text-primary-foreground" : n === etape ? "bg-primary/10 text-primary ring-2 ring-primary" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {n < etape ? <Check className="size-3.5" aria-hidden /> : n}
+            </span>
+            <span className={`hidden sm:inline ${n === etape ? "font-semibold" : "text-muted-foreground"}`}>{t(`etapes.e${n}`)}</span>
+            {n < 4 ? <span aria-hidden className={`h-px flex-1 ${n < etape ? "bg-primary" : "bg-border"}`} /> : null}
           </li>
         ))}
       </ol>
@@ -289,7 +298,7 @@ export function BailWizard() {
         </section>
       ) : null}
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 border-t pt-4">
         {etape > 1 ? (
           <Button type="button" variant="outline" onClick={() => setEtape(etape - 1)}>
             {t("precedent")}

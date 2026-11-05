@@ -10,6 +10,7 @@ import { FicheForm } from "@/components/tiers/fiche-form";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import { optionnel } from "@/lib/tiers";
+import { PageHeader } from "@/components/page-header";
 
 export function ProprietaireNouveau() {
   const t = useTranslations("tiers");
@@ -17,7 +18,7 @@ export function ProprietaireNouveau() {
   const queryClient = useQueryClient();
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{t("nouveauProprietaire")}</h1>
+      <PageHeader retour={{ href: "/proprietaires", libelle: t("proprietaires") }} titre={t("nouveauProprietaire")} />
       <FicheForm
         champs={champsProprietaire(t)}
         contactRequis

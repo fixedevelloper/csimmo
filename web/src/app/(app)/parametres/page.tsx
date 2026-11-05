@@ -3,12 +3,13 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/page-header";
 
 export default async function ParametresPage() {
   const t = await getTranslations("parametres");
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold">{t("titre")}</h1>
+      <PageHeader titre={t("titre")} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Link href="/parametres/licence" className="rounded-xl focus-visible:outline-2 focus-visible:outline-ring">
           <Card className="h-full transition-colors hover:bg-muted/50">

@@ -8,6 +8,7 @@ import { TransactionsListe } from "@/components/paiement-en-ligne/transactions-l
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMe } from "@/hooks/use-me";
 import { useFournisseurs } from "@/hooks/use-paiement-en-ligne";
+import { EnteteParametres } from "@/components/entete-parametres";
 
 export function PaiementEnLignePage() {
   const t = useTranslations("paiementEnLigne");
@@ -16,7 +17,7 @@ export function PaiementEnLignePage() {
   const { data, error, refetch } = useFournisseurs();
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-semibold">{t("titre")}</h1>
+      <EnteteParametres titre={t("titre")} />
       {admin ? (
         <section className="flex flex-col gap-4" aria-label={t("fournisseursTitre")}>
           <p className="text-sm text-muted-foreground">{t("intro")}</p>
