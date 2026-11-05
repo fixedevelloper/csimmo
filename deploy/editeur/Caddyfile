@@ -1,0 +1,30 @@
+# Hôte public : appelé par les installations des clients. Seules deux routes sont exposées.
+{$LICENCES_HOST} {
+  encode zstd gzip
+  header {
+    Strict-Transport-Security "max-age=31536000"
+    X-Content-Type-Options nosniff
+    -Server
+  }
+  @publiques path /api/v1/verification /api/v1/versions/derniere
+  handle @publiques {
+    request_body {
+      max_size 64KB
+    }
+    reverse_proxy license-server:8090
+  }
+  respond 404
+}
+
+# Portail éditeur : usage interne. Restreindre par IP si possible (remplacer 0.0.0.0/0).
+{$PORTAIL_HOST} {
+  encode zstd gzip
+  header {
+    Strict-Transport-Security "max-age=31536000"
+    X-Content-Type-Options nosniff
+    -Server
+  }
+  @interdit not remote_ip 0.0.0.0/0 ::/0
+  respond @interdit 403
+  reverse_proxy license-web:3000
+}

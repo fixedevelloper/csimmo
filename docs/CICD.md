@@ -79,7 +79,7 @@ cd deploy && ./install.sh --mode domaine --site immo.exemple.cm --version 1.4.0 
 
 - **Téléchargement par les clients** : dans un dépôt **privé**, les pièces jointes d'une Release ne se téléchargent pas sans authentification GitHub, or `update.sh --url` fait un `curl` simple. Il faut décider où héberger l'archive pour les clients : un stockage objet (S3, B2…) en lecture publique ou par lien signé, alimenté par le workflow, **ou** continuer à remettre l'archive (clé USB, lien d'envoi) avec sa somme. Tant que ce n'est pas tranché, `update.sh --archive` fonctionne, pas la mise à jour « en un clic » depuis le serveur de licences.
 - **Publication de la version dans le serveur de licences** (`POST /api/v1/versions`) : dépend du point précédent (URL à enregistrer) et d'un jeton d'API (il n'a aujourd'hui qu'une connexion par mot de passe).
-- **Déploiement du staging et de l'éditeur** (phase 4) : pas de serveur ni de compose pour `license-server` / `license-web`.
+- **Déploiement du staging** (phase 4) : pas de serveur de staging. Le compose de l'éditeur existe (`deploy/editeur/` : PostgreSQL, `license-server`, `license-web`, Caddy ; images GHCR) mais n'a pas encore été déployé sur un serveur réel.
 - **Application mobile** (phase 5) : pas de build Android en CI.
 - **Audit des dépendances Java** (OWASP dependency-check) : seul Dependabot les surveille.
 - **Actions épinglées par condensé** (`uses: …@<sha>`) plutôt que par version majeure.

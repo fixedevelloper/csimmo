@@ -1,0 +1,69 @@
+# Déploiement de l'ÉDITEUR (serveur de licences + portail), sur un serveur distinct de ceux des clients.
+#   cp .env.example .env && éditer .env && docker compose up -d
+# Images : ghcr.io/fixedevelloper/immogest-license-server et -license-web (voir docs/CICD.md).
+name: immogest-editeur
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: licenseserver
+      POSTGRES_USER: licenseserver
+      POSTGRES_PASSWORD: ${DB_MOT_DE_PASSE:?définir DB_MOT_DE_PASSE}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U licenseserver"]
+      interval: 5s
+      retries: 10
+    networks: [interne]
+
+  license-server:
+    image: ghcr.io/fixedevelloper/immogest-license-server:${VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      LICENSE_SERVER_DB_URL: jdbc:postgresql://postgres:5432/licenseserver
+      LICENSE_SERVER_DB_USER: licenseserver
+      LICENSE_SERVER_DB_PASSWORD: ${DB_MOT_DE_PASSE}
+      LICENSE_SERVER_CLE_PRIVEE_CHEMIN: /secrets/licence-private.key
+      LICENSE_SERVER_JWT_SECRET: ${JWT_SECRET:?32 caractères au moins}
+      LICENSE_SERVER_ADMIN_EMAIL: ${ADMIN_EMAIL:?définir ADMIN_EMAIL}
+      LICENSE_SERVER_ADMIN_MOT_DE_PASSE: ${ADMIN_MOT_DE_PASSE:?12 caractères au moins}
+    volumes:
+      # Clé privée Ed25519 : fichier sur l'hôte, hors dépôt, lecture seule (chmod 600, lisible par l'uid 10002)
+      - ${CLE_PRIVEE_FICHIER:?chemin de licence-private.key}:/secrets/licence-private.key:ro
+    networks: [interne, exposee]
+
+  license-web:
+    image: ghcr.io/fixedevelloper/immogest-license-web:${VERSION:-latest}
+    restart: unless-stopped
+    depends_on: [license-server]
+    environment:
+      LICENSE_SERVER_URL: http://license-server:8090
+    networks: [exposee]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [license-server, license-web]
+    environment:
+      LICENCES_HOST: ${LICENCES_HOST:?ex. licences.exemple.com}
+      PORTAIL_HOST: ${PORTAIL_HOST:?ex. editeur.exemple.com}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [exposee]
+
+networks:
+  interne:
+    internal: true
+  exposee:
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:
