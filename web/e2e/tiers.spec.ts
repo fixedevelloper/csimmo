@@ -30,7 +30,7 @@ test("propriétaire → mandats sans chevauchement → immeuble rattaché", asyn
   await page.getByLabel("Nom", { exact: true }).fill(nom);
   await page.getByLabel("Téléphone").fill(telephone());
   await page.getByLabel("Mode de reversement").selectOption("MOBILE_MONEY");
-  await page.getByRole("button", { name: "Enregistrer" }).click();
+  await page.getByRole("button", { name: "Enregistrer", exact: true }).click();
   await expect(page.getByRole("heading", { name: nom, level: 1 })).toBeVisible();
 
   // Mandat à 10 % puis un mandat qui le chevauche
@@ -55,7 +55,7 @@ test("propriétaire → mandats sans chevauchement → immeuble rattaché", asyn
   await page.getByLabel("Adresse").fill("1 rue des Tests");
   await page.getByLabel("Ville").fill("Douala");
   await page.getByLabel("Propriétaire (facultatif)").selectOption({ label: nom });
-  await page.getByRole("button", { name: "Enregistrer" }).click();
+  await page.getByRole("button", { name: "Enregistrer", exact: true }).click();
   await expect(page.getByRole("heading", { name: `Immeuble ${suffixe}`, level: 1 })).toBeVisible();
 });
 
@@ -70,7 +70,7 @@ test("locataire → CNI → garant → pièce chiffrée → recherche", async ({
   await page.getByLabel("Nom", { exact: true }).fill(nom);
   await page.getByLabel("Téléphone").fill(tel);
   await page.getByLabel("Numéro de CNI").fill("CNI-E2E-998877");
-  await page.getByRole("button", { name: "Enregistrer" }).click();
+  await page.getByRole("button", { name: "Enregistrer", exact: true }).click();
   await expect(page.getByRole("heading", { name: nom, level: 1 })).toBeVisible();
   await expect(page.getByTestId("numero-cni")).toHaveText("CNI-E2E-998877");
 
@@ -79,7 +79,7 @@ test("locataire → CNI → garant → pièce chiffrée → recherche", async ({
   await page.getByLabel("Nom", { exact: true }).fill("Marie Mbarga");
   await page.getByLabel("Lien avec le locataire").fill("Mère");
   await page.getByLabel("Téléphone").fill(telephone());
-  await page.getByRole("button", { name: "Enregistrer" }).click();
+  await page.getByRole("button", { name: "Enregistrer", exact: true }).click();
   await expect(page.getByText("Marie Mbarga")).toBeVisible();
 
   // Pièce d'identité : envoyée chiffrée, rouverte en clair par l'API
@@ -111,7 +111,7 @@ test("prestataire : création puis archivage", async ({ page }) => {
   await page.getByLabel("Nom", { exact: true }).fill(nom);
   await page.getByLabel("Métier").fill("Plombier");
   await page.getByLabel("Téléphone").fill(telephone());
-  await page.getByRole("button", { name: "Enregistrer" }).click();
+  await page.getByRole("button", { name: "Enregistrer", exact: true }).click();
   await expect(page).toHaveURL(/\/prestataires$/);
   await expect(page.getByRole("link", { name: nom })).toBeVisible();
 

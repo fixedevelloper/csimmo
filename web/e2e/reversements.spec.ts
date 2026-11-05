@@ -47,7 +47,15 @@ test("reversement : calcul du mois, dépense déduite, mois en cours non validab
   // calcul du mois courant, filtré sur ce propriétaire
   await page.goto(`/reversements?proprietaire=${proprietaire.id}`);
   const mois = new Date();
-  await page.getByLabel("Mois", { exact: true }).first().fill(`${mois.getFullYear()}-${String(mois.getMonth() + 1).padStart(2, "0")}`);
+  // Le champ est rempli par React avec le mois précédent à l'hydratation : un fill() trop tôt est écrasé et le calcul porte sur le mauvais mois
+  // (échec aléatoire selon la vitesse de la machine). On attend la page, puis on réessaie jusqu'à ce que la valeur tienne.
+  const valeurMois = `${mois.getFullYear()}-${String(mois.getMonth() + 1).padStart(2, "0")}`;
+  const champMois = page.getByLabel("Mois", { exact: true }).first();
+  await page.waitForLoadState("networkidle");
+  await expect(async () => {
+    await champMois.fill(valeurMois);
+    await expect(champMois).toHaveValue(valeurMois, { timeout: 1000 });
+  }).toPass({ timeout: 15_000 });
   await page.getByRole("button", { name: "Calculer le mois" }).click();
   const ligne = page.getByRole("row").filter({ hasText: nomProprietaire });
   await expect(ligne).toBeVisible();
