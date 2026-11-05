@@ -3,7 +3,6 @@
 **/target
 **/.dart_tool
 mobile/
-license-web/
 .git
 deploy/.env
 deploy/generated

@@ -181,8 +181,8 @@ fi
 # ------------------------------------------------------------------ démarrage
 if [ "$DEMARRER" = 0 ]; then info "Configuration écrite. Démarrage : cd deploy && docker compose up -d --build"; exit 0; fi
 if [ "$PREBUILT" = 1 ]; then
-  info "Téléchargement des images"; docker compose pull app web
-  docker compose up -d
+  info "Téléchargement des images"; docker compose pull app web sauvegarde
+  docker compose up -d --no-build   # jamais de construction locale : on installe exactement les images publiées
 else
   [ -f ../backend/pom.xml ] || erreur "sources absentes : utilisez --images-prebuilt avec IMMOGEST_IMAGE_APP / IMMOGEST_IMAGE_WEB"
   info "Construction des images (plusieurs minutes la première fois)"

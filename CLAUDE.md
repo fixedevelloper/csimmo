@@ -48,7 +48,7 @@ Document de référence fonctionnel : `docs/ANALYSE.md` (exporté de l'analyse).
 | Mobile | Flutter 3.x (Android d'abord), Riverpod, go_router, dio, drift (SQLite, hors ligne), client généré via `openapi-generator` (dart-dio), flutter_localizations |
 | Tests mobile | flutter_test, integration_test |
 | Packaging | Docker Compose (postgres, seaweedfs, app, web, caddy) + scripts `install.sh` / `update.sh` / `backup.sh` ; obfuscation du jar par ProGuard en build release |
-| CI | GitHub Actions : build + tests des 5 projets, génération OpenAPI, build des images |
+| CI | GitHub Actions : build + tests des 5 projets, génération OpenAPI, build des images ; `images.yml` publie et signe les images sur GHCR (voir `docs/CICD.md`) |
 
 Ne pas introduire d'autre framework ou de dépendance lourde sans créer un ADR dans `docs/adr/`.
 

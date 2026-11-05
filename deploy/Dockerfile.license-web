@@ -1,0 +1,22 @@
+# Image du portail éditeur (Next.js, sortie « standalone »). Contexte de build : la racine du dépôt.
+FROM node:22-alpine AS build
+RUN corepack enable
+WORKDIR /src/license-web
+COPY license-web/package.json license-web/pnpm-lock.yaml license-web/pnpm-workspace.yaml ./
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+COPY license-web/ ./
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN pnpm build
+
+FROM node:22-alpine
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
+WORKDIR /app
+COPY --from=build --chown=node:node /src/license-web/.next/standalone ./
+COPY --from=build --chown=node:node /src/license-web/.next/static ./.next/static
+COPY --from=build --chown=node:node /src/license-web/public ./public
+USER node
+EXPOSE 3000
+# LICENSE_SERVER_URL : adresse du serveur de licences (ex. http://license-server:8090)
+HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
+  CMD wget -q -O /dev/null http://127.0.0.1:3000/login || exit 1
+CMD ["node", "server.js"]

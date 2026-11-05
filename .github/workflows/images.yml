@@ -1,0 +1,189 @@
+name: Images
+
+# Construit, analyse, publie et signe les images Docker (registre GHCR).
+#   - fusion sur main  → ghcr.io/<propriétaire>/immogest-<image>:edge et :sha-<court>
+#   - tag vX.Y.Z       → :X.Y.Z, :X.Y, :latest, avec analyse bloquante des failles et contrôle de la clé publique de l'éditeur
+# Les pull requests sont validées par ci.yml (job « packaging » : construction + installation de bout en bout).
+
+on:
+  push:
+    branches: [main]
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Une publication en cours n'est annulée que par une publication plus récente de la même branche ; jamais celle d'un tag.
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
+jobs:
+  # Un tag de release ne part jamais avec la clé publique provisoire : toutes les licences y seraient refusées.
+  garde-release:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clé publique de l'éditeur renseignée
+        run: |
+          cle=$(grep -vE '^\s*(#|$)' backend/app/src/main/resources/licence/cle-publique-editeur.txt | head -n1 | tr -d '[:space:]')
+          if [ -z "$cle" ]; then
+            echo "::error file=backend/app/src/main/resources/licence/cle-publique-editeur.txt::Clé publique de l'éditeur absente : une release refuserait toute licence."
+            exit 1
+          fi
+          # format X.509 d'une clé Ed25519 : préfixe fixe MCowBQYDK2VwAyEA, 44 caractères en base64
+          case "$cle" in MCowBQYDK2VwAyEA*) [ ${#cle} -eq 60 ] || { echo "::error::Longueur inattendue pour une clé Ed25519 X.509 (${#cle})"; exit 1; } ;;
+            *) echo "::error::Ce n'est pas une clé publique Ed25519 au format X.509"; exit 1 ;; esac
+          echo "Clé publique de l'éditeur présente."
+
+  images:
+    needs: [garde-release]
+    # garde-release est ignoré hors tag : on continue dans ce cas, pas s'il a échoué
+    if: ${{ !cancelled() && (needs.garde-release.result == 'success' || needs.garde-release.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write      # publication dans GHCR
+      id-token: write      # signature sans clé (cosign + OIDC)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { image: app, dockerfile: deploy/Dockerfile.app }
+          - { image: web, dockerfile: deploy/Dockerfile.web }
+          - { image: sauvegarde, dockerfile: deploy/Dockerfile.sauvegarde, contexte: deploy }
+          - { image: license-server, dockerfile: deploy/Dockerfile.license-server }
+          - { image: license-web, dockerfile: deploy/Dockerfile.license-web }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Préfixe des images (GHCR exige des minuscules)
+        run: echo "PREFIXE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/immogest" >> "$GITHUB_ENV"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Connexion à GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Étiquettes et métadonnées OCI
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.PREFIXE }}-${{ matrix.image }}
+          tags: |
+            type=edge,branch=main
+            type=sha,prefix=sha-,format=short
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+          labels: |
+            org.opencontainers.image.title=ImmoGest ${{ matrix.image }}
+            org.opencontainers.image.vendor=ImmoGest
+          # pas d'image pour le dépôt source : l'étiquette « source » pointe la révision exacte
+          annotations: |
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      # 1. Construction locale (le cache GitHub rend la seconde construction quasi instantanée) pour analyser AVANT de publier
+      - name: Construction (locale, pour analyse)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.contexte || '.' }}
+          file: ${{ matrix.dockerfile }}
+          load: true
+          push: false
+          tags: analyse/${{ matrix.image }}:${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+      # 2. Analyse des failles : informative sur main, BLOQUANTE sur un tag de release (CRITICAL et HIGH ayant un correctif)
+      - name: Analyse des failles (Trivy)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: analyse/${{ matrix.image }}:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: ${{ github.ref_type == 'tag' && '1' || '0' }}
+          format: table
+          trivyignores: .trivyignore
+
+      # 3. Publication (réutilise le cache) avec attestations BuildKit : provenance (qui a construit quoi, à partir de quelle révision) et SBOM
+      - name: Publication
+        id: publier
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.contexte || '.' }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha,scope=${{ matrix.image }}
+
+      # 4. Signature : le condensé (digest) est signé, pas une étiquette modifiable ; vérifiable sans clé à distribuer
+      - uses: sigstore/cosign-installer@v3
+      - name: Signature (cosign, sans clé)
+        env:
+          DIGEST: ${{ steps.publier.outputs.digest }}
+        run: |
+          for etiquette in ${{ steps.meta.outputs.tags }}; do
+            cosign sign --yes "${etiquette%%:*}@${DIGEST}"
+            break # le condensé est le même pour toutes les étiquettes : une signature suffit
+          done
+
+      - name: Résumé
+        run: |
+          {
+            echo "### ${{ matrix.image }}"
+            echo '```'
+            echo "${{ steps.meta.outputs.tags }}"
+            echo "digest : ${{ steps.publier.outputs.digest }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Installe les images PUBLIÉES (pas reconstruites) en mode réseau local et vérifie qu'elles servent bien l'application à travers Caddy.
+  installation:
+    needs: [images]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Préfixe des images (GHCR exige des minuscules)
+        run: echo "PREFIXE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/immogest" >> "$GITHUB_ENV"
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Version à installer
+        id: v
+        run: |
+          if [ "${{ github.ref_type }}" = tag ]; then echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else echo "version=sha-$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"; fi
+      - name: Installation avec les images publiées
+        working-directory: deploy
+        run: |
+          export IMMOGEST_IMAGE_APP="${PREFIXE}-app" IMMOGEST_IMAGE_WEB="${PREFIXE}-web" IMMOGEST_IMAGE_SAUVEGARDE="${PREFIXE}-sauvegarde"
+          ./install.sh --mode local --site localhost --stockage local --version "${{ steps.v.outputs.version }}" --images-prebuilt --yes
+      - name: Vérifications
+        working-directory: deploy
+        run: |
+          curl -ksf https://localhost/api/v1/health
+          curl -ks -o /dev/null -w '%{http_code}\n' https://localhost/login | grep -xE '200|307'
+          test "$(curl -ks -o /dev/null -w '%{http_code}' https://localhost/actuator/health)" != 200
+          test "$(curl -ks -o /dev/null -w '%{http_code}' -X POST https://localhost/api/v1/webhooks/simule)" = 404
+      - if: failure()
+        working-directory: deploy
+        run: docker compose logs --tail 200

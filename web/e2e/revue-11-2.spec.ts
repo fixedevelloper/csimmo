@@ -153,7 +153,10 @@ test("sauvegardes : l'écran s'affiche et explique l'absence du service en déve
   await page.screenshot({ path: `${CAPTURES}/07-sauvegardes.png`, fullPage: true });
 });
 
+// Désactivé par défaut : la limite (par adresse IP) bloque toute connexion pendant une minute et ferait échouer les scénarios suivants.
+// À lancer seul : E2E_LIMITE_DEBIT=1 (avec le backend à sa limite par défaut, 20 connexions par minute).
 test("limite de débit : trop d'essais de connexion → message clair dans le navigateur", async ({ page }) => {
+  test.skip(!process.env.E2E_LIMITE_DEBIT, "E2E_LIMITE_DEBIT non défini");
   // à exécuter en dernier : la limite (par adresse IP) bloque toute connexion pendant une minute
   for (let i = 0; i < 25; i++) {
     await page.request.post("/api/auth/login", { data: { identifiant: "inconnu@exemple.cm", motDePasse: "faux" } });

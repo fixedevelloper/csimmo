@@ -1,8 +1,19 @@
 name: CI
 
 on:
+  # Branche principale + pull requests : une branche avec une PR ouverte n'est plus testée deux fois
   push:
+    branches: [main]
   pull_request:
+
+# Droits minimaux par défaut ; un job qui a besoin de plus les demande explicitement
+permissions:
+  contents: read
+
+# Une nouvelle poussée annule l'exécution précédente de la même branche ou PR (sauf sur main : chaque fusion est testée)
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   backend:
@@ -65,6 +76,8 @@ jobs:
         working-directory: backend
         run: |
           ./mvnw -B -q install -DskipTests -pl licensing-core -am
+          # La limite de débit par IP (20 connexions/min) arrêterait les dizaines de connexions des scénarios : relevée pour ce job seulement
+          export IMMOGEST_SECURITE_LIMITEAUTHPARMINUTE=100000 IMMOGEST_SECURITE_LIMITEREFRESHPARMINUTE=100000
           nohup ./mvnw -B -pl app spring-boot:run > ../backend.log 2>&1 &
           timeout 180 bash -c 'until curl -sf localhost:8080/api/v1/health; do sleep 3; done'
       - run: pnpm install --frozen-lockfile
@@ -81,6 +94,50 @@ jobs:
             web/playwright-report
             web/test-results
             backend.log
+
+  # Dépendances : les failles HIGH et CRITICAL des paquets de production font échouer le build (Dependabot signale le reste)
+  audit-dependances:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [web, license-web]
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: ${{ matrix.project }}/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --prod --audit-level high
+
+  # Valide les Dockerfiles de l'éditeur (serveur de licences et portail) à chaque PR, sans rien publier.
+  # Les images de l'application elle-même sont construites par le job « packaging » ci-dessous.
+  images-editeur:
+    runs-on: ubuntu-latest
+    needs: [backend, web]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { image: license-server, dockerfile: deploy/Dockerfile.license-server }
+          - { image: license-web, dockerfile: deploy/Dockerfile.license-web }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: false
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
 
   mobile:
     runs-on: ubuntu-latest

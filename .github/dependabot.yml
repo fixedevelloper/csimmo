@@ -1,0 +1,31 @@
+# Mises à jour automatiques groupées : une PR par écosystème et par semaine (évite le bruit), la CI fait foi.
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /backend
+    schedule: { interval: weekly }
+    groups:
+      java: { patterns: ["*"] }
+  - package-ecosystem: npm
+    directory: /web
+    schedule: { interval: weekly }
+    groups:
+      web: { patterns: ["*"] }
+  - package-ecosystem: npm
+    directory: /license-web
+    schedule: { interval: weekly }
+    groups:
+      license-web: { patterns: ["*"] }
+  - package-ecosystem: pub
+    directory: /mobile
+    schedule: { interval: weekly }
+    groups:
+      mobile: { patterns: ["*"] }
+  - package-ecosystem: docker
+    directory: /deploy
+    schedule: { interval: weekly }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+    groups:
+      actions: { patterns: ["*"] }

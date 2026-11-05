@@ -1,0 +1,2 @@
+# Failles connues acceptées, une par ligne : « CVE-AAAA-NNNN  # raison, responsable, date de revue ».
+# Une ligne sans raison ni date de revue n'a pas sa place ici.
