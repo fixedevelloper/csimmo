@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | `ci.yml` | PR et fusions sur `main` | Backend (`mvnw verify`), web et portail éditeur (lint, types, tests, build), **audit des dépendances** (HIGH/CRITICAL bloquants), scénarios Playwright, mobile, **construction des images + installation de bout en bout** (`packaging`), construction des images de l'éditeur, mise à jour N-1 → N |
 | `images.yml` | fusion sur `main`, tag `vX.Y.Z` | Construit, **analyse (Trivy)**, **publie sur GHCR**, **signe (cosign)** les 5 images, puis **installe les images publiées** et vérifie qu'elles servent l'application |
-| `codeql.yml` | PR, `main`, chaque lundi | Analyse statique de sécurité Java et TypeScript |
+| `codeql.yml` | **manuel seulement** (désactivé) | Analyse statique Java et TypeScript : indisponible sur un dépôt privé sans GitHub Advanced Security (« Code scanning is not enabled »). Déclencheurs à remettre si le dépôt devient public ou si GHAS est activé |
 | `dependabot.yml` | chaque semaine | PR groupées de mises à jour (Maven, npm ×2, pub, Docker, Actions) |
 
 Images publiées (`ghcr.io/fixedevelloper/immogest-<nom>`) : `app` (jar obfusqué), `web`, `sauvegarde`, `license-server`, `license-web`. Une seule architecture : **linux/amd64**.
@@ -63,7 +63,7 @@ cd deploy && ./install.sh --mode domaine --site immo.exemple.cm --version 1.4.0 
 
 ## Points d'attention des premières exécutions
 
-- **CodeQL sur dépôt privé** : l'analyse de code (« code scanning ») exige GitHub Advanced Security hors dépôts publics. Si le job `codeql` échoue à l'envoi des résultats, désactivez-le (Settings > Code security) ou passez le dépôt en public ; le reste du CI n'en dépend pas.
+- **CodeQL** : constaté sur ce dépôt, le code scanning n'est pas disponible (dépôt privé, sans GitHub Advanced Security) : le workflow est passé en déclenchement manuel. Dependabot et l'audit des dépendances du CI, eux, fonctionnent.
 - **`images.yml` tourne dès la première fusion sur `main`** et publie `edge` et `sha-…` dans GHCR (paquets privés par défaut).
 - Les contrôles obligatoires de la protection de branche doivent porter les noms exacts affichés par GitHub après une première exécution : ajustez la liste du § Mise en place.
 

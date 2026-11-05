@@ -1,12 +1,19 @@
 name: CodeQL
 
 # Analyse statique de sécurité (injections, désérialisation, secrets…) du Java et du TypeScript.
+#
+# DÉSACTIVÉ (déclenchement manuel seulement) : GitHub n'offre le « code scanning » que sur les dépôts publics ou avec GitHub Advanced
+# Security ; sur ce dépôt privé l'étape analyze échoue avec « Code scanning is not enabled ». Pour le réactiver, une fois l'une de ces
+# conditions remplie, remettre les déclencheurs ci-dessous.
+#
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#   schedule:
+#     - cron: "17 3 * * 1"   # chaque lundi : de nouvelles règles peuvent signaler d'anciens défauts
 on:
-  push:
-    branches: [main]
-  pull_request:
-  schedule:
-    - cron: "17 3 * * 1"   # chaque lundi : de nouvelles règles peuvent signaler d'anciens défauts
+  workflow_dispatch:
 
 permissions:
   contents: read
