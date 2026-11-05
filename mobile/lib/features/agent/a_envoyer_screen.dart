@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/db/app_database.dart';
 import '../../core/error/app_error.dart';
 import '../../core/error/error_messages.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import '../locataire/formatage.dart';
 import 'file_encaissements.dart';
@@ -59,10 +60,10 @@ class _AEnvoyerScreenState extends ConsumerState<AEnvoyerScreen> {
       ),
       const SizedBox(height: 8),
       liste.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Column(children: [Squelette(hauteur: 72, rayon: 18), SizedBox(height: 8), Squelette(hauteur: 72, rayon: 18)]),
         error: (e, _) => Text(errorMessage(l, e)),
         data: (items) => items.isEmpty
-            ? Padding(padding: const EdgeInsets.all(24), child: Text(l.fileVide, key: const Key('file-vide'), textAlign: TextAlign.center))
+            ? EtatVide(icone: Icons.cloud_done_outlined, texte: l.fileVide, cleTexte: const Key('file-vide'))
             : Column(children: [
                 for (final e in items)
                   Card(
@@ -72,14 +73,18 @@ class _AEnvoyerScreenState extends ConsumerState<AEnvoyerScreen> {
                       subtitle: Text('${e.bailLibelle}\n${e.datePaiement}${e.statut == statutRejete ? ' · ${errorMessage(l, _code(e.derniereErreur ?? ''))}' : ''}'),
                       isThreeLine: true,
                       leading: switch (e.statut) {
-                        statutEnvoye => const Icon(Icons.check_circle, color: Colors.green),
+                        statutEnvoye => const Icon(Icons.check_circle, color: Color(0xFF16A34A)),
                         statutRejete => Icon(Icons.error, color: Theme.of(context).colorScheme.error),
                         _ => const Icon(Icons.schedule),
                       },
                       trailing: e.statut == statutEnvoye
-                          ? Text(l.statutEnvoye, key: Key('statut-${e.id}'))
+                          ? PastilleStatut(texte: l.statutEnvoye, ton: Ton.succes, cleTexte: Key('statut-${e.id}'))
                           : Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(e.statut == statutRejete ? l.statutRejete : l.statutEnAttente, key: Key('statut-${e.id}')),
+                              PastilleStatut(
+                                texte: e.statut == statutRejete ? l.statutRejete : l.statutEnAttente,
+                                ton: e.statut == statutRejete ? Ton.danger : Ton.alerte,
+                                cleTexte: Key('statut-${e.id}'),
+                              ),
                               IconButton(key: Key('abandonner-${e.id}'), tooltip: l.supprimerSaisie, icon: const Icon(Icons.delete_outline), onPressed: () => _abandonner(e)),
                             ]),
                     ),

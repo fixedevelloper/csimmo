@@ -1093,6 +1093,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Vous avez déjà des paiements en attente : validez-les ou patientez.'**
   String get errTropDeTransactions;
+
+  /// No description provided for @bandeauFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 encaissement en attente d\'envoi} other{{n} encaissements en attente d\'envoi}}'**
+  String bandeauFile(int n);
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth_actions.dart';
 import 'a_envoyer_screen.dart';
@@ -51,24 +53,31 @@ class _AgentShellState extends ConsumerState<AgentShell> {
     const pages = [EncaisserScreen(), AEnvoyerScreen(), LotsScreen(), LocatairesScreen()];
     return Scaffold(
       appBar: AppBar(
-        title: Text(l.espaceAgent, key: const Key('titre-GESTIONNAIRE')),
+        title: TitreMarque(l.espaceAgent, cleTexte: const Key('titre-GESTIONNAIRE')),
         actions: [
           IconButton(key: const Key('bouton-deconnexion'), tooltip: l.deconnexion, icon: const Icon(Icons.logout), onPressed: _deconnecter),
         ],
       ),
-      body: IndexedStack(index: _onglet, children: pages),
+      body: Column(children: [
+        if ((enAttente.value ?? 0) > 0 && _onglet != 1)
+          _BandeauFile(nombre: enAttente.value ?? 0, onTap: () => setState(() => _onglet = 1)),
+        Expanded(child: IndexedStack(index: _onglet, children: pages)),
+      ]),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
-        onDestinationSelected: (i) => setState(() => _onglet = i),
+        onDestinationSelected: (i) {
+          HapticFeedback.selectionClick();
+          setState(() => _onglet = i);
+        },
         destinations: [
-          NavigationDestination(key: const Key('onglet-encaisser'), icon: const Icon(Icons.payments_outlined), label: l.ongletEncaisser),
+          NavigationDestination(key: const Key('onglet-encaisser'), icon: const Icon(Icons.payments_outlined), selectedIcon: const Icon(Icons.payments), label: l.ongletEncaisser),
           NavigationDestination(
             key: const Key('onglet-a-envoyer'),
             icon: Badge(isLabelVisible: (enAttente.value ?? 0) > 0, label: Text('${enAttente.value ?? 0}', key: const Key('badge-a-envoyer')), child: const Icon(Icons.cloud_upload_outlined)),
             label: l.ongletAEnvoyer,
           ),
-          NavigationDestination(key: const Key('onglet-lots'), icon: const Icon(Icons.apartment_outlined), label: l.ongletLots),
-          NavigationDestination(key: const Key('onglet-locataires'), icon: const Icon(Icons.people_outline), label: l.ongletLocataires),
+          NavigationDestination(key: const Key('onglet-lots'), icon: const Icon(Icons.apartment_outlined), selectedIcon: const Icon(Icons.apartment), label: l.ongletLots),
+          NavigationDestination(key: const Key('onglet-locataires'), icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: l.ongletLocataires),
         ],
       ),
     );
@@ -77,3 +86,33 @@ class _AgentShellState extends ConsumerState<AgentShell> {
 
 /// Nombre d'encaissements de l'agent encore à envoyer (badge de l'onglet).
 final nombreEnAttenteProvider = StreamProvider.family<int, String>((ref, agent) => ref.watch(fileEncaissementsProvider).suivreNombreEnAttente(agent));
+
+/// Bandeau discret : des encaissements attendent le réseau ; un appui ouvre la file d'envoi.
+class _BandeauFile extends StatelessWidget {
+  const _BandeauFile({required this.nombre, required this.onTap});
+
+  final int nombre;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final c = Theme.of(context).colorScheme;
+    return Material(
+      color: c.secondaryContainer,
+      child: InkWell(
+        key: const Key('bandeau-file'),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Row(children: [
+            Icon(Icons.cloud_off_outlined, size: 18, color: c.onSecondaryContainer),
+            const SizedBox(width: 10),
+            Expanded(child: Text(l.bandeauFile(nombre), style: TextStyle(color: c.onSecondaryContainer, fontWeight: FontWeight.w600))),
+            Icon(Icons.chevron_right, color: c.onSecondaryContainer),
+          ]),
+        ),
+      ),
+    );
+  }
+}

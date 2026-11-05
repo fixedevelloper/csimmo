@@ -559,4 +559,15 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errTropDeTransactions =>
       'Vous avez déjà des paiements en attente : validez-les ou patientez.';
+
+  @override
+  String bandeauFile(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n encaissements en attente d\'envoi',
+      one: '1 encaissement en attente d\'envoi',
+    );
+    return '$_temp0';
+  }
 }

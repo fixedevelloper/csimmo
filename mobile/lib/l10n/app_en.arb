@@ -241,5 +241,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "bandeauFile": "{n, plural, =1{1 payment waiting to be sent} other{{n} payments waiting to be sent}}",
+  "@bandeauFile": { "placeholders": { "n": { "type": "int" } } }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/auth/role.dart';
 import '../../core/error/error_messages.dart';
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth_actions.dart';
 import '../auth/auth_repository.dart';
@@ -27,7 +28,7 @@ class RoleHomeScreen extends ConsumerWidget {
     final utilisateur = ref.watch(currentUserProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titre(l), key: Key('titre-${role.code}')),
+        title: TitreMarque(_titre(l), cleTexte: Key('titre-${role.code}')),
         actions: [
           IconButton(
             key: const Key('bouton-deconnexion'),

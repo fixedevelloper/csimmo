@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth_actions.dart';
 import 'accueil_screen.dart';
@@ -25,7 +27,7 @@ class _LocataireShellState extends ConsumerState<LocataireShell> {
     const pages = [AccueilScreen(), BauxScreen(), DocumentsScreen(), SignalerScreen()];
     return Scaffold(
       appBar: AppBar(
-        title: Text(l.espaceLocataire, key: const Key('titre-LOCATAIRE')),
+        title: TitreMarque(l.espaceLocataire, cleTexte: const Key('titre-LOCATAIRE')),
         actions: [
           IconButton(
             key: const Key('bouton-deconnexion'),
@@ -38,12 +40,15 @@ class _LocataireShellState extends ConsumerState<LocataireShell> {
       body: IndexedStack(index: _onglet, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
-        onDestinationSelected: (i) => setState(() => _onglet = i),
+        onDestinationSelected: (i) {
+          HapticFeedback.selectionClick();
+          setState(() => _onglet = i);
+        },
         destinations: [
-          NavigationDestination(key: const Key('onglet-accueil'), icon: const Icon(Icons.home_outlined), label: l.ongletAccueil),
-          NavigationDestination(key: const Key('onglet-baux'), icon: const Icon(Icons.description_outlined), label: l.ongletBaux),
-          NavigationDestination(key: const Key('onglet-documents'), icon: const Icon(Icons.receipt_long_outlined), label: l.ongletDocuments),
-          NavigationDestination(key: const Key('onglet-signaler'), icon: const Icon(Icons.build_outlined), label: l.ongletSignaler),
+          NavigationDestination(key: const Key('onglet-accueil'), icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: l.ongletAccueil),
+          NavigationDestination(key: const Key('onglet-baux'), icon: const Icon(Icons.description_outlined), selectedIcon: const Icon(Icons.description), label: l.ongletBaux),
+          NavigationDestination(key: const Key('onglet-documents'), icon: const Icon(Icons.receipt_long_outlined), selectedIcon: const Icon(Icons.receipt_long), label: l.ongletDocuments),
+          NavigationDestination(key: const Key('onglet-signaler'), icon: const Icon(Icons.build_outlined), selectedIcon: const Icon(Icons.build), label: l.ongletSignaler),
         ],
       ),
     );

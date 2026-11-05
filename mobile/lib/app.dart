@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/theme/app_theme.dart';
 import 'features/agent/synchro_automatique.dart';
 import 'features/push/push_registrar.dart';
 import 'l10n/app_localizations.dart';
@@ -50,7 +51,9 @@ class _ImmoGestAppState extends ConsumerState<ImmoGestApp> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      theme: ThemeData(colorSchemeSeed: const Color(0xFF0B4DB0), useMaterial3: true),
+      theme: construireTheme(Brightness.light),
+      darkTheme: construireTheme(Brightness.dark),
+      themeMode: ThemeMode.system,
     );
   }
 }

@@ -241,5 +241,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "bandeauFile": "{n, plural, =1{1 encaissement en attente d'envoi} other{{n} encaissements en attente d'envoi}}",
+  "@bandeauFile": { "placeholders": { "n": { "type": "int" } } }
 }
