@@ -30,6 +30,8 @@ done
 
 [ -f .env ] || erreur "deploy/.env introuvable : installation absente (install.sh)"
 exec 8>.update.lock; flock -n 8 || erreur "une mise à jour est déjà en cours"
+# Installations antérieures : s3.json était créé en 0600, illisible pour le conteneur SeaweedFS si son uid diffère de celui de l'installateur
+[ -f generated/s3.json ] && chmod 0644 generated/s3.json
 set -a; . ./.env; set +a
 ANCIENNE="${IMMOGEST_VERSION:-latest}"
 TMP=$(mktemp -d); trap 'rm -rf "${TMP:?}"' EXIT

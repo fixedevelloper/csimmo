@@ -130,6 +130,9 @@ if [ "$EXISTANT" = 0 ]; then
   ]
 }
 JSON
+    # Lu par le processus du conteneur SeaweedFS, dont l'uid n'est pas celui de l'installateur : en 0600 il est refusé (« permission denied »,
+    # l'API ne démarre jamais faute de stockage). Le dossier generated/ reste en 0700 : les autres utilisateurs de la machine n'y accèdent pas.
+    chmod 0644 generated/s3.json
   fi
   mkdir -p generated/sans-disque-externe
   cat > .env <<ENV
