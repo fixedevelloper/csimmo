@@ -134,11 +134,11 @@ jobs:
       - name: Signature (cosign, sans clé)
         env:
           DIGEST: ${{ steps.publier.outputs.digest }}
+          ETIQUETTES: ${{ steps.meta.outputs.tags }}   # plusieurs lignes : toujours via l'environnement, jamais collé dans le script
         run: |
-          for etiquette in ${{ steps.meta.outputs.tags }}; do
-            cosign sign --yes "${etiquette%%:*}@${DIGEST}"
-            break # le condensé est le même pour toutes les étiquettes : une signature suffit
-          done
+          premiere=$(printf '%s\n' "$ETIQUETTES" | head -n1)
+          # le condensé est le même pour toutes les étiquettes : on signe le condensé du dépôt, une seule fois
+          cosign sign --yes "${premiere%%:*}@${DIGEST}"
 
       - name: Résumé
         run: |
