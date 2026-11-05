@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ImmoGest — Portail éditeur",
-  description: "Gestion des clients, licences et versions d'ImmoGest",
+  title: "CSImmo — Portail éditeur",
+  description: "Gestion des clients, licences et versions de CSImmo",
   robots: { index: false, follow: false },
 };
 

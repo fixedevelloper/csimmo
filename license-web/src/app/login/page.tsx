@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -35,7 +36,8 @@ export default function Connexion() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-6 p-6">
-      <h1 className="text-2xl font-semibold">Portail éditeur ImmoGest</h1>
+      <Image src="/brand/icone.png" alt="" width={72} height={72} priority className="size-18 rounded-2xl" />
+      <h1 className="text-2xl font-semibold">Portail éditeur CSImmo</h1>
       <form onSubmit={(e) => void soumettre(e)} className="flex flex-col gap-4">
         <Champ id="email" label="Adresse e-mail">
           <input id="email" name="email" type="email" required autoComplete="username" className={classeChamp} />

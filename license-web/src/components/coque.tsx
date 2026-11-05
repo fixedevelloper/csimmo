@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
@@ -23,7 +24,10 @@ export function Coque({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="flex flex-wrap items-center gap-4 border-b border-neutral-200 px-6 py-3 dark:border-neutral-800">
-        <strong>ImmoGest — Éditeur</strong>
+        <span className="flex items-center gap-2">
+          <Image src="/brand/icone.png" alt="" width={32} height={32} priority className="size-8 rounded-lg" />
+          <strong>CSImmo — Éditeur</strong>
+        </span>
         <nav aria-label="Navigation principale" className="flex gap-1">
           {LIENS.map((l) => {
             const actif = l.href === "/" ? chemin === "/" : chemin.startsWith(l.href);
