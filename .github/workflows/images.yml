@@ -8,6 +8,13 @@ name: Images
 on:
   push:
     branches: [main]
+    # Un changement de documentation ou de réglages de dépôt ne reconstruit pas cinq images (les tags, eux, construisent toujours)
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - ".github/dependabot.yml"
+      - ".github/workflows/codeql.yml"
+      - "mobile/**"
     tags: ["v[0-9]+.[0-9]+.[0-9]+"]
   workflow_dispatch:
 
@@ -153,6 +160,8 @@ jobs:
   # Installe les images PUBLIÉES (pas reconstruites) en mode réseau local et vérifie qu'elles servent bien l'application à travers Caddy.
   installation:
     needs: [images]
+    # Sans cette condition le job est ignoré dès qu'un ancêtre l'est (ici garde-release, absent hors tag) : success() est faux pour toute la chaîne
+    if: ${{ !cancelled() && needs.images.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
