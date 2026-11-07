@@ -23,4 +23,5 @@ export function pointsDeBaseEnPourcentage(bp: number, locale: string): string {
 }
 
 /** Chaîne vide → undefined (les champs facultatifs ne sont pas envoyés). */
-export const optionnel = (v: string | undefined): string | undefined => (v === undefined || v.trim() === "" ? undefined : v.trim());
+/** Texte saisi ou renvoyé par l'API (vide ou `null` → `undefined`). */
+export const optionnel = (v: string | null | undefined): string | undefined => (v == null || v.trim() === "" ? undefined : v.trim());

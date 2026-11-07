@@ -8,6 +8,7 @@ import {
   KeyRound,
   ShieldCheck,
   Smartphone,
+  Users,
   ChevronRight,
 } from "lucide-react";
 
@@ -24,6 +25,13 @@ import {
 import { PageHeader } from "@/components/page-header";
 
 const PARAMETRES = [
+  {
+    href: "/parametres/utilisateurs",
+    cle: "utilisateurs",
+    description: "utilisateursDescription",
+    icon: Users,
+    couleur: "bg-teal-50 text-teal-600 dark:bg-teal-500/10 dark:text-teal-400",
+  },
   {
     href: "/parametres/licence",
     cle: "licence",

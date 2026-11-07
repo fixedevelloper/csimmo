@@ -34,6 +34,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { useLocataire } from "@/hooks/use-tiers";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
+import { AccesLocataire } from "@/components/utilisateurs/acces-locataire";
 import { formaterDate } from "@/lib/licence";
 
 export function LocataireFiche() {
@@ -184,6 +185,8 @@ export function LocataireFiche() {
               </CardContent>
             </Card>
           </div>
+
+          {!l.archive && <AccesLocataire locataire={l} />}
 
           {/* Notes éventuelles */}
           {l.notes && (
