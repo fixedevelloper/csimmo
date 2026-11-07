@@ -50,7 +50,7 @@ jobs:
     outputs:
       version: ${{ steps.v.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Version et étiquette source
         id: v
         run: |
@@ -72,7 +72,7 @@ jobs:
       - name: Signature de l'archive (cosign, sans clé)
         working-directory: deploy/dist
         run: cosign sign-blob --yes --bundle "immogest-${{ steps.v.outputs.version }}.tar.gz.bundle" "immogest-${{ steps.v.outputs.version }}.tar.gz"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: archive-${{ steps.v.outputs.version }}
           path: deploy/dist/*
@@ -88,7 +88,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Archive précédente
         id: prec
         env:
@@ -99,7 +99,7 @@ jobs:
           mkdir -p precedente && gh release download "$prec" --pattern 'immogest-*.tar.gz' --pattern 'immogest-*.tar.gz.sha256' --dir precedente
           echo "existe=true" >> "$GITHUB_OUTPUT"
       - if: steps.prec.outputs.existe == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: archive-${{ needs.archive.outputs.version }}
           path: nouvelle
@@ -115,8 +115,8 @@ jobs:
     permissions:
       contents: write      # création de la Release
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: archive-${{ needs.archive.outputs.version }}
           path: dist
