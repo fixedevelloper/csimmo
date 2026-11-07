@@ -1,6 +1,6 @@
 .env
 generated/
-# produits par update.sh et package.sh : jamais des sources
+# produits par update.sh et package-release.sh : jamais des sources
 .avant-mise-a-jour/
 .update.lock
 dist/

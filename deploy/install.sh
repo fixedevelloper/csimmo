@@ -10,13 +10,14 @@
 #                      --s3-access-key ... --s3-secret-key ... [--s3-region ...]
 #                  --port-http N --port-https N (si 80 / 443 sont déjà utilisés)
 # Autres options : --version X --licence-serveur-url URL --cle-publique BASE64 --images-prebuilt (tirer les images au lieu de les construire)
+#                  --registre PREFIXE (avec --images-prebuilt : préfixe des images publiées, défaut ghcr.io/fixedevelloper/immogest ; images publiques, aucune connexion requise)
 #                  --images-chargees (images déjà dans Docker, ex. `docker load` d'une archive de release : ni pull ni construction)
 #                  --pas-de-demarrage --yes (aucune question)
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 MODE=""; SITE=""; STOCKAGE=""; S3_ENDPOINT=""; S3_BUCKET="immogest"; S3_REGION="us-east-1"; S3_ACCESS=""; S3_SECRET=""
-HTTP_PORT=80; HTTPS_PORT=443; TUNNEL_TOKEN=""; VERSION="latest"; LICENCE_URL=""; CLE_PUBLIQUE=""; PREBUILT=0; DEMARRER=1; YES=0
+HTTP_PORT=80; HTTPS_PORT=443; TUNNEL_TOKEN=""; VERSION="latest"; LICENCE_URL=""; CLE_PUBLIQUE=""; PREBUILT=0; REGISTRE="ghcr.io/fixedevelloper/immogest"; DEMARRER=1; YES=0
 
 erreur() { echo "ERREUR : $*" >&2; exit 1; }
 info() { echo "==> $*"; }
@@ -36,11 +37,12 @@ while [ $# -gt 0 ]; do
     --version) VERSION="${2:-}"; shift 2 ;;
     --licence-serveur-url) LICENCE_URL="${2:-}"; shift 2 ;;
     --cle-publique) CLE_PUBLIQUE="${2:-}"; shift 2 ;;
+    --registre) REGISTRE="${2:-}"; shift 2 ;;
     --images-prebuilt) PREBUILT=1; shift ;;
     --images-chargees) PREBUILT=2; shift ;;
     --pas-de-demarrage) DEMARRER=0; shift ;;
     --yes) YES=1; shift ;;
-    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
     *) erreur "option inconnue : $1" ;;
   esac
 done
@@ -137,6 +139,14 @@ JSON
     chmod 0644 generated/s3.json
   fi
   mkdir -p generated/sans-disque-externe
+  # Images publiées : leurs noms sont mémorisés dans .env pour que docker compose et update.sh --registre tirent les mêmes
+  IMAGES_ENV=""
+  if [ "$PREBUILT" = 1 ]; then
+    [[ "$REGISTRE" =~ ^[a-z0-9./:_-]+$ ]] || erreur "préfixe d'images invalide : $REGISTRE"
+    IMAGES_ENV="IMMOGEST_IMAGE_APP=${IMMOGEST_IMAGE_APP:-$REGISTRE-app}
+IMMOGEST_IMAGE_WEB=${IMMOGEST_IMAGE_WEB:-$REGISTRE-web}
+IMMOGEST_IMAGE_SAUVEGARDE=${IMMOGEST_IMAGE_SAUVEGARDE:-$REGISTRE-sauvegarde}"
+  fi
   cat > .env <<ENV
 # Généré par install.sh le $(date -u +%FT%TZ). NE PAS COMMITER. Sauvegardez ce fichier hors du serveur (surtout IMMOGEST_CLE_CHIFFREMENT).
 COMPOSE_PROFILES=$PROFILS
@@ -145,6 +155,7 @@ IMMOGEST_SITE=$SITE
 IMMOGEST_HTTP_PORT=$HTTP_PORT
 IMMOGEST_HTTPS_PORT=$HTTPS_PORT
 IMMOGEST_VERSION=$VERSION
+$IMAGES_ENV
 POSTGRES_PASSWORD=$(openssl rand -hex 24)
 IMMOGEST_JWT_SECRET=$(openssl rand -base64 48 | tr -d '\n')
 IMMOGEST_CLE_CHIFFREMENT=$(openssl rand -base64 32 | tr -d '\n')

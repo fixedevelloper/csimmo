@@ -3,6 +3,8 @@
 # En cas d'échec : RETOUR ARRIÈRE AUTOMATIQUE = restauration de la sauvegarde faite juste avant + ancienne image
 # (Flyway n'est pas réversible : on ne « dé-migre » jamais, on restaure).
 #
+#   ./update.sh --version 1.4.0                    # installation faite avec --images-prebuilt (images publiques GHCR dans .env) : tire les images
+#   ./update.sh --version 1.4.0 --verifier-signature   # idem, après contrôle de la signature cosign (cosign requis)
 #   ./update.sh                                    # dernière version publiée par l'éditeur (IMMOGEST_LICENCE_SERVEUR_URL)
 #   ./update.sh --archive immogest-1.4.0.tar.gz --sha256 <somme>   # hors ligne (réseau local) : archive remise sur clé USB
 #   ./update.sh --url https://…/immogest-1.4.0.tar.gz --sha256 <somme> --version 1.4.0
@@ -12,7 +14,7 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-ARCHIVE=""; URL=""; SHA=""; VERSION=""; SOURCES=0; YES=0
+ARCHIVE=""; URL=""; SHA=""; VERSION=""; SOURCES=0; YES=0; VERIFIER=0
 erreur() { echo "ERREUR : $*" >&2; exit 1; }
 info() { echo "==> $*"; }
 while [ $# -gt 0 ]; do
@@ -22,8 +24,9 @@ while [ $# -gt 0 ]; do
     --sha256) SHA="${2:-}"; shift 2 ;;
     --version) VERSION="${2:-}"; shift 2 ;;
     --depuis-les-sources) SOURCES=1; shift ;;
+    --verifier-signature) VERIFIER=1; shift ;;
     --yes) YES=1; shift ;;
-    -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
     *) erreur "option inconnue : $1" ;;
   esac
 done
@@ -34,6 +37,9 @@ exec 8>.update.lock; flock -n 8 || erreur "une mise à jour est déjà en cours"
 [ -f generated/s3.json ] && chmod 0644 generated/s3.json
 set -a; . ./.env; set +a
 ANCIENNE="${IMMOGEST_VERSION:-latest}"
+# Noms des images (registre ou locales) : ceux de .env pour une installation faite avec --images-prebuilt
+IMG_app="${IMMOGEST_IMAGE_APP:-immogest/app}"; IMG_web="${IMMOGEST_IMAGE_WEB:-immogest/web}"; IMG_sauvegarde="${IMMOGEST_IMAGE_SAUVEGARDE:-immogest/sauvegarde}"
+REGISTRE=0; [ -z "${IMMOGEST_IMAGE_APP:-}" ] || REGISTRE=1
 TMP=$(mktemp -d); trap 'rm -rf "${TMP:?}"' EXIT
 
 attendre_sain() { # attendre_sain SERVICE SECONDES
@@ -56,6 +62,26 @@ integrite() { # intégrité : nombre de lignes de chaque table (hors files techn
 if [ "$SOURCES" = 1 ]; then
   [ -n "$VERSION" ] || erreur "--version est requis avec --depuis-les-sources"
   [ -f ../backend/pom.xml ] || erreur "sources absentes"
+elif [ "$REGISTRE" = 1 ] && [ -z "$ARCHIVE" ] && [ -z "$URL" ]; then
+  # Images publiques tirées du registre : rien à vérifier par somme de contrôle (le condensé des couches l'est par Docker) ;
+  # on les télécharge toutes AVANT de toucher à l'installation, et on peut contrôler la signature cosign.
+  if [ -z "$VERSION" ]; then
+    [ -n "${IMMOGEST_LICENCE_SERVEUR_URL:-}" ] || erreur "indiquez --version X.Y.Z (pas de serveur de licences configuré pour connaître la dernière)"
+    META=$(curl -fsS --max-time 20 "${IMMOGEST_LICENCE_SERVEUR_URL%/}/api/v1/versions/derniere") || erreur "serveur de licences injoignable"
+    VERSION=$(printf '%s' "$META" | sed -n 's/.*"numero":"\([^"]*\)".*/\1/p')
+    [ -n "$VERSION" ] || erreur "réponse du serveur de licences illisible"
+  fi
+  [[ "$VERSION" =~ ^[0-9A-Za-z][0-9A-Za-z.+-]*$ ]] || erreur "version invalide : $VERSION"
+  for s in app web sauvegarde; do
+    var="IMG_$s"; ref="${!var}:$VERSION"
+    info "Téléchargement de $ref"; docker pull -q "$ref" >/dev/null || erreur "image introuvable : $ref (version inexistante ou registre injoignable). Rien n'a été modifié."
+    if [ "$VERIFIER" = 1 ]; then
+      command -v cosign >/dev/null 2>&1 || erreur "--verifier-signature demande cosign (https://docs.sigstore.dev/cosign/installation/)"
+      cosign verify "$ref" --certificate-identity-regexp '^https://github.com/fixedevelloper/csimmo/\.github/workflows/images\.yml@refs/tags/v' \
+        --certificate-oidc-issuer https://token.actions.githubusercontent.com >/dev/null 2>&1 || erreur "SIGNATURE INVALIDE pour $ref : image non produite par la CI de l'éditeur. Rien n'a été modifié."
+      info "Signature vérifiée : $ref"
+    fi
+  done
 else
   if [ -z "$ARCHIVE" ] && [ -z "$URL" ]; then
     [ -n "${IMMOGEST_LICENCE_SERVEUR_URL:-}" ] || erreur "aucune archive indiquée et pas de serveur de licences configuré (installation hors ligne : --archive)"
@@ -97,14 +123,18 @@ integrite "$TMP/avant.txt"
 info "Sauvegarde $SAUVEGARDE_ID faite"
 
 # ------------------------------------------------------------------ 3. mise en place
-for s in app web sauvegarde; do docker image inspect "immogest/$s:$ANCIENNE" >/dev/null 2>&1 && docker tag "immogest/$s:$ANCIENNE" "immogest/$s:avant-mise-a-jour"; done
-FICHIERS="docker-compose.yml Caddyfile.domaine Caddyfile.local Caddyfile.tunnel install.sh update.sh backup.sh restore.sh package.sh package-release.sh diagnostic.sh Dockerfile.app Dockerfile.web Dockerfile.sauvegarde"
+for s in app web sauvegarde; do var="IMG_$s"; docker image inspect "${!var}:$ANCIENNE" >/dev/null 2>&1 && docker tag "${!var}:$ANCIENNE" "${!var}:avant-mise-a-jour"; done
+FICHIERS="docker-compose.yml Caddyfile.domaine Caddyfile.local Caddyfile.tunnel install.sh update.sh backup.sh restore.sh package-release.sh diagnostic.sh"
 rm -rf .avant-mise-a-jour; mkdir .avant-mise-a-jour
 for f in $FICHIERS .env; do [ -f "$f" ] && cp -p "$f" .avant-mise-a-jour/; done
 if [ "$SOURCES" = 1 ]; then
   info "Construction des images $VERSION"; IMMOGEST_VERSION="$VERSION" docker compose build
+elif [ -z "$ARCHIVE" ] && [ "$REGISTRE" = 1 ]; then
+  info "Images $VERSION déjà téléchargées"
 else
   info "Chargement des images"; docker load -i "$TMP/x/images.tar" >/dev/null
+  # installation faite avec des images de registre : l'archive les livre sous immogest/<nom>, on les range sous les noms du .env
+  if [ "$REGISTRE" = 1 ]; then for s in app web sauvegarde; do var="IMG_$s"; docker tag "immogest/$s:$VERSION" "${!var}:$VERSION"; done; fi
   for f in $FICHIERS; do [ -f "$TMP/x/deploy/$f" ] && cp "$TMP/x/deploy/$f" "./$f"; done
 fi
 
@@ -113,7 +143,7 @@ retour_arriere() {
   echo "==> Retour arrière : restauration de la sauvegarde $SAUVEGARDE_ID et de l'ancienne version $ANCIENNE" >&2
   docker compose stop app web >&2 || true
   for f in $FICHIERS .env; do [ -f ".avant-mise-a-jour/$f" ] && cp -p ".avant-mise-a-jour/$f" "./$f"; done
-  for s in app web sauvegarde; do docker image inspect "immogest/$s:avant-mise-a-jour" >/dev/null 2>&1 && docker tag "immogest/$s:avant-mise-a-jour" "immogest/$s:$ANCIENNE"; done
+  for s in app web sauvegarde; do var="IMG_$s"; docker image inspect "${!var}:avant-mise-a-jour" >/dev/null 2>&1 && docker tag "${!var}:avant-mise-a-jour" "${!var}:$ANCIENNE"; done
   set -a; . ./.env; set +a
   docker compose up -d sauvegarde >&2
   sleep 5

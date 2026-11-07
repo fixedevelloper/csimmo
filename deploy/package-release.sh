@@ -35,7 +35,7 @@ for img in "${IMAGES[@]}"; do
 done
 docker save "${REFS[@]}" -o "$TMP/images.tar"
 mkdir -p "$TMP/deploy"
-cp -r docker-compose.yml Caddyfile.* install.sh update.sh backup.sh restore.sh diagnostic.sh package.sh package-release.sh Dockerfile.* "$TMP/deploy/"
+cp -r docker-compose.yml Caddyfile.* install.sh update.sh backup.sh restore.sh diagnostic.sh package-release.sh "$TMP/deploy/"
 mkdir -p dist
 tar -czf "dist/immogest-$VERSION.tar.gz" -C "$TMP" images.tar deploy RELEASE.txt
 ( cd dist && sha256sum "immogest-$VERSION.tar.gz" > "immogest-$VERSION.tar.gz.sha256" )

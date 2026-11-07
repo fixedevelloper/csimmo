@@ -32,7 +32,7 @@ gh api -X PUT repos/fixedevelloper/csimmo/branches/main/protection --input - <<'
 JSON
 ```
 
-Dans **Settings > Actions > General** : droits du `GITHUB_TOKEN` « lecture » par défaut (les workflows demandent eux-mêmes ce qu'il leur faut). Dans **Settings > Packages** : conserver les paquets privés ; donner l'accès en lecture aux comptes qui installent.
+Dans **Settings > Actions > General** : droits du `GITHUB_TOKEN` « lecture » par défaut (les workflows demandent eux-mêmes ce qu'il leur faut). Dans **Settings > Packages** : passer les 5 paquets `immogest-*` en **public** (le dépôt reste privé), sinon `docker pull` échoue chez les clients.
 
 Aucun secret n'est nécessaire à ce stade : la publication utilise le `GITHUB_TOKEN` et la signature l'identité OIDC du workflow. **La clé privée de licence n'est jamais dans la CI** : elle ne sert qu'au serveur de licences de l'éditeur.
 
@@ -67,7 +67,7 @@ docker login ghcr.io
 export IMMOGEST_IMAGE_APP=ghcr.io/fixedevelloper/immogest-app IMMOGEST_IMAGE_WEB=ghcr.io/fixedevelloper/immogest-web IMMOGEST_IMAGE_SAUVEGARDE=ghcr.io/fixedevelloper/immogest-sauvegarde
 cd deploy && ./install.sh --mode domaine --site immo.exemple.cm --version 1.4.0 --images-prebuilt --yes
 ```
-`--images-prebuilt` **ne construit rien** (`up --no-build`). Pour un client **sans accès à GHCR ou sans Internet**, la voie reste l'archive `immogest-X.tar.gz` + somme SHA-256 de `update.sh` (`deploy/package.sh`).
+`--images-prebuilt` **ne construit rien** (`up --no-build`) et écrit `IMMOGEST_IMAGE_*` dans `.env` (préfixe par défaut `ghcr.io/fixedevelloper/immogest`, option `--registre`). Les images sont **publiques** (décision : le jar est obfusqué, aucun jeton chez le client) : le `docker login` et les variables exportées ne sont plus nécessaires. Mise à jour : `./update.sh --version 1.4.0 [--verifier-signature]` (voir `deploy/README.md`). Le serveur de l'éditeur se met à jour à la main (`deploy/editeur/README.md`). Pour un client **sans accès à GHCR ou sans Internet**, la voie reste l'archive `immogest-X.tar.gz` + somme SHA-256 de `update.sh` (`deploy/package-release.sh`).
 
 ## Points d'attention des premières exécutions
 

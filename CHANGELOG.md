@@ -4,6 +4,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+- feat(deploy): installation et mise à jour à partir des images publiques GHCR (`install.sh --images-prebuilt [--registre]`, `update.sh --version X [--verifier-signature]`), noms d'images mémorisés dans `.env`.
+
 ## [0.1.0] - 2026-11-05
 
 Première version.

@@ -13,6 +13,13 @@ cd deploy
 ./install.sh --mode tunnel  --site immo.exemple.cm --tunnel-token <jeton> --yes
 ```
 
+**À partir des images publiées par la CI** (GHCR, publiques : aucune connexion requise, rien n'est construit) :
+
+```bash
+./install.sh --mode domaine --site immo.exemple.cm --version 1.4.0 --images-prebuilt --yes
+```
+Les noms des images (`ghcr.io/fixedevelloper/immogest-app|web|sauvegarde`, autre préfixe avec `--registre`) sont écrits dans `.env`.
+
 Options utiles : `--stockage externe --s3-endpoint … --s3-bucket … --s3-access-key … --s3-secret-key …` (désactive SeaweedFS) ;
 `--port-http N --port-https N` (si 80/443 sont pris) ; `--cle-publique <base64>` ; `--licence-serveur-url URL`.
 
@@ -48,8 +55,12 @@ Une sauvegarde « avant-restauration » est toujours faite d'abord.
 ./update.sh                                    # dernière version publiée par l'éditeur
 ./update.sh --archive immogest-1.4.0.tar.gz --sha256 <somme> --yes   # hors ligne
 ```
+Installation faite avec `--images-prebuilt` : `./update.sh --version 1.4.0` tire les trois images du registre (échec = rien n'est modifié ;
+`--verifier-signature` contrôle d'abord la signature cosign, cosign requis), puis le reste de l'ordre ci-dessous s'applique (même retour arrière).
+Les scripts et le compose de `deploy/` ne sont pas mis à jour par ce mode : récupérez-les avec la version (dépôt ou archive) si elle les a modifiés.
+
 Ordre : téléchargement → somme de contrôle (avant toute modification) → sauvegarde → chargement des images → redémarrage (migrations Flyway) → contrôle de
-santé et d'intégrité des données. **En cas d'échec : retour arrière automatique** (restauration de la sauvegarde d'avant + ancienne image). `./package.sh X.Y.Z`
+santé et d'intégrité des données. **En cas d'échec : retour arrière automatique** (restauration de la sauvegarde d'avant + ancienne image). `./package-release.sh X.Y.Z --prefixe ghcr.io/fixedevelloper/immogest`
 construit l'archive à publier (portail éditeur > Versions).
 
 ## Diagnostic
