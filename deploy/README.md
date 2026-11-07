@@ -55,7 +55,7 @@ Une sauvegarde « avant-restauration » est toujours faite d'abord.
 ./update.sh                                    # dernière version publiée par l'éditeur
 ./update.sh --archive immogest-1.4.0.tar.gz --sha256 <somme> --yes   # hors ligne
 ```
-Installation faite avec `--images-prebuilt` : `./update.sh --version 1.4.0` tire les trois images du registre (échec = rien n'est modifié ;
+Changer de version par tag : `./update.sh --version 1.4.0` tire les trois images du registre (`--registre PREFIX` pour un autre préfixe ; sans sources sur le serveur, GHCR de l'éditeur est utilisé et les noms d'images sont écrits dans `.env`, même si l'installation n'en venait pas) (échec = rien n'est modifié ;
 `--verifier-signature` contrôle d'abord la signature cosign, cosign requis), puis le reste de l'ordre ci-dessous s'applique (même retour arrière).
 Les scripts et le compose de `deploy/` ne sont pas mis à jour par ce mode : récupérez-les avec la version (dépôt ou archive) si elle les a modifiés.
 

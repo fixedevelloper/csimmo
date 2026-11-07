@@ -4,6 +4,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+- feat(deploy): `update.sh --version X [--registre PREFIX]` change de version en tirant les images par tag, même sur une installation qui n'avait pas les noms d'images du registre (écrits dans `.env`) ; le retour arrière garde les anciens noms.
 - chore(web): migration vers Next.js 16.4.5 (`web` et `license-web`) : `middleware.ts` renommé `proxy.ts`, ESLint en config plate native (`eslint-config-next` 16), Turbopack par défaut.
 
 - feat(deploy): installation et mise à jour à partir des images publiques GHCR (`install.sh --images-prebuilt [--registre]`, `update.sh --version X [--verifier-signature]`), noms d'images mémorisés dans `.env`.
