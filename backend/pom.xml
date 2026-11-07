@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.16</version>
+    <version>4.1.2</version>
     <relativePath/>
   </parent>
 
@@ -24,7 +24,7 @@
 
   <properties>
     <java.version>21</java.version>
-    <spring-modulith.version>1.4.14</spring-modulith.version>
+    <spring-modulith.version>2.1.2</spring-modulith.version>
     <aws-sdk.version>2.57.8</aws-sdk.version>
     <!-- Surcharges de sécurité de la gestion de dépendances de Spring Boot 3.5.16 (analyse Trivy bloquante d'une release) :
          Tomcat, Jackson, PostgreSQL et Apache HttpClient/HttpCore corrigés dans la branche actuelle. À retirer quand Boot les embarque. -->
