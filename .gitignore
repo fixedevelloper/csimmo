@@ -26,3 +26,6 @@ mobile/android/local.properties
 license-private*
 # OS
 .DS_Store
+
+# dépôt séparé (immo-deploy) : fichiers d'installation chez le client
+/deploy-prod/
