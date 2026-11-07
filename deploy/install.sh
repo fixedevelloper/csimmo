@@ -8,7 +8,7 @@
 #   ./install.sh --mode tunnel  --site immo.exemple.cm --tunnel-token <jeton Cloudflare> --yes
 #   Stockage externe : --stockage externe --s3-endpoint https://s3.eu-central-003.backblazeb2.com --s3-bucket immogest \
 #                      --s3-access-key ... --s3-secret-key ... [--s3-region ...]
-#                  --port-http N --port-https N (si 80 / 443 sont déjà utilisés)
+#                  --port-http N --port-https N (si 80 / 443 sont déjà utilisés ; sans ces options, l'assistant propose un autre port)
 # Autres options : --version X --licence-serveur-url URL --cle-publique BASE64 --images-prebuilt (tirer les images au lieu de les construire)
 #                  --registre PREFIXE (avec --images-prebuilt : préfixe des images publiées, défaut ghcr.io/fixedevelloper/immogest ; images publiques, aucune connexion requise)
 #                  --images-chargees (images déjà dans Docker, ex. `docker load` d'une archive de release : ni pull ni construction)
@@ -17,7 +17,7 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 MODE=""; SITE=""; STOCKAGE=""; S3_ENDPOINT=""; S3_BUCKET="immogest"; S3_REGION="us-east-1"; S3_ACCESS=""; S3_SECRET=""
-HTTP_PORT=80; HTTPS_PORT=443; TUNNEL_TOKEN=""; VERSION="latest"; LICENCE_URL=""; CLE_PUBLIQUE=""; PREBUILT=0; REGISTRE="ghcr.io/fixedevelloper/immogest"; DEMARRER=1; YES=0
+HTTP_PORT=80; HTTPS_PORT=443; TUNNEL_TOKEN=""; VERSION="latest"; LICENCE_URL=""; CLE_PUBLIQUE=""; PREBUILT=0; REGISTRE="ghcr.io/fixedevelloper/immogest"; DEMARRER=1; YES=0; VERSION_FOURNIE=0; PORT_HTTP_FOURNI=0; PORT_HTTPS_FOURNI=0
 
 erreur() { echo "ERREUR : $*" >&2; exit 1; }
 info() { echo "==> $*"; }
@@ -31,10 +31,10 @@ while [ $# -gt 0 ]; do
     --s3-region) S3_REGION="${2:-}"; shift 2 ;;
     --s3-access-key) S3_ACCESS="${2:-}"; shift 2 ;;
     --s3-secret-key) S3_SECRET="${2:-}"; shift 2 ;;
-    --port-http) HTTP_PORT="${2:-}"; shift 2 ;;
-    --port-https) HTTPS_PORT="${2:-}"; shift 2 ;;
+    --port-http) HTTP_PORT="${2:-}"; PORT_HTTP_FOURNI=1; shift 2 ;;
+    --port-https) HTTPS_PORT="${2:-}"; PORT_HTTPS_FOURNI=1; shift 2 ;;
     --tunnel-token) TUNNEL_TOKEN="${2:-}"; shift 2 ;;
-    --version) VERSION="${2:-}"; shift 2 ;;
+    --version) VERSION="${2:-}"; VERSION_FOURNIE=1; shift 2 ;;
     --licence-serveur-url) LICENCE_URL="${2:-}"; shift 2 ;;
     --cle-publique) CLE_PUBLIQUE="${2:-}"; shift 2 ;;
     --registre) REGISTRE="${2:-}"; shift 2 ;;
@@ -46,6 +46,9 @@ while [ $# -gt 0 ]; do
     *) erreur "option inconnue : $1" ;;
   esac
 done
+
+# Sans les sources du dépôt (dossier deploy copié seul) il n'y a rien à construire : on installe les images publiées
+if [ "$PREBUILT" = 0 ] && [ ! -f ../backend/pom.xml ]; then PREBUILT=1; info "Sources absentes : installation à partir des images publiées (${REGISTRE})"; fi
 
 demander() { # demander VARIABLE "question" [défaut]
   local var="$1" question="$2" defaut="${3:-}" reponse=""
@@ -185,11 +188,44 @@ ENV
 fi
 
 # ------------------------------------------------------------------ ports (hors tunnel)
+# .env existant : il n'est pas réécrit, mais les ports demandés en ligne de commande y sont appliqués (aucun secret touché)
+# Idem pour la version et les noms d'images (installation déjà faite sans --images-prebuilt, ou version à changer)
+ecrire_env() { if grep -q "^$1=" .env; then sed -i "s|^$1=.*|$1=$2|" .env; else printf '%s=%s\n' "$1" "$2" >> .env; fi; }
+[ "$VERSION_FOURNIE" != 1 ] || ecrire_env IMMOGEST_VERSION "$VERSION"
+if [ "$PREBUILT" = 1 ] && ! grep -q '^IMMOGEST_IMAGE_APP=' .env; then
+  ecrire_env IMMOGEST_IMAGE_APP "${IMMOGEST_IMAGE_APP:-$REGISTRE-app}"
+  ecrire_env IMMOGEST_IMAGE_WEB "${IMMOGEST_IMAGE_WEB:-$REGISTRE-web}"
+  ecrire_env IMMOGEST_IMAGE_SAUVEGARDE "${IMMOGEST_IMAGE_SAUVEGARDE:-$REGISTRE-sauvegarde}"
+fi
+for pair in "IMMOGEST_HTTP_PORT=$HTTP_PORT=$PORT_HTTP_FOURNI" "IMMOGEST_HTTPS_PORT=$HTTPS_PORT=$PORT_HTTPS_FOURNI"; do
+  IFS== read -r var val fourni <<< "$pair"
+  [ "$fourni" = 1 ] || continue
+  [[ "$val" =~ ^[0-9]+$ ]] && [ "$val" -ge 1 ] && [ "$val" -le 65535 ] || erreur "port invalide : $val"
+  if grep -q "^$var=" .env; then sed -i "s/^$var=.*/$var=$val/" .env; else printf '%s=%s\n' "$var" "$val" >> .env; fi
+done
 set -a; . ./.env; set +a
 if [ "$DEMARRER" = 1 ] && [ "${CADDYFILE:-}" != Caddyfile.tunnel ] && command -v ss >/dev/null 2>&1; then
   if ! docker compose ps --status running --services 2>/dev/null | grep -qx caddy; then
-    for p in "${IMMOGEST_HTTP_PORT:-80}" "${IMMOGEST_HTTPS_PORT:-443}"; do
-      ss -ltn "( sport = :$p )" 2>/dev/null | grep -q LISTEN && erreur "le port $p est déjà utilisé sur ce serveur (autre serveur web ?)."
+    port_occupe() { ss -ltn "( sport = :$1 )" 2>/dev/null | grep -q LISTEN; }
+    for var in IMMOGEST_HTTP_PORT IMMOGEST_HTTPS_PORT; do
+      p="${!var:-}"; [ -n "$p" ] || { [ "$var" = IMMOGEST_HTTP_PORT ] && p=80 || p=443; }
+      port_occupe "$p" || continue
+      suggestion=$([ "$var" = IMMOGEST_HTTP_PORT ] && echo 8080 || echo 8443)
+      while port_occupe "$suggestion"; do suggestion=$((suggestion + 1)); done
+      [ "$YES" != 1 ] || erreur "le port $p est déjà utilisé sur ce serveur (autre serveur web ?). Relancez avec --port-http N --port-https N (ex. $suggestion), ou libérez le port."
+      echo "Le port $p est déjà utilisé sur ce serveur (autre serveur web ?)."
+      while :; do
+        read -r -p "Port à utiliser pour ImmoGest [$suggestion] : " nouveau; nouveau="${nouveau:-$suggestion}"
+        [[ "$nouveau" =~ ^[0-9]+$ ]] && [ "$nouveau" -ge 1 ] && [ "$nouveau" -le 65535 ] || { echo "  port invalide"; continue; }
+        port_occupe "$nouveau" && { echo "  le port $nouveau est lui aussi utilisé"; continue; }
+        [ "$nouveau" != "${IMMOGEST_HTTP_PORT:-80}" ] || [ "$var" = IMMOGEST_HTTP_PORT ] || { echo "  ce port est déjà celui du HTTP"; continue; }
+        break
+      done
+      sed -i "s/^$var=.*/$var=$nouveau/" .env
+      printf -v "$var" '%s' "$nouveau"
+      if [ "${CADDYFILE:-}" = Caddyfile.domaine ]; then
+        echo "  Attention : en mode « domaine », Let's Encrypt a besoin que Internet atteigne le port 80 (ou 443) de ce serveur ; avec un autre port, placez un reverse proxy devant ou utilisez --mode tunnel."
+      fi
     done
   fi
 fi
