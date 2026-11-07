@@ -19,6 +19,7 @@ import {
   Sun,
   Settings,
   Users,
+  UserCog,
   Wallet,
   Wrench,
   X,
@@ -63,6 +64,10 @@ type Entree = {
   cle: string;
   icone: LucideIcon;
   gestion: boolean;
+  /** Visible par l'employé restreint (ENCAISSEUR), qui n'a accès à rien d'autre. */
+  encaisseur?: boolean;
+  /** Réservé à l'ADMIN. */
+  admin?: boolean;
 };
 
 type Groupe = {
@@ -99,7 +104,7 @@ const GROUPES: Groupe[] = [
   {
     cle: "finance",
     entrees: [
-      { href: "/encaissements", cle: "encaissements", icone: Wallet, gestion: true },
+      { href: "/encaissements", cle: "encaissements", icone: Wallet, gestion: true, encaisseur: true },
       { href: "/relances", cle: "relances", icone: CalendarClock, gestion: true },
       { href: "/reversements", cle: "reversements", icone: HandCoins, gestion: true },
     ],
@@ -114,6 +119,7 @@ const GROUPES: Groupe[] = [
   {
     cle: "administration",
     entrees: [
+      { href: "/equipe", cle: "equipe", icone: UserCog, gestion: true, admin: true },
       { href: "/parametres", cle: "parametres", icone: Settings, gestion: true },
     ],
   },
@@ -193,15 +199,21 @@ export function AppShell({ children }: { children: ReactNode }) {
     () => void deconnecter("inactivite"),
   );
 
-  const gestion =
-    moi?.role !== undefined &&
-    ROLES_GESTION.includes(moi.role);
+  const role = moi?.role;
+  const gestion = role !== undefined && ROLES_GESTION.includes(role);
+
+  // Un employé restreint n'a pas de tableau de bord : son espace de travail est l'encaissement
+  useEffect(() => {
+    if (role === "ENCAISSEUR" && (pathname === "/" || pathname === "/tableau-de-bord")) router.replace("/encaissements");
+  }, [role, pathname, router]);
 
   const groupes = GROUPES.map((g) => ({
     ...g,
-    entrees: g.entrees.filter(
-      (e) => !e.gestion || gestion,
-    ),
+    entrees: g.entrees.filter((e) => {
+      if (role === "ENCAISSEUR") return e.encaisseur === true;
+      if (e.admin) return role === "ADMIN";
+      return !e.gestion || gestion;
+    }),
   })).filter((g) => g.entrees.length > 0);
 
   const courante = groupes

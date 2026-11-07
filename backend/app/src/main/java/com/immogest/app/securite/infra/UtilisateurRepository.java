@@ -14,4 +14,8 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, UUID> 
     boolean existsByTelephone(String telephone);
 
     boolean existsByEmail(String email);
+
+    /** Comptes d'un des rôles donnés (page Équipe : employés). */
+    org.springframework.data.domain.Page<com.immogest.app.securite.domain.Utilisateur> findByRoleIn(
+            java.util.Collection<com.immogest.app.securite.Role> roles, org.springframework.data.domain.Pageable pageable);
 }

@@ -746,6 +746,20 @@ paths:
         schema:
           type: string
           default: nom
+      - name: roles
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - ADMIN
+            - GESTIONNAIRE
+            - PROPRIETAIRE_TIERS
+            - LOCATAIRE
+            - PRESTATAIRE
+            - ENCAISSEUR
       responses:
         "200":
           description: OK

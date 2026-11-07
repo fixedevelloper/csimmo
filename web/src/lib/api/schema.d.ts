@@ -3804,6 +3804,7 @@ export interface operations {
                 page?: number;
                 size?: number;
                 sort?: string;
+                roles?: ("ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR")[];
             };
             header?: never;
             path?: never;

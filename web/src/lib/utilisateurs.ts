@@ -1,8 +1,14 @@
-export const ROLES = ["ADMIN", "GESTIONNAIRE", "PROPRIETAIRE_TIERS", "LOCATAIRE", "PRESTATAIRE"] as const;
+export const ROLES = ["ADMIN", "GESTIONNAIRE", "PROPRIETAIRE_TIERS", "LOCATAIRE", "PRESTATAIRE", "ENCAISSEUR"] as const;
 export type RoleUtilisateur = (typeof ROLES)[number];
 
+/** Rôles proposés par Paramètres > Utilisateurs : l'ENCAISSEUR se crée depuis la page Équipe (double authentification et immeubles affectés). */
+export const ROLES_CREATION_GENERIQUE = ["ADMIN", "GESTIONNAIRE", "PROPRIETAIRE_TIERS", "LOCATAIRE", "PRESTATAIRE"] as const;
+
+/** Employés gérés depuis la page Équipe. */
+export const ROLES_EMPLOYES = ["ENCAISSEUR", "GESTIONNAIRE"] as const;
+
 /** Rôles qui doivent toujours se connecter par mot de passe (le serveur leur interdit l'OTP seul). */
-export const ROLES_MOT_DE_PASSE_OBLIGATOIRE: readonly RoleUtilisateur[] = ["ADMIN", "GESTIONNAIRE"];
+export const ROLES_MOT_DE_PASSE_OBLIGATOIRE: readonly RoleUtilisateur[] = ["ADMIN", "GESTIONNAIRE", "ENCAISSEUR"];
 
 const MINUSCULES = "abcdefghijkmnpqrstuvwxyz"; // sans l, o (confusion avec 1, 0)
 const MAJUSCULES = "ABCDEFGHJKLMNPQRSTUVWXYZ";

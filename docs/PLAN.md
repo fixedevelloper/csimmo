@@ -368,7 +368,7 @@ Un employé n'accède qu'aux immeubles qui lui sont affectés ; sans affectation
 ### [x] 12.1 Socle : affectations et périmètre (phase A, backend)
 Migration `sec_affectation` ; rôle `ENCAISSEUR` (double authentification obligatoire, révocation des sessions à la désactivation) ; `shared.PerimetreAcces` et `shared.LocatairesDuPerimetre` ; filtrage de patrimoine, bail, finance (paiements, échéances, caisse, documents), tiers (locataires) ; ouverture des seules routes de l'encaisseur ; audit des affectations ; OpenAPI et clients TS/Dart régénérés. Tests : « interdit hors périmètre » par route, non-régression ADMIN/GESTIONNAIRE, matrice des droits.
 
-### [ ] 12.2 Page Équipe (phase A, web) et espace agent (mobile)
+### [x] 12.2 Page Équipe (phase A, web) et espace agent (mobile) — fiche employé détaillée (encaissements récents, audit) reportée
 Menu Administration > Équipe : liste, création, affectation multiple, fiche employé (encaissements, caisse, audit). Mobile : espace agent pour `ENCAISSEUR`, cache limité au périmètre, vidé quand les affectations changent. e2e : un encaisseur n'encaisse que dans son périmètre.
 
 ### [ ] 12.3 Gestionnaire de biens (phase B)

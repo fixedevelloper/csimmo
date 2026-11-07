@@ -18,10 +18,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useErrorMessage } from "@/hooks/use-error-message";
+import { useActionsUtilisateur } from "@/hooks/use-actions-utilisateur";
 import { useUtilisateurs } from "@/hooks/use-utilisateurs";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
-import { genererMotDePasse, ROLES, type RoleUtilisateur } from "@/lib/utilisateurs";
+import { genererMotDePasse, ROLES, ROLES_CREATION_GENERIQUE, type RoleUtilisateur } from "@/lib/utilisateurs";
 import type { components } from "@/lib/api/schema";
 
 type Utilisateur = components["schemas"]["UtilisateurDto"];
@@ -80,7 +81,7 @@ function FormulaireCreation({ onCree, onAnnuler }: { onCree: (identifiant: strin
           nom: z.string().trim().min(1, t("erreurs.nom")).max(200),
           telephone: z.string().trim().max(30),
           email: z.string().trim().max(200).refine((v) => v === "" || /^\S+@\S+\.\S+$/.test(v), t("erreurs.email")),
-          role: z.enum(ROLES),
+          role: z.enum(ROLES_CREATION_GENERIQUE),
           motDePasse: z.string().min(8, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")),
         })
         .refine((v) => v.telephone !== "" || v.email !== "", { path: ["telephone"], message: t("erreurs.contact") }),
@@ -122,7 +123,7 @@ function FormulaireCreation({ onCree, onAnnuler }: { onCree: (identifiant: strin
             <div className="flex flex-col gap-1">
               <label htmlFor="u-role" className="text-sm font-medium">{t("role")}</label>
               <NativeSelect id="u-role" {...form.register("role")}>
-                {ROLES.map((r) => (
+                {ROLES_CREATION_GENERIQUE.map((r) => (
                   <option key={r} value={r}>{t(`roles.${r}`)}</option>
                 ))}
               </NativeSelect>
@@ -152,7 +153,7 @@ function FormulaireCreation({ onCree, onAnnuler }: { onCree: (identifiant: strin
   );
 }
 
-function FormulaireReinitialisation({ utilisateur, onFait, onAnnuler }: { utilisateur: Utilisateur; onFait: (motDePasse: string) => void; onAnnuler: () => void }) {
+export function FormulaireReinitialisation({ utilisateur, onFait, onAnnuler }: { utilisateur: Utilisateur; onFait: (motDePasse: string) => void; onAnnuler: () => void }) {
   const t = useTranslations("utilisateurs");
   const message = useErrorMessage();
   const [erreur, setErreur] = useState<string | null>(null);
@@ -206,32 +207,7 @@ export function UtilisateursListe() {
   const [aReinitialiser, setAReinitialiser] = useState<Utilisateur | null>(null);
   const [recap, setRecap] = useState<{ identifiant: string; motDePasse: string } | null>(null);
 
-  async function agir(action: () => Promise<unknown>, succes: string) {
-    try {
-      await action();
-      await queryClient.invalidateQueries({ queryKey: ["utilisateurs"] });
-      toast.success(succes);
-    } catch (e) {
-      toast.error(message(e));
-    }
-  }
-
-  const basculerActif = (u: Utilisateur) =>
-    agir(
-      async () =>
-        deballer(
-          await api.PUT("/api/v1/utilisateurs/{id}", {
-            params: { path: { id: u.id ?? "" } },
-            body: {
-              nom: u.nom ?? "", telephone: u.telephone, email: u.email, role: u.role ?? "LOCATAIRE",
-              actif: !u.actif, deuxFacteursActif: u.deuxFacteursActif,
-            },
-          }),
-        ),
-      t(u.actif ? "desactive" : "active"),
-    );
-  const deverrouiller = (u: Utilisateur) =>
-    agir(async () => deballer(await api.POST("/api/v1/utilisateurs/{id}/deverrouiller", { params: { path: { id: u.id ?? "" } } })), t("deverrouille"));
+  const { basculerActif, deverrouiller } = useActionsUtilisateur();
 
   const colonnes: Colonne<Utilisateur>[] = [
     {

@@ -231,6 +231,24 @@ class PerimetreEncaisseurTest {
     }
 
     @Test
+    void la_liste_des_comptes_se_filtre_par_role() throws Exception {
+        JsonNode contenu = mapper.readTree(mvc.perform(get("/api/v1/utilisateurs").param("roles", "ENCAISSEUR").param("size", "100").with(ADMIN))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).path("content");
+        List<String> roles = new ArrayList<>();
+        List<String> idsTrouves = new ArrayList<>();
+        contenu.forEach(n -> {
+            roles.add(n.path("role").asText());
+            idsTrouves.add(n.path("id").asText());
+        });
+        assertThat(roles).isNotEmpty().containsOnly("ENCAISSEUR");
+        assertThat(idsTrouves).contains(employe.toString());
+        // plusieurs rôles, et sans filtre : tout
+        JsonNode deux = mapper.readTree(mvc.perform(get("/api/v1/utilisateurs").param("roles", "ENCAISSEUR", "GESTIONNAIRE").param("size", "100").with(ADMIN))
+                .andReturn().getResponse().getContentAsString()).path("content");
+        deux.forEach(n -> assertThat(n.path("role").asText()).isIn("ENCAISSEUR", "GESTIONNAIRE"));
+    }
+
+    @Test
     void admin_et_gestionnaire_gardent_une_vue_complete() throws Exception {
         for (Role role : List.of(Role.ADMIN, Role.GESTIONNAIRE)) {
             RequestPostProcessor acteur = jwtRole(role, UUID.randomUUID());

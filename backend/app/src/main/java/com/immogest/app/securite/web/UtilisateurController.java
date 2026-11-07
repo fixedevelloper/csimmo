@@ -58,13 +58,14 @@ class UtilisateurController {
 
     @GetMapping
     PageReponse<UtilisateurDto> lister(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "nom") String sort) {
+            @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "nom") String sort,
+            @RequestParam(required = false) java.util.List<Role> roles) {
         int taille = Math.min(Math.max(size, 1), 100);
         String champ = switch (sort) {
             case "nom", "role", "createdAt" -> sort;
             default -> "nom";
         };
-        return PageReponse.de(service.lister(PageRequest.of(Math.max(page, 0), taille, Sort.by(champ))));
+        return PageReponse.de(service.lister(roles, PageRequest.of(Math.max(page, 0), taille, Sort.by(champ))));
     }
 
     @GetMapping("/{id}")

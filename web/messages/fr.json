@@ -27,6 +27,7 @@
     "encaissements": "Encaissements",
     "relances": "Relances",
     "proprietaires": "Propriétaires",
+    "equipe": "Équipe",
     "parametres": "Paramètres",
     "ouvrirMenu": "Ouvrir le menu",
     "fermerMenu": "Fermer le menu",
@@ -378,7 +379,8 @@
       "GESTIONNAIRE": "Gestionnaire",
       "PROPRIETAIRE_TIERS": "Propriétaire",
       "LOCATAIRE": "Locataire",
-      "PRESTATAIRE": "Prestataire"
+      "PRESTATAIRE": "Prestataire",
+      "ENCAISSEUR": "Encaisseur"
     },
     "motDePasse": "Mot de passe",
     "nouveauMotDePasse": "Nouveau mot de passe",
@@ -424,6 +426,40 @@
       "email": "Adresse e-mail invalide.",
       "contact": "Un téléphone ou un e-mail est obligatoire.",
       "motDePasse": "Le mot de passe contient entre 8 et 100 caractères."
+    }
+  },
+  "equipe": {
+    "titre": "Équipe",
+    "description": "Vos employés : un encaisseur n'accède qu'aux immeubles que vous lui affectez.",
+    "nouveau": "Nouvel employé",
+    "creer": "Créer l'employé",
+    "annuler": "Annuler",
+    "enregistrer": "Enregistrer",
+    "roles": {
+      "ENCAISSEUR": "Encaisseur",
+      "GESTIONNAIRE": "Gestionnaire (accès total)"
+    },
+    "roleAide": {
+      "ENCAISSEUR": "Encaisse les loyers et consulte les baux, locataires et paiements des immeubles qui lui sont affectés. Rien d'autre : ni reversements, ni paramètres, ni contre-passation.",
+      "GESTIONNAIRE": "Accès à tout le patrimoine et à toute la gestion, comme vous (hors paramètres sensibles réservés à l'administrateur)."
+    },
+    "doubleAuth": "La double authentification est activée : l'employé reçoit un code par SMS à chaque connexion.",
+    "immeubles": "Immeubles",
+    "immeublesAffectes": "Immeubles affectés",
+    "immeublesAide": "L'encaisseur ne voit que ces immeubles. Sans immeuble coché, il ne voit rien.",
+    "rechercherImmeuble": "Rechercher un immeuble",
+    "aucunImmeuble": "Aucun immeuble.",
+    "selection": "{count, plural, =0 {Aucun immeuble sélectionné} one {# immeuble sélectionné} other {# immeubles sélectionnés}}",
+    "tous": "Tous",
+    "aucun": "Aucun",
+    "nombreImmeubles": "{count, plural, one {# immeuble} other {# immeubles}}",
+    "affectationsDe": "Immeubles affectés à {nom}",
+    "affectationsEnregistrees": "Affectations enregistrées.",
+    "aucuneAffectation": "Sans immeuble, cet employé ne voit rien et ne peut encaisser nulle part.",
+    "affectationEchouee": "Le compte a été créé mais les immeubles n'ont pas pu être affectés (ne le recréez pas : utilisez le bouton « Immeubles » de la liste).",
+    "aucunEmploye": "Aucun employé pour le moment.",
+    "erreurs": {
+      "telephone": "Le téléphone est obligatoire (code de double authentification)."
     }
   },
   "licence": {

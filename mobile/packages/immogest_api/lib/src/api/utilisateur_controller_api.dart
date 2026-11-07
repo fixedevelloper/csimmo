@@ -308,6 +308,7 @@ _responseData = rawData == null ? null : deserialize<AffectationsReponse, Affect
   /// * [page] 
   /// * [size] 
   /// * [sort] 
+  /// * [roles] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -321,6 +322,7 @@ _responseData = rawData == null ? null : deserialize<AffectationsReponse, Affect
     int? page = 0,
     int? size = 20,
     String? sort = 'nom',
+    List<String>? roles,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -345,6 +347,7 @@ _responseData = rawData == null ? null : deserialize<AffectationsReponse, Affect
       if (page != null) r'page': page,
       if (size != null) r'size': size,
       if (sort != null) r'sort': sort,
+      if (roles != null) r'roles': roles,
     };
 
     final _response = await _dio.request<Object>(

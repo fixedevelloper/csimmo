@@ -126,6 +126,12 @@ public class UtilisateurService {
         return utilisateurs.findAll(pageable).map(this::dto);
     }
 
+    /** Comptes d'un des rôles donnés ; liste vide ou absente = tous les rôles. */
+    @Transactional(readOnly = true)
+    public Page<UtilisateurDto> lister(java.util.Collection<Role> roles, Pageable pageable) {
+        return roles == null || roles.isEmpty() ? lister(pageable) : utilisateurs.findByRoleIn(roles, pageable).map(this::dto);
+    }
+
     // ----------------------------------------------------------------
 
     private Utilisateur charger(UUID id) {
