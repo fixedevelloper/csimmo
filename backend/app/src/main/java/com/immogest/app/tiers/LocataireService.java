@@ -44,12 +44,14 @@ public class LocataireService {
     private final StockageService stockage;
     private final LiensUtilisateur liens;
     private final JournalTiers journal;
-    private final com.immogest.app.shared.LocatairesDuPerimetre perimetre;
+    private final com.immogest.app.tiers.infra.VisibiliteLocataires visibilite;
+    private final com.immogest.app.shared.ActeurCourant acteurCourant;
 
     LocataireService(LocataireRepository locataires, GarantRepository garants, PieceIdentiteRepository pieces, TiersMapper mapper,
             ChiffrementDonnees chiffrement, StockageService stockage, LiensUtilisateur liens, JournalTiers journal,
-            com.immogest.app.shared.LocatairesDuPerimetre perimetre) {
-        this.perimetre = perimetre;
+            com.immogest.app.tiers.infra.VisibiliteLocataires visibilite, com.immogest.app.shared.ActeurCourant acteurCourant) {
+        this.visibilite = visibilite;
+        this.acteurCourant = acteurCourant;
         this.locataires = locataires;
         this.garants = garants;
         this.pieces = pieces;
@@ -64,10 +66,7 @@ public class LocataireService {
 
     @Transactional(readOnly = true)
     public Page<LocataireDto> lister(String q, boolean inclureArchives, Pageable pageable) {
-        org.springframework.data.jpa.domain.Specification<Locataire> restriction = perimetre.locatairesVisibles() // employé restreint
-                .<org.springframework.data.jpa.domain.Specification<Locataire>>map(ids -> (r, cq, cb) -> ids.isEmpty() ? cb.disjunction() : r.get("id").in(ids))
-                .orElse(null);
-        return locataires.findAll(RechercheSpecifications.<Locataire>parNomOuTelephone(q, inclureArchives).and(restriction), pageable)
+        return locataires.findAll(RechercheSpecifications.<Locataire>parNomOuTelephone(q, inclureArchives).and(visibilite.restriction()), pageable)
                 .map(mapper::versDto); // numéro de CNI absent des listes
     }
 
@@ -78,7 +77,9 @@ public class LocataireService {
 
     @Transactional
     public LocataireDto creer(LocataireSaisie s) {
-        Locataire l = locataires.saveAndFlush(construire(s, null));
+        Locataire nouveau = construire(s, null);
+        nouveau.definirCreateur(acteurCourant.acteur().map(a -> a.id()).orElse(null));
+        Locataire l = locataires.saveAndFlush(nouveau);
         journal.publier("TIERS.LOCATAIRE_CREE", "locataire", l.getId(), null, resume(l));
         return detail(l);
     }
@@ -172,6 +173,7 @@ public class LocataireService {
     public void supprimerPiece(UUID pieceId) {
         PieceIdentite piece = pieces.findById(pieceId).orElseThrow(() ->
                 new ErreurMetier("PIECE_INTROUVABLE", "Pièce introuvable", HttpStatus.NOT_FOUND));
+        verifierCible(piece.getCibleType(), piece.getCibleId(), false); // la fiche doit être dans le périmètre
         pieces.delete(piece);
         stockage.supprimer(piece.getFichierId());
         journal.publier("TIERS.PIECE_SUPPRIMEE", piece.getCibleType().name().toLowerCase(), piece.getCibleId(),
@@ -237,8 +239,10 @@ public class LocataireService {
         }
     }
 
+    /** Un employé restreint ne charge que les locataires de son périmètre : les autres sont « introuvables ». */
     private Locataire charger(UUID id) {
-        return locataires.findById(id).orElseThrow(() -> new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable", HttpStatus.NOT_FOUND));
+        return locataires.findById(id).filter(visibilite::visible)
+                .orElseThrow(() -> new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable", HttpStatus.NOT_FOUND));
     }
 
     private Locataire chargerActif(UUID id) {
@@ -250,7 +254,11 @@ public class LocataireService {
     }
 
     private Garant chargerGarant(UUID id) {
-        return garants.findById(id).orElseThrow(() -> new ErreurMetier("GARANT_INTROUVABLE", "Garant introuvable", HttpStatus.NOT_FOUND));
+        Garant g = garants.findById(id).orElseThrow(() -> new ErreurMetier("GARANT_INTROUVABLE", "Garant introuvable", HttpStatus.NOT_FOUND));
+        if (!locataires.findById(g.getLocataireId()).filter(visibilite::visible).isPresent()) { // garant d'un locataire hors périmètre
+            throw new ErreurMetier("GARANT_INTROUVABLE", "Garant introuvable", HttpStatus.NOT_FOUND);
+        }
+        return g;
     }
 
     private Garant chargerGarantActif(UUID id) {

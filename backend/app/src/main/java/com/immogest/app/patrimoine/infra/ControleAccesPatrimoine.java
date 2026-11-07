@@ -18,11 +18,13 @@ class ControleAccesPatrimoine implements ControleAccesFichier {
     private final ImmeubleRepository immeubles;
     private final LotRepository lots;
     private final LecteurTiers tiers;
+    private final com.immogest.app.shared.PerimetreAcces perimetre;
 
-    ControleAccesPatrimoine(ImmeubleRepository immeubles, LotRepository lots, LecteurTiers tiers) {
+    ControleAccesPatrimoine(ImmeubleRepository immeubles, LotRepository lots, LecteurTiers tiers, com.immogest.app.shared.PerimetreAcces perimetre) {
         this.immeubles = immeubles;
         this.lots = lots;
         this.tiers = tiers;
+        this.perimetre = perimetre;
     }
 
     @Override
@@ -35,6 +37,14 @@ class ControleAccesPatrimoine implements ControleAccesFichier {
     public boolean peutLire(String entite, UUID entiteId, Acteur acteur) {
         if (acteur.aLeRole("ADMIN") || acteur.aLeRole("GESTIONNAIRE")) {
             return true;
+        }
+        if (acteur.aLeRole("GESTIONNAIRE_BIENS")) { // photos des immeubles et lots de son périmètre
+            UUID immeuble = switch (entite) {
+                case "immeuble" -> entiteId;
+                case "lot" -> lots.findById(entiteId).map(l -> l.getImmeuble().getId()).orElse(null);
+                default -> null;
+            };
+            return immeuble != null && perimetre.immeublesVisibles().map(ids -> ids.contains(immeuble)).orElse(false);
         }
         if (!acteur.aLeRole("PROPRIETAIRE_TIERS")) {
             return false;

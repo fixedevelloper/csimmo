@@ -40,4 +40,7 @@ public interface LecteurTiers {
 
     /** Mandat en vigueur à la date donnée pour ce propriétaire (honoraires du reversement). */
     Optional<MandatResume> mandatEnVigueur(UUID proprietaireId, LocalDate date);
+
+    /** Vrai si le locataire est visible par l'utilisateur de la requête (employé restreint : bail dans son périmètre ou fiche créée par lui). */
+    boolean locataireVisible(UUID locataireId);
 }

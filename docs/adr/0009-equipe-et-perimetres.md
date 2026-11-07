@@ -1,6 +1,6 @@
 # ADR 0009 — Équipe (employés) et périmètres d'accès
 
-Statut : proposé (en attente de validation avant le codage). Étape du plan : 12 (`docs/PLAN.md`).
+Statut : accepté ; phases A (`ENCAISSEUR`, étapes 12.1-12.2) et B (`GESTIONNAIRE_BIENS`, étape 12.3) livrées. Étape du plan : 12 (`docs/PLAN.md`).
 
 ## Contexte
 
@@ -85,3 +85,22 @@ Inchangée (palier par nombre de lots). Un plafond d'employés serait une décis
 - **Fuite par oubli de filtre** : le point le plus risqué. Parades : refus par défaut (D1), un test « interdit hors périmètre » par route ouverte à un rôle restreint, et un test de matrice qui échoue si une route ouverte à `ENCAISSEUR` n'est pas listée avec son filtre.
 - Le **mobile** met en cache locataires et baux (`cache_terrain`) : il doit être vidé quand les affectations changent (déjà vidé à la déconnexion), et ne charger que le périmètre.
 - Les **statistiques agrégées** (tableau de bord) ne sont pas ouvertes aux rôles restreints en phase A, pour éviter une fuite par totaux.
+
+## Phase B — `GESTIONNAIRE_BIENS` (étape 12.3)
+
+Même mécanisme (rôle restreint, affectations, refus par défaut, 404 hors périmètre, double authentification obligatoire). `Role.restreintAuxAffectations()` couvre les deux rôles ; `PerimetreAccesSecurite` n'a pas changé.
+
+**Autorisé, dans son périmètre :**
+
+- lire immeubles, lots (et leurs photos) ;
+- **baux** : lister, voir, créer, modifier (brouillon), supprimer (brouillon), activer, résilier, renouveler, documents et aperçu PDF ; la création vérifie que le lot **et** le locataire sont dans son périmètre ;
+- **locataires** : lister, voir, créer, modifier, archiver, garants, pièces d'identité (et leurs fichiers) ;
+- **relances** : arriérés, historique, relance manuelle, mise en demeure (et PDF) ; lecture des paramètres de relance (pas leur modification) ;
+- **signalements** : lister, voir, changer le statut (et photos) ;
+- paiements, échéances, documents de paiement, caisse (les siens), comme l'encaisseur.
+
+**Refusé :** créer ou modifier immeubles et lots (le palier de licence compte les lots), contre-passation, reversements, dépenses, propriétaires et prestataires, modèle de bail, paramètres, utilisateurs, import, conformité, sauvegardes, licence, tableau de bord, exécution des relances automatiques.
+
+**Visibilité des locataires (décidée) :** un locataire est visible s'il a (ou a eu) un bail dans le périmètre **ou** si l'employé l'a créé lui-même (colonne `locataire.cree_par`, V24). Sans cela, il ne retrouverait pas la fiche qu'il vient de créer avant d'y rattacher un bail. Un locataire créé par un ADMIN reste invisible tant qu'aucun bail ne le rattache au périmètre. La règle vit dans `tiers.infra.VisibiliteLocataires` ; `LecteurTiers.locataireVisible` la met à disposition de `bail`.
+
+**Point d'attention :** `BailService.charger` applique le périmètre à tous les chemins (lecture, modification, activation, résiliation, PDF) ; une nouvelle opération sur les baux doit passer par lui.

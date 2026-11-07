@@ -69,7 +69,7 @@ class SignalementController {
 
     /** Gestionnaires : tous les signalements ; locataire : les siens. */
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE')")
     @io.swagger.v3.oas.annotations.Operation(operationId = "listerSignalements")
     PageReponse<SignalementDto> lister(@RequestParam(required = false) StatutSignalement statut, @RequestParam(required = false) UUID bailId,
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(required = false) String sort) {
@@ -77,13 +77,13 @@ class SignalementController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE')")
     SignalementDto obtenir(@PathVariable UUID id) {
         return service.obtenir(id);
     }
 
     @PutMapping("/{id}/statut")
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS')")
     SignalementDto changerStatut(@PathVariable UUID id, @Valid @RequestBody StatutSignalementRequete r) {
         return service.changerStatut(id, r.statut(), r.note());
     }

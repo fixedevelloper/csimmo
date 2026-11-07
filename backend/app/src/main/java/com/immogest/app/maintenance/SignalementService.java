@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -93,8 +95,15 @@ public class SignalementService {
         UUID impose = locataireActeur().orElse(null);
         boolean locataire = acteurCourant.acteur().filter(a -> a.aLeRole("LOCATAIRE")).isPresent();
         UUID filtreLocataire = locataire ? (impose == null ? new UUID(0, 0) : impose) : null;
+        Optional<Set<UUID>> visibles = baux.bailIdsVisibles(); // employé restreint : seulement les signalements des baux de son périmètre
+        if (visibles.isPresent() && bailId != null && !visibles.get().contains(bailId)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
+        }
         Specification<Signalement> spec = (r, q, cb) -> {
             List<Predicate> c = new ArrayList<>();
+            if (visibles.isPresent()) {
+                c.add(visibles.get().isEmpty() ? cb.disjunction() : r.get("bailId").in(visibles.get()));
+            }
             if (filtreLocataire != null) {
                 c.add(cb.equal(r.get("locataireId"), filtreLocataire));
             }
@@ -121,6 +130,7 @@ public class SignalementService {
         if (locataire && !s.getLocataireId().equals(impose)) {
             throw new ErreurMetier("SIGNALEMENT_INTROUVABLE", "Signalement introuvable", HttpStatus.NOT_FOUND);
         }
+        verifierVisible(s);
         return dto(s, new HashMap<>(), new HashMap<>(), new HashMap<>());
     }
 
@@ -128,6 +138,7 @@ public class SignalementService {
     @Transactional
     public SignalementDto changerStatut(UUID id, StatutSignalement vers, String noteSaisie) {
         Signalement s = charger(id);
+        verifierVisible(s);
         StatutSignalement de = s.getStatut();
         if (de.terminal() || vers == StatutSignalement.NOUVEAU || vers == de) {
             throw new ErreurMetier("SIGNALEMENT_TRANSITION_INVALIDE", "Transition impossible de %s vers %s".formatted(de, vers), HttpStatus.CONFLICT);
@@ -149,6 +160,13 @@ public class SignalementService {
 
     private java.util.Optional<UUID> locataireActeur() {
         return acteurCourant.acteur().filter(a -> a.aLeRole("LOCATAIRE")).flatMap(a -> tiers.locataireDeUtilisateur(a.id()));
+    }
+
+    /** Employé restreint : le signalement d'un bail hors de son périmètre est « introuvable ». */
+    private void verifierVisible(Signalement s) {
+        if (baux.bailIdsVisibles().map(ids -> !ids.contains(s.getBailId())).orElse(false)) {
+            throw new ErreurMetier("SIGNALEMENT_INTROUVABLE", "Signalement introuvable", HttpStatus.NOT_FOUND);
+        }
     }
 
     private String auteur() {

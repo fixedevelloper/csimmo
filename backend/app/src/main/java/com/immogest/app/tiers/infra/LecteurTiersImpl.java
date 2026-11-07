@@ -23,14 +23,22 @@ class LecteurTiersImpl implements LecteurTiers {
     private final MandatRepository mandats;
     private final GarantRepository garants;
     private final ChiffrementDonnees chiffrement;
+    private final VisibiliteLocataires visibilite;
 
     LecteurTiersImpl(ProprietaireTiersRepository proprietaires, LocataireRepository locataires, MandatRepository mandats,
-            GarantRepository garants, ChiffrementDonnees chiffrement) {
+            GarantRepository garants, ChiffrementDonnees chiffrement, VisibiliteLocataires visibilite) {
+        this.visibilite = visibilite;
         this.proprietaires = proprietaires;
         this.locataires = locataires;
         this.mandats = mandats;
         this.garants = garants;
         this.chiffrement = chiffrement;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean locataireVisible(UUID locataireId) {
+        return locataires.findById(locataireId).map(visibilite::visible).orElse(false);
     }
 
     @Override

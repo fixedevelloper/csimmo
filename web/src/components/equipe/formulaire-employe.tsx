@@ -19,7 +19,7 @@ import { useErrorMessage } from "@/hooks/use-error-message";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import { optionnel } from "@/lib/tiers";
-import { genererMotDePasse, ROLES_EMPLOYES } from "@/lib/utilisateurs";
+import { estRestreint, genererMotDePasse, ROLES_EMPLOYES } from "@/lib/utilisateurs";
 
 type Props = {
   /** `avertissement` : le compte existe mais l'étape suivante (affectation des immeubles) a échoué. */
@@ -69,7 +69,7 @@ export function FormulaireEmploye({ onCree, onAnnuler }: Props) {
       return;
     }
     let avertissement: string | undefined;
-    if (v.role === "ENCAISSEUR" && immeubles.length > 0) {
+    if (estRestreint(v.role) && immeubles.length > 0) {
       try {
         deballer(await api.PUT("/api/v1/utilisateurs/{id}/affectations", { params: { path: { id: id ?? "" } }, body: { immeubleIds: immeubles } }));
       } catch (e) {
@@ -112,7 +112,7 @@ export function FormulaireEmploye({ onCree, onAnnuler }: Props) {
             </Button>
             <p className="mt-1 text-xs text-muted-foreground">{tu("genererAide")}</p>
           </div>
-          {role === "ENCAISSEUR" ? <ChoixImmeubles valeur={immeubles} onChange={setImmeubles} /> : null}
+          {estRestreint(role) ? <ChoixImmeubles valeur={immeubles} onChange={setImmeubles} /> : null}
           <p className="text-xs text-muted-foreground">{t("doubleAuth")}</p>
           {erreur ? <p role="alert" className="text-sm text-destructive">{erreur}</p> : null}
           <div className="flex gap-2">

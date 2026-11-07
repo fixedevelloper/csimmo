@@ -17,7 +17,7 @@ class RoleHomeScreen extends ConsumerWidget {
 
   String _titre(AppLocalizations l) => switch (role) {
         Role.locataire => l.espaceLocataire,
-        Role.gestionnaire || Role.admin || Role.encaisseur => l.espaceAgent,
+        Role.gestionnaire || Role.admin || Role.encaisseur || Role.gestionnaireBiens => l.espaceAgent,
         Role.prestataire => l.espacePrestataire,
         Role.proprietaireTiers => l.espaceProprietaire,
       };

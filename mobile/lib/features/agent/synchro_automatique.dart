@@ -19,7 +19,7 @@ class SynchroAutomatique with WidgetsBindingObserver {
   Timer? _minuteur;
 
   bool get _agent => switch (_ref.read(sessionProvider)) {
-        Role.gestionnaire || Role.admin || Role.encaisseur => true,
+        Role.gestionnaire || Role.admin || Role.encaisseur || Role.gestionnaireBiens => true,
         _ => false,
       };
 

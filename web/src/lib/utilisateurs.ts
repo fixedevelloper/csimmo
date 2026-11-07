@@ -1,14 +1,18 @@
-export const ROLES = ["ADMIN", "GESTIONNAIRE", "PROPRIETAIRE_TIERS", "LOCATAIRE", "PRESTATAIRE", "ENCAISSEUR"] as const;
+export const ROLES = ["ADMIN", "GESTIONNAIRE", "PROPRIETAIRE_TIERS", "LOCATAIRE", "PRESTATAIRE", "ENCAISSEUR", "GESTIONNAIRE_BIENS"] as const;
 export type RoleUtilisateur = (typeof ROLES)[number];
 
-/** Rôles proposés par Paramètres > Utilisateurs : l'ENCAISSEUR se crée depuis la page Équipe (double authentification et immeubles affectés). */
+/** Rôles proposés par Paramètres > Utilisateurs : les employés restreints se créent depuis la page Équipe (double authentification et immeubles affectés). */
 export const ROLES_CREATION_GENERIQUE = ["ADMIN", "GESTIONNAIRE", "PROPRIETAIRE_TIERS", "LOCATAIRE", "PRESTATAIRE"] as const;
 
 /** Employés gérés depuis la page Équipe. */
-export const ROLES_EMPLOYES = ["ENCAISSEUR", "GESTIONNAIRE"] as const;
+export const ROLES_EMPLOYES = ["ENCAISSEUR", "GESTIONNAIRE_BIENS", "GESTIONNAIRE"] as const;
+
+/** Employés limités aux immeubles qui leur sont affectés (sans affectation, ils ne voient rien). */
+export const ROLES_RESTREINTS: readonly string[] = ["ENCAISSEUR", "GESTIONNAIRE_BIENS"];
+export const estRestreint = (role?: string): boolean => role !== undefined && ROLES_RESTREINTS.includes(role);
 
 /** Rôles qui doivent toujours se connecter par mot de passe (le serveur leur interdit l'OTP seul). */
-export const ROLES_MOT_DE_PASSE_OBLIGATOIRE: readonly RoleUtilisateur[] = ["ADMIN", "GESTIONNAIRE", "ENCAISSEUR"];
+export const ROLES_MOT_DE_PASSE_OBLIGATOIRE: readonly RoleUtilisateur[] = ["ADMIN", "GESTIONNAIRE", "ENCAISSEUR", "GESTIONNAIRE_BIENS"];
 
 const MINUSCULES = "abcdefghijkmnpqrstuvwxyz"; // sans l, o (confusion avec 1, 0)
 const MAJUSCULES = "ABCDEFGHJKLMNPQRSTUVWXYZ";

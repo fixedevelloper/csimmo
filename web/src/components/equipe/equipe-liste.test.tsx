@@ -17,11 +17,12 @@ vi.mock("@/hooks/use-equipe", () => ({
       content: [
         { id: "u-1", nom: "Awa Encaisseuse", telephone: "+237611111111", role: "ENCAISSEUR", actif: true, verrouille: false },
         { id: "u-2", nom: "Boris Chef", telephone: "+237622222222", role: "GESTIONNAIRE", actif: true, verrouille: false },
+        { id: "u-3", nom: "Carine Biens", telephone: "+237633000000", role: "GESTIONNAIRE_BIENS", actif: true, verrouille: false },
       ],
-      page: 0, size: 20, totalElements: 2,
+      page: 0, size: 20, totalElements: 3,
     },
   }),
-  useAffectations: (id: string) => ({ data: id === "u-1" ? ["i-1", "i-2"] : [], isPending: false }),
+  useAffectations: (id: string) => ({ data: id === "u-1" ? ["i-1", "i-2"] : id === "u-3" ? ["i-3"] : [], isPending: false }),
   useImmeublesChoix: () => ({
     isPending: false,
     data: [
@@ -52,6 +53,31 @@ describe("EquipeListe", () => {
     expect(within(chef).getByText("Gestionnaire (accès total)")).toBeInTheDocument();
     expect(within(chef).getByText("Tous")).toBeInTheDocument();
     expect(within(chef).queryByRole("button", { name: "Immeubles" })).not.toBeInTheDocument();
+  });
+
+  it("affiche un gestionnaire de biens avec ses immeubles et le bouton pour les modifier", () => {
+    rendu();
+    const ligne = screen.getByText("Carine Biens").closest("tr") as HTMLElement;
+    expect(within(ligne).getByText("Gestionnaire de biens")).toBeInTheDocument();
+    expect(within(ligne).getByText("1 immeuble")).toBeInTheDocument();
+    expect(within(ligne).getByRole("button", { name: "Immeubles" })).toBeInTheDocument();
+  });
+
+  it("crée un gestionnaire de biens avec ses immeubles affectés", async () => {
+    post.mockReturnValueOnce(ok({ id: "u-11" }));
+    put.mockReturnValueOnce(ok({ immeubleIds: ["i-2"] }));
+    rendu();
+    await userEvent.click(screen.getByRole("button", { name: "Nouvel employé" }));
+    await userEvent.selectOptions(screen.getByLabelText("Rôle"), "GESTIONNAIRE_BIENS");
+    expect(screen.getByText("Immeubles affectés")).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText("Nom"), "Hugo Biens");
+    await userEvent.type(screen.getByLabelText("Téléphone"), "+237677000222");
+    await userEvent.click(screen.getByRole("button", { name: "Générer un mot de passe" }));
+    await userEvent.click(screen.getByText("Immeuble Bonanjo"));
+    await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
+    await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
+    expect(post.mock.calls[0][1].body).toMatchObject({ role: "GESTIONNAIRE_BIENS", deuxFacteursActif: true });
+    expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-2"]);
   });
 
   it("exige un téléphone et un mot de passe valides avant d'appeler l'API", async () => {

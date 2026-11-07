@@ -371,8 +371,8 @@ Migration `sec_affectation` ; rôle `ENCAISSEUR` (double authentification obliga
 ### [x] 12.2 Page Équipe (phase A, web) et espace agent (mobile) — fiche employé détaillée (encaissements récents, audit) reportée
 Menu Administration > Équipe : liste, création, affectation multiple, fiche employé (encaissements, caisse, audit). Mobile : espace agent pour `ENCAISSEUR`, cache limité au périmètre, vidé quand les affectations changent. e2e : un encaisseur n'encaisse que dans son périmètre.
 
-### [ ] 12.3 Gestionnaire de biens (phase B)
-Rôle `GESTIONNAIRE_BIENS` : baux, locataires, relances, signalements sur son périmètre ; règle de visibilité des locataires sans bail à décider (créés par lui ?).
+### [x] 12.3 Gestionnaire de biens (phase B)
+Rôle `GESTIONNAIRE_BIENS` : baux, locataires, relances, signalements sur son périmètre ; un locataire est visible avec un bail dans le périmètre ou s'il l'a créé (décidé, V24).
 
 ### [ ] 12.4 Comptable (phase C)
 Rôle `COMPTABLE` : lecture des paiements, dépenses et reversements du périmètre, validation des reversements.

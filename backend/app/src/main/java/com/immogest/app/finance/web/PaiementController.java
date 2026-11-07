@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 class PaiementController {
 
     private static final String GESTION = "hasAnyRole('ADMIN', 'GESTIONNAIRE')";
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE', 'ENCAISSEUR')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR')";
     /** Saisie d'un encaissement et caisse du jour : l'ENCAISSEUR n'agit que dans son périmètre (filtré par PaiementService). */
-    private static final String ENCAISSEMENT = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'ENCAISSEUR')";
+    private static final String ENCAISSEMENT = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("datePaiement", "montant", "createdAt");
 
     /** @param montant FCFA entiers */

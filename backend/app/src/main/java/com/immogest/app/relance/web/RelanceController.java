@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 class RelanceController {
 
-    private static final String GESTION = "hasAnyRole('ADMIN', 'GESTIONNAIRE')";
+    private static final String GESTION = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS')";
 
     record ParametresRequete(boolean actif, @NotNull List<Integer> niveaux, int delaiMiseEnDemeureJours) {
     }
@@ -97,7 +97,7 @@ class RelanceController {
 
     /** Gestionnaires : toutes (filtre par bail). Locataire : celles de ses baux. */
     @GetMapping("/mises-en-demeure")
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE')")
     PageReponse<MiseEnDemeureDto> lister(@RequestParam(required = false) UUID bailId, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         UUID locataire = acteurCourant.acteur().filter(a -> a.aLeRole("LOCATAIRE"))

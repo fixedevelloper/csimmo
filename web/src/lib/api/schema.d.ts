@@ -1613,7 +1613,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
+            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
             actif?: boolean;
             deuxFacteursActif?: boolean;
         };
@@ -1624,7 +1624,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
+            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
             actif?: boolean;
             deuxFacteursActif?: boolean;
             verrouille?: boolean;
@@ -2009,7 +2009,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
+            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
             deuxFacteursActif?: boolean;
             motDePasse: string;
         };
@@ -2466,7 +2466,7 @@ export interface components {
             expiresIn?: number;
             tokenType?: string;
             /** @enum {string} */
-            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
+            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
             deuxFacteursRequis?: boolean;
         };
         OtpVerification: {
@@ -3804,7 +3804,7 @@ export interface operations {
                 page?: number;
                 size?: number;
                 sort?: string;
-                roles?: ("ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR")[];
+                roles?: ("ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS")[];
             };
             header?: never;
             path?: never;

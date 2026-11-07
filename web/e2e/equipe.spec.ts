@@ -78,3 +78,33 @@ test("Équipe : le gestionnaire (accès total) n'a pas de choix d'immeubles et n
   await expect(ligne.getByText("Gestionnaire (accès total)")).toBeVisible();
   await expect(ligne.getByText("Tous", { exact: true })).toBeVisible();
 });
+
+test("Équipe : créer un gestionnaire de biens avec ses immeubles", async ({ page }) => {
+  await connecterAdmin(page);
+  const suffixe = Date.now().toString(36);
+  const creation = await page.request.post("/api/proxy/api/v1/immeubles", { data: { nom: `Immeuble Biens ${suffixe}`, adresse: "3 rue des Biens", ville: "Douala" } });
+  expect(creation.status()).toBe(201);
+  const immeuble = (await creation.json()) as { id: string };
+
+  const nom = `Gestionnaire Biens E2E ${suffixe}`;
+  await page.goto("/equipe");
+  await page.getByRole("button", { name: "Nouvel employé" }).click();
+  await page.getByLabel("Rôle").selectOption("GESTIONNAIRE_BIENS");
+  await page.getByLabel("Nom", { exact: true }).fill(nom);
+  await page.getByLabel("Téléphone").fill(telephone());
+  await page.getByRole("button", { name: "Générer un mot de passe" }).click();
+  await page.getByLabel("Rechercher un immeuble").fill(`Immeuble Biens ${suffixe}`);
+  await page.getByText(`Immeuble Biens ${suffixe}`, { exact: true }).click();
+  await page.getByRole("button", { name: "Créer l'employé" }).click();
+  await expect(page.getByTestId("recap-mot-de-passe")).toBeVisible();
+
+  const ligne = page.getByRole("row").filter({ hasText: nom });
+  await expect(ligne.getByText("Gestionnaire de biens", { exact: true })).toBeVisible();
+  await expect(ligne.getByText("1 immeuble", { exact: true })).toBeVisible();
+
+  const liste = await page.request.get("/api/proxy/api/v1/utilisateurs?roles=GESTIONNAIRE_BIENS&size=100");
+  const employe = ((await liste.json()) as { content: { id: string; nom: string }[] }).content.find((u) => u.nom === nom);
+  expect(employe).toBeTruthy();
+  const aff = await page.request.get(`/api/proxy/api/v1/utilisateurs/${employe!.id}/affectations`);
+  expect(((await aff.json()) as { immeubleIds: string[] }).immeubleIds).toEqual([immeuble.id]);
+});

@@ -64,8 +64,10 @@ type Entree = {
   cle: string;
   icone: LucideIcon;
   gestion: boolean;
-  /** Visible par l'employé restreint (ENCAISSEUR), qui n'a accès à rien d'autre. */
+  /** Visible par l'employé restreint ENCAISSEUR, qui n'a accès à rien d'autre. */
   encaisseur?: boolean;
+  /** Visible par l'employé restreint GESTIONNAIRE_BIENS (en plus des entrées « encaisseur »). */
+  gestionnaireBiens?: boolean;
   /** Réservé à l'ADMIN. */
   admin?: boolean;
 };
@@ -90,22 +92,23 @@ const GROUPES: Groupe[] = [
   {
     cle: "activite",
     entrees: [
-      { href: "/patrimoine", cle: "patrimoine", icone: Building2, gestion: true },
-      { href: "/locataires", cle: "locataires", icone: Users, gestion: true },
-      { href: "/baux", cle: "baux", icone: FileText, gestion: true },
+      { href: "/patrimoine", cle: "patrimoine", icone: Building2, gestion: true, gestionnaireBiens: true },
+      { href: "/locataires", cle: "locataires", icone: Users, gestion: true, gestionnaireBiens: true },
+      { href: "/baux", cle: "baux", icone: FileText, gestion: true, gestionnaireBiens: true },
       {
         href: "/signalements",
         cle: "signalements",
         icone: ClipboardList,
         gestion: true,
+        gestionnaireBiens: true,
       },
     ],
   },
   {
     cle: "finance",
     entrees: [
-      { href: "/encaissements", cle: "encaissements", icone: Wallet, gestion: true, encaisseur: true },
-      { href: "/relances", cle: "relances", icone: CalendarClock, gestion: true },
+      { href: "/encaissements", cle: "encaissements", icone: Wallet, gestion: true, encaisseur: true, gestionnaireBiens: true },
+      { href: "/relances", cle: "relances", icone: CalendarClock, gestion: true, gestionnaireBiens: true },
       { href: "/reversements", cle: "reversements", icone: HandCoins, gestion: true },
     ],
   },
@@ -202,15 +205,18 @@ export function AppShell({ children }: { children: ReactNode }) {
   const role = moi?.role;
   const gestion = role !== undefined && ROLES_GESTION.includes(role);
 
-  // Un employé restreint n'a pas de tableau de bord : son espace de travail est l'encaissement
+  // Un employé restreint n'a pas de tableau de bord : son espace de travail est l'encaissement (encaisseur) ou les baux (gestionnaire de biens)
   useEffect(() => {
-    if (role === "ENCAISSEUR" && (pathname === "/" || pathname === "/tableau-de-bord")) router.replace("/encaissements");
+    if (pathname !== "/" && pathname !== "/tableau-de-bord") return;
+    if (role === "ENCAISSEUR") router.replace("/encaissements");
+    if (role === "GESTIONNAIRE_BIENS") router.replace("/baux");
   }, [role, pathname, router]);
 
   const groupes = GROUPES.map((g) => ({
     ...g,
     entrees: g.entrees.filter((e) => {
       if (role === "ENCAISSEUR") return e.encaisseur === true;
+      if (role === "GESTIONNAIRE_BIENS") return e.gestionnaireBiens === true;
       if (e.admin) return role === "ADMIN";
       return !e.gestion || gestion;
     }),

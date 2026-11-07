@@ -27,7 +27,7 @@ class DocumentController {
 
     /** Gestionnaires : tout (filtres). Locataire : les siens (documents annulés exclus). */
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE', 'ENCAISSEUR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR')")
     @io.swagger.v3.oas.annotations.Operation(operationId = "listerDocumentsPaiement")
     PageReponse<DocumentDto> lister(@RequestParam(required = false) UUID bailId, @RequestParam(required = false) UUID locataireId,
             @RequestParam(required = false) String type, @RequestParam(defaultValue = "0") int page,

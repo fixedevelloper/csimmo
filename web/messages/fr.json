@@ -380,7 +380,8 @@
       "PROPRIETAIRE_TIERS": "Propriétaire",
       "LOCATAIRE": "Locataire",
       "PRESTATAIRE": "Prestataire",
-      "ENCAISSEUR": "Encaisseur"
+      "ENCAISSEUR": "Encaisseur",
+      "GESTIONNAIRE_BIENS": "Gestionnaire de biens"
     },
     "motDePasse": "Mot de passe",
     "nouveauMotDePasse": "Nouveau mot de passe",
@@ -437,10 +438,12 @@
     "enregistrer": "Enregistrer",
     "roles": {
       "ENCAISSEUR": "Encaisseur",
+      "GESTIONNAIRE_BIENS": "Gestionnaire de biens",
       "GESTIONNAIRE": "Gestionnaire (accès total)"
     },
     "roleAide": {
       "ENCAISSEUR": "Encaisse les loyers et consulte les baux, locataires et paiements des immeubles qui lui sont affectés. Rien d'autre : ni reversements, ni paramètres, ni contre-passation.",
+      "GESTIONNAIRE_BIENS": "Gère les baux, locataires, relances et signalements des immeubles qui lui sont affectés, et peut encaisser. Rien d'autre : ni reversements, ni paramètres, ni création d'immeubles.",
       "GESTIONNAIRE": "Accès à tout le patrimoine et à toute la gestion, comme vous (hors paramètres sensibles réservés à l'administrateur)."
     },
     "doubleAuth": "La double authentification est activée : l'employé reçoit un code par SMS à chaque connexion.",

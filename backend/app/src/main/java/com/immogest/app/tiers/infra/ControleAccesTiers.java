@@ -17,10 +17,12 @@ class ControleAccesTiers implements ControleAccesFichier {
 
     private final LocataireRepository locataires;
     private final GarantRepository garants;
+    private final VisibiliteLocataires visibilite;
 
-    ControleAccesTiers(LocataireRepository locataires, GarantRepository garants) {
+    ControleAccesTiers(LocataireRepository locataires, GarantRepository garants, VisibiliteLocataires visibilite) {
         this.locataires = locataires;
         this.garants = garants;
+        this.visibilite = visibilite;
     }
 
     @Override
@@ -33,6 +35,14 @@ class ControleAccesTiers implements ControleAccesFichier {
     public boolean peutLire(String entite, UUID entiteId, Acteur acteur) {
         if (acteur.aLeRole("ADMIN") || acteur.aLeRole("GESTIONNAIRE")) {
             return true;
+        }
+        if (acteur.aLeRole("GESTIONNAIRE_BIENS")) { // pièces d'identité des locataires (et de leurs garants) de son périmètre
+            UUID locataireVisible = switch (entite) {
+                case "locataire" -> entiteId;
+                case "garant" -> garants.findById(entiteId).map(Garant::getLocataireId).orElse(null);
+                default -> null;
+            };
+            return locataireVisible != null && locataires.findById(locataireVisible).map(visibilite::visible).orElse(false);
         }
         if (!acteur.aLeRole("LOCATAIRE")) {
             return false;

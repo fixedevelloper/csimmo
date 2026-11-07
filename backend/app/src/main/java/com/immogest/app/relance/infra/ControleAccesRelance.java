@@ -33,6 +33,9 @@ class ControleAccesRelance implements ControleAccesFichier {
         if (acteur.aLeRole("ADMIN") || acteur.aLeRole("GESTIONNAIRE")) {
             return true;
         }
+        if (acteur.aLeRole("GESTIONNAIRE_BIENS") && "mises-en-demeure".equals(entite)) { // mises en demeure des baux de son périmètre
+            return miseEnDemeures.findById(entiteId).map(m -> baux.bailIdsVisibles().map(ids -> ids.contains(m.getBailId())).orElse(false)).orElse(false);
+        }
         if (!acteur.aLeRole("LOCATAIRE") || !"mises-en-demeure".equals(entite)) {
             return false;
         }

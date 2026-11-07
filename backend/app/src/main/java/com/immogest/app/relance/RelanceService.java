@@ -211,6 +211,7 @@ public class RelanceService {
             throw new ErreurMetier("RELANCE_ECHEANCE_SOLDEE", "Cette échéance n'a rien à relancer", HttpStatus.CONFLICT);
         }
         BailResume bail = baux.bail(e.bailId()).orElseThrow(() -> new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND));
+        verifierBailVisible(e.bailId()); // employé restreint : hors périmètre = introuvable
         UUID moi = acteurCourant.acteur().map(a -> a.id()).orElse(null);
         Relance r = envoyer(e, bail, null, finance.aujourdhui(), TypeRelance.MANUELLE, moi);
         return versDto(List.of(r)).get(0);
@@ -220,6 +221,17 @@ public class RelanceService {
 
     @Transactional(readOnly = true)
     public Page<RelanceDto> historique(UUID echeanceId, UUID bailId, Pageable pageable) {
+        if (baux.bailIdsVisibles().isPresent()) { // employé restreint : toujours rattaché à un bail de son périmètre
+            if (bailId == null && echeanceId == null) {
+                return Page.empty(pageable);
+            }
+            if (bailId != null) {
+                verifierBailVisible(bailId);
+            }
+            if (echeanceId != null) {
+                verifierBailVisible(finance.echeance(echeanceId).map(EcheanceOuverte::bailId).orElse(null));
+            }
+        }
         Page<Relance> page = relances.historique(echeanceId, bailId, pageable);
         return new PageImpl<>(versDto(page.getContent()), pageable, page.getTotalElements());
     }
@@ -230,6 +242,14 @@ public class RelanceService {
         List<UUID> bailIds = null;
         if (q != null && !q.isBlank()) { // recherche par nom ou téléphone du locataire
             bailIds = tiers.rechercherLocataires(q.strip()).stream().flatMap(l -> baux.bauxDuLocataire(l).stream()).map(BailResume::id).toList();
+        }
+        Optional<Set<UUID>> visibles = baux.bailIdsVisibles();
+        if (visibles.isPresent()) { // employé restreint : seulement les arriérés des baux de son périmètre
+            List<UUID> dansLePerimetre = bailIds == null ? new ArrayList<>(visibles.get()) : bailIds.stream().filter(visibles.get()::contains).toList();
+            if (dansLePerimetre.isEmpty()) {
+                return Page.empty(pageable);
+            }
+            bailIds = dansLePerimetre;
         }
         int dernierNiveau = parametres().niveaux().stream().max(Integer::compare).orElse(30);
         Page<EcheanceOuverte> page = finance.arrieres(bailIds, pageable);
@@ -250,6 +270,13 @@ public class RelanceService {
                     e.montant(), e.reste(), retard, derniere, med == null && retard >= dernierNiveau, med == null ? null : med.getId());
         }).toList();
         return new PageImpl<>(dtos, pageable, page.getTotalElements());
+    }
+
+    /** Employé restreint : un bail hors de son périmètre (ou inconnu) est « introuvable ». Sans effet pour les autres rôles. */
+    private void verifierBailVisible(UUID bailId) {
+        if (baux.bailIdsVisibles().map(ids -> bailId == null || !ids.contains(bailId)).orElse(false)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
+        }
     }
 
     private List<RelanceDto> versDto(List<Relance> liste) {
@@ -294,6 +321,7 @@ public class RelanceService {
                     HttpStatus.CONFLICT);
         }
         BailResume bail = baux.bail(e.bailId()).orElseThrow(() -> new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND));
+        verifierBailVisible(e.bailId()); // employé restreint : hors périmètre = introuvable
         var locataire = tiers.locatairePourContrat(bail.locataireId())
                 .orElseThrow(() -> new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable ou archivé", HttpStatus.CONFLICT));
         LotResume lot = lots.lot(bail.lotId()).orElse(null);
@@ -339,7 +367,17 @@ public class RelanceService {
     @Transactional(readOnly = true)
     public Page<MiseEnDemeureDto> miseEnDemeures(UUID bailId, UUID locataireImpose, Pageable pageable) {
         Page<MiseEnDemeure> page;
-        if (locataireImpose != null) {
+        Optional<Set<UUID>> visibles = baux.bailIdsVisibles();
+        if (visibles.isPresent()) { // employé restreint : seulement les baux de son périmètre
+            if (bailId != null) {
+                verifierBailVisible(bailId);
+            }
+            List<UUID> mes = bailId != null ? List.of(bailId) : new ArrayList<>(visibles.get());
+            if (mes.isEmpty()) {
+                return Page.empty(pageable);
+            }
+            page = miseEnDemeures.listerDesBaux(mes, pageable);
+        } else if (locataireImpose != null) {
             List<UUID> mes = baux.bauxDuLocataire(locataireImpose).stream().map(BailResume::id).filter(id -> bailId == null || id.equals(bailId)).toList();
             if (mes.isEmpty()) {
                 return Page.empty(pageable);

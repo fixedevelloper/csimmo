@@ -329,6 +329,14 @@ public class BailService {
         if (s.lotId() == null || s.locataireId() == null) {
             throw new ErreurMetier("BAIL_LOT_LOCATAIRE_REQUIS", "Le lot et le locataire sont obligatoires", HttpStatus.BAD_REQUEST);
         }
+        lotsVisibles().ifPresent(autorises -> { // employé restreint : un lot et un locataire de son périmètre, sinon introuvables
+            if (!autorises.contains(s.lotId())) {
+                throw new ErreurMetier("LOT_INTROUVABLE", "Lot introuvable", HttpStatus.NOT_FOUND);
+            }
+            if (!tiers.locataireVisible(s.locataireId())) {
+                throw new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable ou archivé", HttpStatus.NOT_FOUND);
+            }
+        });
         lotActif(s.lotId());
         tiers.locatairePourContrat(s.locataireId()).orElseThrow(() ->
                 new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable ou archivé", HttpStatus.NOT_FOUND));
@@ -388,8 +396,13 @@ public class BailService {
 
     // ================================================================== interne : accès, DTO, PDF
 
+    /** Charge un bail ; un employé restreint ne voit que ceux des lots de son périmètre (les autres sont « introuvables »). */
     private Bail charger(UUID id) {
-        return baux.findById(id).orElseThrow(() -> new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND));
+        Bail bail = baux.findById(id).orElseThrow(() -> new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND));
+        if (lotsVisibles().map(lotsAutorises -> !lotsAutorises.contains(bail.getLotId())).orElse(false)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
+        }
+        return bail;
     }
 
     /** Un locataire ne voit que ses baux : les autres sont « introuvables ». */
@@ -397,9 +410,6 @@ public class BailService {
         Bail bail = charger(id);
         UUID impose = locataireImpose();
         if (impose != null && !impose.equals(bail.getLocataireId())) {
-            throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
-        }
-        if (lotsVisibles().map(lotsAutorises -> !lotsAutorises.contains(bail.getLotId())).orElse(false)) {
             throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
         }
         return bail;

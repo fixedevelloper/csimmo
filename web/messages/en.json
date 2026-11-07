@@ -380,7 +380,8 @@
       "PROPRIETAIRE_TIERS": "Owner",
       "LOCATAIRE": "Tenant",
       "PRESTATAIRE": "Service provider",
-      "ENCAISSEUR": "Cashier"
+      "ENCAISSEUR": "Cashier",
+      "GESTIONNAIRE_BIENS": "Property manager"
     },
     "motDePasse": "Password",
     "nouveauMotDePasse": "New password",
@@ -437,10 +438,12 @@
     "enregistrer": "Save",
     "roles": {
       "ENCAISSEUR": "Cashier",
+      "GESTIONNAIRE_BIENS": "Property manager",
       "GESTIONNAIRE": "Manager (full access)"
     },
     "roleAide": {
       "ENCAISSEUR": "Collects rent and views the leases, tenants and payments of the buildings assigned to them. Nothing else: no payouts, no settings, no reversal.",
+      "GESTIONNAIRE_BIENS": "Manages the leases, tenants, reminders and reports of the buildings assigned to them, and can collect rent. Nothing else: no payouts, no settings, no building creation.",
       "GESTIONNAIRE": "Access to the whole portfolio and all management, like you (except sensitive settings reserved to the administrator)."
     },
     "doubleAuth": "Two-factor authentication is on: the employee gets an SMS code at each sign-in.",

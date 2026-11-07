@@ -33,12 +33,26 @@ public class Locataire extends BaseEntity {
     @Column(nullable = false)
     private boolean archive;
 
+    /** Compte qui a créé la fiche (un employé restreint retrouve ses propres locataires avant leur premier bail). */
+    @Column(name = "cree_par", updatable = false)
+    private UUID creePar;
+
     protected Locataire() {
     }
 
     public Locataire(String nom, String profession, String telephone, String email, String adresse, LocalDate dateNaissance,
             String numeroCniChiffre, UUID utilisateurId, String notes) {
         modifier(nom, profession, telephone, email, adresse, dateNaissance, numeroCniChiffre, utilisateurId, notes);
+    }
+
+    public UUID getCreePar() {
+        return creePar;
+    }
+
+    public void definirCreateur(UUID compte) {
+        if (creePar == null) {
+            creePar = compte;
+        }
     }
 
     public void modifier(String nom, String profession, String telephone, String email, String adresse, LocalDate dateNaissance,

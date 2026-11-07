@@ -41,12 +41,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/baux")
-@PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
+@PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS')")
 class BailController {
 
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE')";
     /** Liste et fiche d'un bail : l'ENCAISSEUR les lit dans son périmètre (BailService) ; pas les documents ni les actions. */
-    private static final String LECTURE_BAIL = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE', 'ENCAISSEUR')";
+    private static final String LECTURE_BAIL = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("numero", "dateDebut", "dateFin", "loyer", "statut", "createdAt");
 
     /** Montants en FCFA entiers. */
@@ -140,7 +140,7 @@ class BailController {
     }
 
     @GetMapping(value = "/{id}/apercu", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS')")
     ResponseEntity<byte[]> apercu(@PathVariable UUID id) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"bail.pdf\"")

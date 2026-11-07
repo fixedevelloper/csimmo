@@ -760,6 +760,7 @@ paths:
             - LOCATAIRE
             - PRESTATAIRE
             - ENCAISSEUR
+            - GESTIONNAIRE_BIENS
       responses:
         "200":
           description: OK
@@ -3410,6 +3411,7 @@ components:
           - LOCATAIRE
           - PRESTATAIRE
           - ENCAISSEUR
+          - GESTIONNAIRE_BIENS
         actif:
           type: boolean
         deuxFacteursActif:
@@ -3438,6 +3440,7 @@ components:
           - LOCATAIRE
           - PRESTATAIRE
           - ENCAISSEUR
+          - GESTIONNAIRE_BIENS
         actif:
           type: boolean
         deuxFacteursActif:
@@ -4325,6 +4328,7 @@ components:
           - LOCATAIRE
           - PRESTATAIRE
           - ENCAISSEUR
+          - GESTIONNAIRE_BIENS
         deuxFacteursActif:
           type: boolean
         motDePasse:
@@ -5251,6 +5255,7 @@ components:
           - LOCATAIRE
           - PRESTATAIRE
           - ENCAISSEUR
+          - GESTIONNAIRE_BIENS
         deuxFacteursRequis:
           type: boolean
     OtpVerification:

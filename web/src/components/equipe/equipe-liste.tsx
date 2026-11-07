@@ -13,12 +13,13 @@ import { FormulaireReinitialisation, Recapitulatif } from "@/components/utilisat
 import { useActionsUtilisateur } from "@/hooks/use-actions-utilisateur";
 import { useAffectations, useEmployes } from "@/hooks/use-equipe";
 import type { components } from "@/lib/api/schema";
+import { estRestreint, type RoleUtilisateur } from "@/lib/utilisateurs";
 
 type Utilisateur = components["schemas"]["UtilisateurDto"];
 
 function NombreImmeubles({ utilisateur }: { utilisateur: Utilisateur }) {
   const t = useTranslations("equipe");
-  const restreint = utilisateur.role === "ENCAISSEUR";
+  const restreint = estRestreint(utilisateur.role);
   const { data } = useAffectations(utilisateur.id ?? "", restreint);
   if (!restreint) return <span className="text-muted-foreground">{t("tous")}</span>;
   if (!data) return <span className="text-muted-foreground">…</span>;
@@ -53,7 +54,7 @@ export function EquipeListe() {
         </div>
       ),
     },
-    { id: "role", entete: tu("role"), cellule: (u) => (u.role === "ENCAISSEUR" || u.role === "GESTIONNAIRE" ? t(`roles.${u.role}`) : (u.role ?? "—")) },
+    { id: "role", entete: tu("role"), cellule: (u) => (u.role ? t(`roles.${u.role as RoleUtilisateur}`) : "—") },
     { id: "immeubles", entete: t("immeubles"), cellule: (u) => <NombreImmeubles utilisateur={u} /> },
     {
       id: "statut",
@@ -70,7 +71,7 @@ export function EquipeListe() {
       entete: tu("actions"),
       cellule: (u) => (
         <div className="flex flex-wrap gap-1.5">
-          {u.role === "ENCAISSEUR" ? (
+          {estRestreint(u.role) ? (
             <Button type="button" size="sm" variant="outline" onClick={() => { setPanneau({ type: "immeubles", utilisateur: u }); setRecap(null); }}>
               {t("immeubles")}
             </Button>

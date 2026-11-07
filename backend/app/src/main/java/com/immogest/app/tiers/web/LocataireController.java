@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1")
-@PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
+@PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS')")
 class LocataireController {
 
     private static final Set<String> TRIS = Set.of("nom", "createdAt");
@@ -66,7 +66,7 @@ class LocataireController {
 
     /** Liste sans numéro de CNI ; l'ENCAISSEUR la lit pour chercher un locataire, limitée à son périmètre (voir LocataireService). */
     @GetMapping("/locataires")
-    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'ENCAISSEUR')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'ENCAISSEUR')")
     @io.swagger.v3.oas.annotations.Operation(operationId = "listerLocataires")
     PageReponse<LocataireDto> lister(@RequestParam(required = false) String q, @RequestParam(defaultValue = "false") boolean inclureArchives,
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(required = false) String sort) {
