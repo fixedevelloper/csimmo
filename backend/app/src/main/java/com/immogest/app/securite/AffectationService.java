@@ -61,7 +61,7 @@ public class AffectationService {
         Role role = charger(utilisateurId).getRole();
         if (!role.restreintAuxAffectations()) {
             throw new ErreurMetier("AFFECTATION_ROLE_NON_CONCERNE",
-                    "Les affectations ne concernent que les employés restreints (rôles ENCAISSEUR et GESTIONNAIRE_BIENS)", HttpStatus.CONFLICT);
+                    "Les affectations ne concernent que les employés restreints (ENCAISSEUR, GESTIONNAIRE_BIENS, COMPTABLE)", HttpStatus.CONFLICT);
         }
         Set<UUID> voulus = new LinkedHashSet<>(immeubleIds);
         if (voulus.size() > MAX_AFFECTATIONS) {

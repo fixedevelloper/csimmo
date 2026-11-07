@@ -381,7 +381,8 @@
       "LOCATAIRE": "Locataire",
       "PRESTATAIRE": "Prestataire",
       "ENCAISSEUR": "Encaisseur",
-      "GESTIONNAIRE_BIENS": "Gestionnaire de biens"
+      "GESTIONNAIRE_BIENS": "Gestionnaire de biens",
+      "COMPTABLE": "Comptable"
     },
     "motDePasse": "Mot de passe",
     "nouveauMotDePasse": "Nouveau mot de passe",
@@ -439,11 +440,13 @@
     "roles": {
       "ENCAISSEUR": "Encaisseur",
       "GESTIONNAIRE_BIENS": "Gestionnaire de biens",
+      "COMPTABLE": "Comptable",
       "GESTIONNAIRE": "Gestionnaire (accès total)"
     },
     "roleAide": {
       "ENCAISSEUR": "Encaisse les loyers et consulte les baux, locataires et paiements des immeubles qui lui sont affectés. Rien d'autre : ni reversements, ni paramètres, ni contre-passation.",
       "GESTIONNAIRE_BIENS": "Gère les baux, locataires, relances et signalements des immeubles qui lui sont affectés, et peut encaisser. Rien d'autre : ni reversements, ni paramètres, ni création d'immeubles.",
+      "COMPTABLE": "Lit les paiements, dépenses et reversements des immeubles qui lui sont affectés et valide les reversements. Il n'encaisse pas, ne calcule ni ne paie les reversements.",
       "GESTIONNAIRE": "Accès à tout le patrimoine et à toute la gestion, comme vous (hors paramètres sensibles réservés à l'administrateur)."
     },
     "doubleAuth": "La double authentification est activée : l'employé reçoit un code par SMS à chaque connexion.",
@@ -460,6 +463,20 @@
     "affectationsEnregistrees": "Affectations enregistrées.",
     "aucuneAffectation": "Sans immeuble, cet employé ne voit rien et ne peut encaisser nulle part.",
     "affectationEchouee": "Le compte a été créé mais les immeubles n'ont pas pu être affectés (ne le recréez pas : utilisez le bouton « Immeubles » de la liste).",
+    "modifierImmeubles": "Modifier les immeubles",
+    "fiche": {
+      "caisseDuJour": "Caisse du jour (espèces)",
+      "especesOperations": "{count, plural, =0 {Aucune opération} one {# opération} other {# opérations}} aujourd'hui",
+      "encaissementsRecents": "Encaissements récents",
+      "aucunEncaissement": "Aucun encaissement saisi par cet employé.",
+      "date": "Date",
+      "activite": "Activité récente",
+      "activiteAide": "Actions enregistrées au nom de cet employé (jamais le détail des valeurs modifiées).",
+      "action": "Action",
+      "entite": "Élément",
+      "aucuneActivite": "Aucune activité enregistrée.",
+      "etAutres": "… et {count} autres immeubles."
+    },
     "aucunEmploye": "Aucun employé pour le moment.",
     "erreurs": {
       "telephone": "Le téléphone est obligatoire (code de double authentification)."

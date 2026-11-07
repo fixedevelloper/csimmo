@@ -9,6 +9,7 @@ void main() {
     expect(Role.admin.homeRoute, '/agent');
     expect(Role.encaisseur.homeRoute, '/agent');
     expect(Role.gestionnaireBiens.homeRoute, '/agent');
+    expect(Role.comptable.homeRoute, '/comptable');
     expect(Role.prestataire.homeRoute, '/prestataire');
     expect(Role.proprietaireTiers.homeRoute, '/proprietaire');
   });
@@ -17,6 +18,7 @@ void main() {
     expect(Role.fromCode('PROPRIETAIRE_TIERS'), Role.proprietaireTiers);
     expect(Role.fromCode('ENCAISSEUR'), Role.encaisseur);
     expect(Role.fromCode('GESTIONNAIRE_BIENS'), Role.gestionnaireBiens);
+    expect(Role.fromCode('COMPTABLE'), Role.comptable);
     expect(Role.fromCode('INCONNU'), isNull);
     expect(Role.fromCode(null), isNull);
   });

@@ -1,6 +1,6 @@
 # ADR 0009 — Équipe (employés) et périmètres d'accès
 
-Statut : accepté ; phases A (`ENCAISSEUR`, étapes 12.1-12.2) et B (`GESTIONNAIRE_BIENS`, étape 12.3) livrées. Étape du plan : 12 (`docs/PLAN.md`).
+Statut : accepté ; phases A (`ENCAISSEUR`, 12.1-12.2), B (`GESTIONNAIRE_BIENS`, 12.3) et C (`COMPTABLE`, 12.4) livrées, ainsi que la fiche employé. Étape du plan : 12 (`docs/PLAN.md`).
 
 ## Contexte
 
@@ -104,3 +104,13 @@ Même mécanisme (rôle restreint, affectations, refus par défaut, 404 hors pé
 **Visibilité des locataires (décidée) :** un locataire est visible s'il a (ou a eu) un bail dans le périmètre **ou** si l'employé l'a créé lui-même (colonne `locataire.cree_par`, V24). Sans cela, il ne retrouverait pas la fiche qu'il vient de créer avant d'y rattacher un bail. Un locataire créé par un ADMIN reste invisible tant qu'aucun bail ne le rattache au périmètre. La règle vit dans `tiers.infra.VisibiliteLocataires` ; `LecteurTiers.locataireVisible` la met à disposition de `bail`.
 
 **Point d'attention :** `BailService.charger` applique le périmètre à tous les chemins (lecture, modification, activation, résiliation, PDF) ; une nouvelle opération sur les baux doit passer par lui.
+
+## Phase C — `COMPTABLE` (étape 12.4)
+
+Même mécanisme. **Autorisé** (périmètre) : lire les paiements, échéances et documents de paiement ; lire les **dépenses** ; lire les **reversements**, leur aperçu PDF et leur relevé validé ; **valider** un reversement. **Refusé** : encaisser, contre-passer, caisse, saisir ou annuler une dépense, calculer ou payer un reversement, baux, locataires, immeubles et lots, relances, tableau de bord, paramètres.
+
+**Visibilité des reversements (décidée) :** un reversement porte sur un propriétaire, donc sur *tous* ses immeubles. Il n'est visible que si **tous** les immeubles du propriétaire (archivés compris) sont dans le périmètre de l'employé ; sinon ses montants révéleraient un immeuble hors périmètre. Une affectation partielle ne donne donc accès à aucun reversement de ce propriétaire (404). Les dépenses, elles, se rattachent à un immeuble et se filtrent directement. Code : `finance.PerimetreReversements` ; requête `ImmeubleRepository.proprietairesEntierementDans`.
+
+## Fiche employé
+
+Page `/equipe/{id}` (ADMIN) : identité, immeubles affectés (modifiables), **caisse du jour** (ligne de l'employé dans `GET /paiements/caisse`), **encaissements récents** (`GET /paiements?saisiPar=` , réservé à ADMIN/GESTIONNAIRE) et **journal d'activité** (`GET /api/v1/audit?auteur=`, ADMIN seul). Le journal n'expose que la date, l'action et l'entité visée, **jamais** les valeurs avant/après (elles peuvent contenir des données personnelles).

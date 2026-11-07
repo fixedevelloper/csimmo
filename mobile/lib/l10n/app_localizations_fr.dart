@@ -131,6 +131,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get espaceProprietaire => 'Espace propriétaire';
 
   @override
+  String get espaceComptable => 'Espace comptable';
+
+  @override
   String get chargement => 'Chargement…';
 
   @override

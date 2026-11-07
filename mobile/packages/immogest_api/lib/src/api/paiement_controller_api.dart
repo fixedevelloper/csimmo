@@ -365,6 +365,7 @@ _responseData = rawData == null ? null : deserialize<PaiementDto, PaiementDto>(r
   /// * [bailId] 
   /// * [locataireId] 
   /// * [mode] 
+  /// * [saisiPar] 
   /// * [du] 
   /// * [au] 
   /// * [page] 
@@ -383,6 +384,7 @@ _responseData = rawData == null ? null : deserialize<PaiementDto, PaiementDto>(r
     String? bailId,
     String? locataireId,
     String? mode,
+    String? saisiPar,
     DateTime? du,
     DateTime? au,
     int? page = 0,
@@ -412,6 +414,7 @@ _responseData = rawData == null ? null : deserialize<PaiementDto, PaiementDto>(r
       if (bailId != null) r'bailId': bailId,
       if (locataireId != null) r'locataireId': locataireId,
       if (mode != null) r'mode': mode,
+      if (saisiPar != null) r'saisiPar': saisiPar,
       if (du != null) r'du': du,
       if (au != null) r'au': au,
       if (page != null) r'page': page,

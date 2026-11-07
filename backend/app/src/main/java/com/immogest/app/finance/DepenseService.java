@@ -41,9 +41,11 @@ public class DepenseService {
     private final ActeurCourant acteurCourant;
     private final ApplicationEventPublisher evenements;
     private final JdbcTemplate jdbc;
+    private final PerimetreReversements perimetre;
 
     DepenseService(DepenseRepository depenses, ReversementRepository reversements, LecteurLots lots, EcheanceService moteur,
-            ActeurCourant acteurCourant, ApplicationEventPublisher evenements, JdbcTemplate jdbc) {
+            ActeurCourant acteurCourant, ApplicationEventPublisher evenements, JdbcTemplate jdbc, PerimetreReversements perimetre) {
+        this.perimetre = perimetre;
         this.depenses = depenses;
         this.reversements = reversements;
         this.lots = lots;
@@ -115,8 +117,15 @@ public class DepenseService {
 
     @Transactional(readOnly = true)
     public Page<DepenseDto> lister(UUID immeubleId, UUID proprietaireId, LocalDate mois, Pageable pageable) {
+        var visibles = perimetre.immeubles(); // employé restreint : seulement les dépenses des immeubles de son périmètre
+        if (visibles.isPresent() && immeubleId != null && !visibles.get().contains(immeubleId)) {
+            throw new ErreurMetier("IMMEUBLE_INTROUVABLE", "Immeuble introuvable", HttpStatus.NOT_FOUND);
+        }
         Specification<Depense> spec = (r, q, cb) -> {
             List<Predicate> c = new ArrayList<>();
+            if (visibles.isPresent()) {
+                c.add(visibles.get().isEmpty() ? cb.disjunction() : r.get("immeubleId").in(visibles.get()));
+            }
             if (immeubleId != null) {
                 c.add(cb.equal(r.get("immeubleId"), immeubleId));
             }

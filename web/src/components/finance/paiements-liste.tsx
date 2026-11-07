@@ -10,6 +10,8 @@ import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
 import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
+import { useMe } from "@/hooks/use-me";
+import { peut } from "@/lib/droits";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import { usePaiements, type FiltresPaiements } from "@/hooks/use-finance";
@@ -29,6 +31,7 @@ export function PaiementsListe({ locataireId }: { locataireId?: string }) {
   const [page, setPage] = useState(0);
   const { data, isPending, error, refetch } = usePaiements(filtres, page);
   const [cible, setCible] = useState<string | null>(null);
+  const { data: moi } = useMe();
   const [motif, setMotif] = useState("");
   const [erreur, setErreur] = useState<string | null>(null);
 
@@ -83,7 +86,7 @@ export function PaiementsListe({ locataireId }: { locataireId?: string }) {
       id: "actions",
       entete: "",
       cellule: (p) =>
-        p.type === "ENCAISSEMENT" && !p.contrePasse ? (
+        p.type === "ENCAISSEMENT" && !p.contrePasse && peut(moi?.role, "contrePasser") ? (
           <Button size="sm" variant="outline" onClick={() => { setCible(p.id ?? null); setErreur(null); }}>
             {t("contrePasser")}
           </Button>

@@ -20,6 +20,7 @@ class RoleHomeScreen extends ConsumerWidget {
         Role.gestionnaire || Role.admin || Role.encaisseur || Role.gestionnaireBiens => l.espaceAgent,
         Role.prestataire => l.espacePrestataire,
         Role.proprietaireTiers => l.espaceProprietaire,
+        Role.comptable => l.espaceComptable,
       };
 
   @override

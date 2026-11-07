@@ -9,6 +9,7 @@ export 'package:immogest_api/src/auth/bearer_auth.dart';
 export 'package:immogest_api/src/auth/oauth.dart';
 
 
+export 'package:immogest_api/src/api/audit_controller_api.dart';
 export 'package:immogest_api/src/api/auth_controller_api.dart';
 export 'package:immogest_api/src/api/bail_controller_api.dart';
 export 'package:immogest_api/src/api/conformite_controller_api.dart';
@@ -74,6 +75,7 @@ export 'package:immogest_api/src/model/document_bail_dto.dart';
 export 'package:immogest_api/src/model/document_dto.dart';
 export 'package:immogest_api/src/model/echeance_dto.dart';
 export 'package:immogest_api/src/model/echeance_requete.dart';
+export 'package:immogest_api/src/model/entree_audit.dart';
 export 'package:immogest_api/src/model/erreur_import_dto.dart';
 export 'package:immogest_api/src/model/etat_installation_dto.dart';
 export 'package:immogest_api/src/model/etat_licence_dto.dart';
@@ -113,6 +115,7 @@ export 'package:immogest_api/src/model/page_reponse_bail_dto.dart';
 export 'package:immogest_api/src/model/page_reponse_depense_dto.dart';
 export 'package:immogest_api/src/model/page_reponse_document_dto.dart';
 export 'package:immogest_api/src/model/page_reponse_echeance_dto.dart';
+export 'package:immogest_api/src/model/page_reponse_entree_audit.dart';
 export 'package:immogest_api/src/model/page_reponse_immeuble_dto.dart';
 export 'package:immogest_api/src/model/page_reponse_locataire_dto.dart';
 export 'package:immogest_api/src/model/page_reponse_lot_dto.dart';

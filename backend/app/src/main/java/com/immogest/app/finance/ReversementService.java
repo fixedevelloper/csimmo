@@ -73,10 +73,12 @@ public class ReversementService {
     private final ApplicationEventPublisher evenements;
     private final JdbcTemplate jdbc;
     private final Clock horloge;
+    private final PerimetreReversements perimetre;
 
     ReversementService(ReversementRepository reversements, DepenseRepository depenses, EcheanceService moteur, LecteurBaux baux, LecteurLots lots,
             LecteurTiers tiers, RenduPdf pdf, StockageService stockage, ActeurCourant acteurCourant, ApplicationEventPublisher evenements,
-            JdbcTemplate jdbc, Clock horloge) {
+            JdbcTemplate jdbc, Clock horloge, PerimetreReversements perimetre) {
+        this.perimetre = perimetre;
         this.reversements = reversements;
         this.depenses = depenses;
         this.moteur = moteur;
@@ -300,8 +302,15 @@ public class ReversementService {
             throw new ErreurMetier("PROPRIETAIRE_INTROUVABLE", "Introuvable", HttpStatus.NOT_FOUND);
         }
         UUID filtre = proprietaireImpose != null ? proprietaireImpose : proprietaireId;
+        Optional<Set<UUID>> visibles = perimetre.proprietaires(); // employé restreint : propriétaires dont tous les immeubles sont dans son périmètre
+        if (visibles.isPresent() && proprietaireId != null && !visibles.get().contains(proprietaireId)) {
+            throw new ErreurMetier("PROPRIETAIRE_INTROUVABLE", "Introuvable", HttpStatus.NOT_FOUND);
+        }
         Specification<Reversement> spec = (r, q, cb) -> {
             List<Predicate> c = new ArrayList<>();
+            if (visibles.isPresent()) {
+                c.add(visibles.get().isEmpty() ? cb.disjunction() : r.get("proprietaireId").in(visibles.get()));
+            }
             if (filtre != null) {
                 c.add(cb.equal(r.get("proprietaireId"), filtre));
             }
@@ -332,8 +341,13 @@ public class ReversementService {
 
     // ================================================================== interne
 
+    /** Charge un reversement ; un employé restreint ne voit que ceux de ses propriétaires (voir PerimetreReversements). */
     private Reversement charger(UUID id) {
-        return reversements.findById(id).orElseThrow(() -> new ErreurMetier("REVERSEMENT_INTROUVABLE", "Reversement introuvable", HttpStatus.NOT_FOUND));
+        Reversement r = reversements.findById(id).orElseThrow(() -> new ErreurMetier("REVERSEMENT_INTROUVABLE", "Reversement introuvable", HttpStatus.NOT_FOUND));
+        if (perimetre.proprietaires().map(ids -> !ids.contains(r.getProprietaireId())).orElse(false)) {
+            throw new ErreurMetier("REVERSEMENT_INTROUVABLE", "Reversement introuvable", HttpStatus.NOT_FOUND);
+        }
+        return r;
     }
 
     private UUID proprietaireActeur() {

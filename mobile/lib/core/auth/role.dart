@@ -6,7 +6,8 @@ enum Role {
   locataire('LOCATAIRE'),
   prestataire('PRESTATAIRE'),
   encaisseur('ENCAISSEUR'),
-  gestionnaireBiens('GESTIONNAIRE_BIENS');
+  gestionnaireBiens('GESTIONNAIRE_BIENS'),
+  comptable('COMPTABLE');
 
   const Role(this.code);
 
@@ -19,11 +20,12 @@ enum Role {
     return null;
   }
 
-  /// Écran d'accueil du rôle : locataire, agent (ADMIN, GESTIONNAIRE, ENCAISSEUR et GESTIONNAIRE_BIENS), prestataire, propriétaire.
+  /// Écran d'accueil du rôle : locataire, agent (ADMIN, GESTIONNAIRE, ENCAISSEUR et GESTIONNAIRE_BIENS), prestataire, propriétaire, comptable (accueil minimal : le travail du comptable se fait sur le web).
   String get homeRoute => switch (this) {
         locataire => '/locataire',
         gestionnaire || admin || encaisseur || gestionnaireBiens => '/agent',
         prestataire => '/prestataire',
         proprietaireTiers => '/proprietaire',
+        comptable => '/comptable',
       };
 }

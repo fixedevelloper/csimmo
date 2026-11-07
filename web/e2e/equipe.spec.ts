@@ -108,3 +108,33 @@ test("Équipe : créer un gestionnaire de biens avec ses immeubles", async ({ pa
   const aff = await page.request.get(`/api/proxy/api/v1/utilisateurs/${employe!.id}/affectations`);
   expect(((await aff.json()) as { immeubleIds: string[] }).immeubleIds).toEqual([immeuble.id]);
 });
+
+test("Équipe : la fiche d'un encaisseur montre ses immeubles, sa caisse et son activité ; le comptable est proposé", async ({ page }) => {
+  await connecterAdmin(page);
+  const suffixe = Date.now().toString(36);
+  const creation = await page.request.post("/api/proxy/api/v1/immeubles", { data: { nom: `Immeuble Fiche ${suffixe}`, adresse: "4 rue de la Fiche", ville: "Douala" } });
+  expect(creation.status()).toBe(201);
+
+  const nom = `Comptable E2E ${suffixe}`;
+  await page.goto("/equipe");
+  await page.getByRole("button", { name: "Nouvel employé" }).click();
+  await page.getByLabel("Rôle").selectOption("COMPTABLE");
+  await page.getByLabel("Nom", { exact: true }).fill(nom);
+  await page.getByLabel("Téléphone").fill(telephone());
+  await page.getByRole("button", { name: "Générer un mot de passe" }).click();
+  await page.getByLabel("Rechercher un immeuble").fill(`Immeuble Fiche ${suffixe}`);
+  await page.getByText(`Immeuble Fiche ${suffixe}`, { exact: true }).click();
+  await page.getByRole("button", { name: "Créer l'employé" }).click();
+  await expect(page.getByTestId("recap-mot-de-passe")).toBeVisible();
+
+  const ligne = page.getByRole("row").filter({ hasText: nom });
+  await expect(ligne.getByText("Comptable", { exact: true })).toBeVisible();
+  await ligne.getByRole("link", { name: nom }).click();
+
+  await expect(page.getByRole("heading", { name: new RegExp(nom), level: 1 })).toBeVisible();
+  await expect(page.getByRole("link", { name: `Immeuble Fiche ${suffixe}` })).toBeVisible();
+  await expect(page.getByText("Activité récente")).toBeVisible();
+  // un comptable n'encaisse pas : ni caisse ni encaissements
+  await expect(page.getByText("Caisse du jour (espèces)")).toHaveCount(0);
+  await expect(page.getByText("Encaissements récents")).toHaveCount(0);
+});

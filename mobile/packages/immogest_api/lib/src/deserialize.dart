@@ -36,6 +36,7 @@ import 'package:immogest_api/src/model/document_bail_dto.dart';
 import 'package:immogest_api/src/model/document_dto.dart';
 import 'package:immogest_api/src/model/echeance_dto.dart';
 import 'package:immogest_api/src/model/echeance_requete.dart';
+import 'package:immogest_api/src/model/entree_audit.dart';
 import 'package:immogest_api/src/model/erreur_import_dto.dart';
 import 'package:immogest_api/src/model/etat_installation_dto.dart';
 import 'package:immogest_api/src/model/etat_licence_dto.dart';
@@ -75,6 +76,7 @@ import 'package:immogest_api/src/model/page_reponse_bail_dto.dart';
 import 'package:immogest_api/src/model/page_reponse_depense_dto.dart';
 import 'package:immogest_api/src/model/page_reponse_document_dto.dart';
 import 'package:immogest_api/src/model/page_reponse_echeance_dto.dart';
+import 'package:immogest_api/src/model/page_reponse_entree_audit.dart';
 import 'package:immogest_api/src/model/page_reponse_immeuble_dto.dart';
 import 'package:immogest_api/src/model/page_reponse_locataire_dto.dart';
 import 'package:immogest_api/src/model/page_reponse_lot_dto.dart';
@@ -221,6 +223,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return EcheanceDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'EcheanceRequete':
           return EcheanceRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'EntreeAudit':
+          return EntreeAudit.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ErreurImportDto':
           return ErreurImportDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'EtatInstallationDto':
@@ -299,6 +303,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return PageReponseDocumentDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PageReponseEcheanceDto':
           return PageReponseEcheanceDto.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'PageReponseEntreeAudit':
+          return PageReponseEntreeAudit.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PageReponseImmeubleDto':
           return PageReponseImmeubleDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PageReponseLocataireDto':

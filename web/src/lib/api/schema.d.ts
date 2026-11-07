@@ -1556,6 +1556,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listerActivite"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/arrieres": {
         parameters: {
             query?: never;
@@ -1613,7 +1629,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
+            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE";
             actif?: boolean;
             deuxFacteursActif?: boolean;
         };
@@ -1624,7 +1640,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
+            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE";
             actif?: boolean;
             deuxFacteursActif?: boolean;
             verrouille?: boolean;
@@ -2009,7 +2025,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
+            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE";
             deuxFacteursActif?: boolean;
             motDePasse: string;
         };
@@ -2466,7 +2482,7 @@ export interface components {
             expiresIn?: number;
             tokenType?: string;
             /** @enum {string} */
-            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS";
+            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE";
             deuxFacteursRequis?: boolean;
         };
         OtpVerification: {
@@ -2894,6 +2910,25 @@ export interface components {
         };
         PageReponseBailDto: {
             content?: components["schemas"]["BailDto"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number;
+        };
+        EntreeAudit: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: date-time */
+            date?: string;
+            action?: string;
+            entite?: string;
+            /** Format: uuid */
+            entiteId?: string;
+        };
+        PageReponseEntreeAudit: {
+            content?: components["schemas"]["EntreeAudit"][];
             /** Format: int32 */
             page?: number;
             /** Format: int32 */
@@ -3804,7 +3839,7 @@ export interface operations {
                 page?: number;
                 size?: number;
                 sort?: string;
-                roles?: ("ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS")[];
+                roles?: ("ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE")[];
             };
             header?: never;
             path?: never;
@@ -4303,6 +4338,7 @@ export interface operations {
                 bailId?: string;
                 locataireId?: string;
                 mode?: "ESPECES" | "VIREMENT" | "MTN_MOMO" | "ORANGE_MONEY";
+                saisiPar?: string;
                 du?: string;
                 au?: string;
                 page?: number;
@@ -6292,6 +6328,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["UtilisateurDto"];
+                };
+            };
+        };
+    };
+    listerActivite: {
+        parameters: {
+            query: {
+                auteur: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageReponseEntreeAudit"];
                 };
             };
         };

@@ -174,6 +174,15 @@ public class PaiementService {
 
     @Transactional(readOnly = true)
     public Page<PaiementDto> lister(UUID bailId, UUID locataireId, ModePaiement mode, LocalDate du, LocalDate au, Pageable pageable) {
+        return lister(bailId, locataireId, mode, du, au, null, pageable);
+    }
+
+    /** {@code saisiPar} : encaissements saisis par ce compte (fiche employé) ; réservé à l'ADMIN et au GESTIONNAIRE. */
+    @Transactional(readOnly = true)
+    public Page<PaiementDto> lister(UUID bailId, UUID locataireId, ModePaiement mode, LocalDate du, LocalDate au, UUID saisiPar, Pageable pageable) {
+        if (saisiPar != null && !acteurCourant.acteur().map(a -> a.aLeRole("ADMIN") || a.aLeRole("GESTIONNAIRE")).orElse(false)) {
+            throw new ErreurMetier("ACCES_REFUSE", "Accès refusé", HttpStatus.FORBIDDEN);
+        }
         UUID moi = locataireActeur();
         UUID locataire = locataireId;
         if (moi != null) { // un locataire ne voit que ses propres paiements
@@ -200,6 +209,9 @@ public class PaiementService {
             }
             if (bailIds != null) {
                 c.add(racine.get("bailId").in(bailIds));
+            }
+            if (saisiPar != null) {
+                c.add(cb.equal(racine.get("saisiPar"), saisiPar));
             }
             if (mode != null) {
                 c.add(cb.equal(racine.get("mode"), mode.name()));

@@ -18,4 +18,7 @@ public interface LecteurLots {
 
     /** Identifiants de tous les lots (archivés compris) des immeubles donnés : base du périmètre des employés restreints. */
     java.util.Set<UUID> lotIdsDesImmeubles(java.util.Collection<UUID> immeubleIds);
+
+    /** Propriétaires tiers dont tous les immeubles (archivés compris) sont dans {@code immeubleIds} ; ensemble vide si {@code immeubleIds} l'est. */
+    java.util.Set<UUID> proprietairesEntierementDans(java.util.Collection<UUID> immeubleIds);
 }

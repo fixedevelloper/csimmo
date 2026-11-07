@@ -68,6 +68,8 @@ type Entree = {
   encaisseur?: boolean;
   /** Visible par l'employé restreint GESTIONNAIRE_BIENS (en plus des entrées « encaisseur »). */
   gestionnaireBiens?: boolean;
+  /** Visible par l'employé restreint COMPTABLE (lecture des paiements, reversements). */
+  comptable?: boolean;
   /** Réservé à l'ADMIN. */
   admin?: boolean;
 };
@@ -107,9 +109,9 @@ const GROUPES: Groupe[] = [
   {
     cle: "finance",
     entrees: [
-      { href: "/encaissements", cle: "encaissements", icone: Wallet, gestion: true, encaisseur: true, gestionnaireBiens: true },
+      { href: "/encaissements", cle: "encaissements", icone: Wallet, gestion: true, encaisseur: true, gestionnaireBiens: true, comptable: true },
       { href: "/relances", cle: "relances", icone: CalendarClock, gestion: true, gestionnaireBiens: true },
-      { href: "/reversements", cle: "reversements", icone: HandCoins, gestion: true },
+      { href: "/reversements", cle: "reversements", icone: HandCoins, gestion: true, comptable: true },
     ],
   },
   {
@@ -210,6 +212,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     if (pathname !== "/" && pathname !== "/tableau-de-bord") return;
     if (role === "ENCAISSEUR") router.replace("/encaissements");
     if (role === "GESTIONNAIRE_BIENS") router.replace("/baux");
+    if (role === "COMPTABLE") router.replace("/reversements");
   }, [role, pathname, router]);
 
   const groupes = GROUPES.map((g) => ({
@@ -217,6 +220,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     entrees: g.entrees.filter((e) => {
       if (role === "ENCAISSEUR") return e.encaisseur === true;
       if (role === "GESTIONNAIRE_BIENS") return e.gestionnaireBiens === true;
+      if (role === "COMPTABLE") return e.comptable === true;
       if (e.admin) return role === "ADMIN";
       return !e.gestion || gestion;
     }),

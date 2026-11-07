@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 class PaiementController {
 
     private static final String GESTION = "hasAnyRole('ADMIN', 'GESTIONNAIRE')";
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR', 'COMPTABLE')";
     /** Saisie d'un encaissement et caisse du jour : l'ENCAISSEUR n'agit que dans son périmètre (filtré par PaiementService). */
     private static final String ENCAISSEMENT = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("datePaiement", "montant", "createdAt");
@@ -73,12 +73,12 @@ class PaiementController {
     @GetMapping("/paiements")
     @PreAuthorize(LECTURE)
     PageReponse<PaiementDto> lister(@RequestParam(required = false) UUID bailId, @RequestParam(required = false) UUID locataireId,
-            @RequestParam(required = false) ModePaiement mode,
+            @RequestParam(required = false) ModePaiement mode, @RequestParam(required = false) UUID saisiPar,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate du,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate au,
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String sort) {
-        return PageReponse.de(service.lister(bailId, locataireId, mode, du, au, Pagination.de(page, size, sort, TRIS, "createdAt")));
+        return PageReponse.de(service.lister(bailId, locataireId, mode, du, au, saisiPar, Pagination.de(page, size, sort, TRIS, "createdAt")));
     }
 
     /** Rapprochement de caisse : espèces du jour par agent (un gestionnaire ne voit que les siennes). */

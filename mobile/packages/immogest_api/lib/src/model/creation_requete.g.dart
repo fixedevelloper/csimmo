@@ -152,4 +152,5 @@ const _$CreationRequeteRoleEnumEnumMap = {
   CreationRequeteRoleEnum.PRESTATAIRE: 'PRESTATAIRE',
   CreationRequeteRoleEnum.ENCAISSEUR: 'ENCAISSEUR',
   CreationRequeteRoleEnum.GESTIONNAIRE_BIENS: 'GESTIONNAIRE_BIENS',
+  CreationRequeteRoleEnum.COMPTABLE: 'COMPTABLE',
 };

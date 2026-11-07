@@ -7,6 +7,7 @@ import 'package:immogest_api/src/auth/api_key_auth.dart';
 import 'package:immogest_api/src/auth/basic_auth.dart';
 import 'package:immogest_api/src/auth/bearer_auth.dart';
 import 'package:immogest_api/src/auth/oauth.dart';
+import 'package:immogest_api/src/api/audit_controller_api.dart';
 import 'package:immogest_api/src/api/auth_controller_api.dart';
 import 'package:immogest_api/src/api/bail_controller_api.dart';
 import 'package:immogest_api/src/api/conformite_controller_api.dart';
@@ -123,6 +124,12 @@ class ImmogestApi {
     if (this.dio.interceptors.any((i) => i is ApiKeyAuthInterceptor)) {
       (this.dio.interceptors.firstWhere((element) => element is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor).apiKeys.remove(name);
     }
+  }
+
+  /// Get AuditControllerApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AuditControllerApi getAuditControllerApi() {
+    return AuditControllerApi(dio);
   }
 
   /// Get AuthControllerApi instance, base route and serializer can be overridden by a given but be careful,

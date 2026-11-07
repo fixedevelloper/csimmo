@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useState } from "react";
 
 import { DataTable, type Colonne } from "@/components/data-table";
@@ -49,7 +50,7 @@ export function EquipeListe() {
       entete: tu("nom"),
       cellule: (u) => (
         <div className="flex flex-col">
-          <span className="font-medium">{u.nom}</span>
+          <Link href={`/equipe/${u.id}`} className="font-medium underline-offset-2 hover:underline">{u.nom}</Link>
           <span className="text-xs text-muted-foreground">{[u.telephone, u.email].filter(Boolean).join(" · ")}</span>
         </div>
       ),

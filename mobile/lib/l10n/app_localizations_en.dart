@@ -130,6 +130,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get espaceProprietaire => 'Owner area';
 
   @override
+  String get espaceComptable => 'Accountant area';
+
+  @override
   String get chargement => 'Loading…';
 
   @override

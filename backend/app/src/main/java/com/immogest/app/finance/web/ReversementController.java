@@ -39,7 +39,9 @@ import org.springframework.web.bind.annotation.RestController;
 class ReversementController {
 
     private static final String GESTION = "hasAnyRole('ADMIN', 'GESTIONNAIRE')";
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'PROPRIETAIRE_TIERS')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'PROPRIETAIRE_TIERS', 'COMPTABLE')";
+    /** Le comptable valide les reversements de son périmètre et lit relevés et dépenses ; il ne calcule ni ne paie, et ne saisit aucune dépense. */
+    private static final String VALIDATION = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'COMPTABLE')";
     private static final Set<String> TRIS_REV = Set.of("periode", "net", "statut");
     private static final Set<String> TRIS_DEP = Set.of("dateDepense", "montant", "createdAt");
 
@@ -98,7 +100,7 @@ class ReversementController {
     }
 
     @PostMapping("/reversements/{id}/valider")
-    @PreAuthorize(GESTION)
+    @PreAuthorize(VALIDATION)
     ReversementDto valider(@PathVariable UUID id) {
         return reversements.valider(id);
     }
@@ -110,7 +112,7 @@ class ReversementController {
     }
 
     @GetMapping(value = "/reversements/{id}/apercu", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize(GESTION)
+    @PreAuthorize(VALIDATION)
     ResponseEntity<byte[]> apercu(@PathVariable UUID id) {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"releve.pdf\"").header(HttpHeaders.CACHE_CONTROL, "no-store")
                 .contentType(MediaType.APPLICATION_PDF).body(reversements.apercu(id));
@@ -126,7 +128,7 @@ class ReversementController {
     }
 
     @GetMapping("/depenses")
-    @PreAuthorize(GESTION)
+    @PreAuthorize(VALIDATION)
     PageReponse<DepenseDto> listerDepenses(@RequestParam(required = false) UUID immeubleId, @RequestParam(required = false) UUID proprietaireId,
             @RequestParam(required = false) String mois, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String sort) {

@@ -20,8 +20,11 @@ class ControleAccesDocuments implements ControleAccesFichier {
     private final ReversementRepository reversements;
     private final LecteurBaux baux;
     private final LecteurTiers tiers;
+    private final com.immogest.app.finance.PerimetreReversements perimetre;
 
-    ControleAccesDocuments(DocumentRepository documents, ReversementRepository reversements, LecteurBaux baux, LecteurTiers tiers) {
+    ControleAccesDocuments(DocumentRepository documents, ReversementRepository reversements, LecteurBaux baux, LecteurTiers tiers,
+            com.immogest.app.finance.PerimetreReversements perimetre) {
+        this.perimetre = perimetre;
         this.documents = documents;
         this.reversements = reversements;
         this.baux = baux;
@@ -39,12 +42,16 @@ class ControleAccesDocuments implements ControleAccesFichier {
         if (acteur.aLeRole("ADMIN") || acteur.aLeRole("GESTIONNAIRE")) {
             return true;
         }
+        if (acteur.aLeRole("COMPTABLE") && "reversements".equals(entite)) { // relevés des propriétaires de son périmètre, une fois validés
+            return reversements.findById(entiteId).map(r -> !"CALCULE".equals(r.getStatut())
+                    && perimetre.proprietaires().map(ids -> ids.contains(r.getProprietaireId())).orElse(false)).orElse(false);
+        }
         if (acteur.aLeRole("PROPRIETAIRE_TIERS") && "reversements".equals(entite)) { // relevé de gérance : le mandant, une fois validé
             UUID proprietaire = tiers.proprietaireDeUtilisateur(acteur.id()).orElse(null);
             return proprietaire != null && reversements.findById(entiteId)
                     .map(r -> proprietaire.equals(r.getProprietaireId()) && !"CALCULE".equals(r.getStatut())).orElse(false);
         }
-        if ((acteur.aLeRole("ENCAISSEUR") || acteur.aLeRole("GESTIONNAIRE_BIENS")) && "documents".equals(entite)) { // quittances et reçus des baux de son périmètre, jamais les annulés
+        if ((acteur.aLeRole("ENCAISSEUR") || acteur.aLeRole("GESTIONNAIRE_BIENS") || acteur.aLeRole("COMPTABLE")) && "documents".equals(entite)) { // quittances et reçus des baux de son périmètre, jamais les annulés
             return documents.findById(entiteId).filter(d -> DocumentPaiement.EMIS.equals(d.getStatut()))
                     .map(d -> baux.bailIdsVisibles().map(ids -> ids.contains(d.getBailId())).orElse(false)).orElse(false);
         }

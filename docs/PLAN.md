@@ -374,8 +374,8 @@ Menu Administration > Équipe : liste, création, affectation multiple, fiche em
 ### [x] 12.3 Gestionnaire de biens (phase B)
 Rôle `GESTIONNAIRE_BIENS` : baux, locataires, relances, signalements sur son périmètre ; un locataire est visible avec un bail dans le périmètre ou s'il l'a créé (décidé, V24).
 
-### [ ] 12.4 Comptable (phase C)
-Rôle `COMPTABLE` : lecture des paiements, dépenses et reversements du périmètre, validation des reversements.
+### [x] 12.4 Comptable (phase C) et fiche employé
+Rôle `COMPTABLE` : lecture des paiements, dépenses et reversements du périmètre, validation des reversements (un reversement n'est visible que si tous les immeubles de son propriétaire sont dans le périmètre). Fiche employé `/equipe/{id}` : immeubles, caisse du jour, encaissements récents, journal d'activité.
 
 ---
 

@@ -216,7 +216,7 @@ Sessions : access JWT 15 min, refresh 30 jours ; le web déconnecte après **30 
 
 Mises à jour : Flyway n'est pas réversible ; le retour arrière de `update.sh` = restauration de la sauvegarde faite juste avant la migration + ancienne image.
 
-Rôles : `ADMIN`, `GESTIONNAIRE` (accès total), `PROPRIETAIRE_TIERS`, `LOCATAIRE`, `PRESTATAIRE`, `ENCAISSEUR`, `GESTIONNAIRE_BIENS`. Un locataire ne voit que ses baux, échéances et documents ; un propriétaire tiers que ses biens. **`ENCAISSEUR`** et **`GESTIONNAIRE_BIENS`** (employés restreints, `docs/adr/0009-equipe-et-perimetres.md`) : refus par défaut, il ne voit et n'encaisse que dans les immeubles qui lui sont affectés (`sec_affectation`, `shared.PerimetreAcces` ; sans affectation, rien ; hors périmètre : 404), double authentification obligatoire. Un module qui ouvre une route à un rôle restreint filtre par périmètre et ajoute un test « interdit hors périmètre ».
+Rôles : `ADMIN`, `GESTIONNAIRE` (accès total), `PROPRIETAIRE_TIERS`, `LOCATAIRE`, `PRESTATAIRE`, `ENCAISSEUR`, `GESTIONNAIRE_BIENS`, `COMPTABLE`. Un locataire ne voit que ses baux, échéances et documents ; un propriétaire tiers que ses biens. **`ENCAISSEUR`**, **`GESTIONNAIRE_BIENS`** et **`COMPTABLE`** (employés restreints, `docs/adr/0009-equipe-et-perimetres.md`) : refus par défaut, il ne voit et n'encaisse que dans les immeubles qui lui sont affectés (`sec_affectation`, `shared.PerimetreAcces` ; sans affectation, rien ; hors périmètre : 404), double authentification obligatoire. Un module qui ouvre une route à un rôle restreint filtre par périmètre et ajoute un test « interdit hors périmètre ».
 
 ## 7. Conventions de code
 

@@ -157,7 +157,7 @@ public class UtilisateurService {
         }
         if (saisie.deuxFacteursActif() && !saisie.role().motDePasseObligatoire()) {
             throw new ErreurMetier("UTILISATEUR_2FA_ROLE_NON_CONCERNE",
-                    "La double authentification concerne les rôles ADMIN, GESTIONNAIRE, ENCAISSEUR et GESTIONNAIRE_BIENS", HttpStatus.BAD_REQUEST);
+                    "La double authentification concerne les rôles ADMIN, GESTIONNAIRE et les employés restreints (ENCAISSEUR, GESTIONNAIRE_BIENS, COMPTABLE)", HttpStatus.BAD_REQUEST);
         }
     }
 

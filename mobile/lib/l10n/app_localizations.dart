@@ -326,6 +326,12 @@ abstract class AppLocalizations {
   /// **'Espace propriétaire'**
   String get espaceProprietaire;
 
+  /// No description provided for @espaceComptable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Espace comptable'**
+  String get espaceComptable;
+
   /// No description provided for @chargement.
   ///
   /// In fr, this message translates to:

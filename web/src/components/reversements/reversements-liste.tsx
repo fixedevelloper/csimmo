@@ -11,6 +11,8 @@ import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
 import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
+import { useMe } from "@/hooks/use-me";
+import { peut } from "@/lib/droits";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
 import { useReversements } from "@/hooks/use-reversements";
@@ -27,6 +29,7 @@ export function ReversementsListe() {
   const locale = useLocale();
   const message = useErrorMessage();
   const queryClient = useQueryClient();
+  const { data: moi } = useMe();
   const [mois, setMois] = useState(moisPrecedent(moisCourant()));
   const [page, setPage] = useState(0);
   const proprietaire = useSearchParams().get("proprietaire"); // lien direct depuis la fiche d'un propriétaire
@@ -77,16 +80,18 @@ export function ReversementsListe() {
               <a href={urlApercuReleve(r.id ?? "")} target="_blank" rel="noopener noreferrer" className="inline-flex h-7 items-center rounded-lg border px-2.5 text-sm">
                 {t("apercu")}
               </a>
-              <Button size="sm" onClick={() => setAValider(r)} aria-label={t("validerNom", { nom: r.proprietaireNom ?? "" })}>
-                {t("valider")}
-              </Button>
+              {peut(moi?.role, "validerReversement") ? (
+                <Button size="sm" onClick={() => setAValider(r)} aria-label={t("validerNom", { nom: r.proprietaireNom ?? "" })}>
+                  {t("valider")}
+                </Button>
+              ) : null}
             </>
           ) : (
             <a href={urlDocument(r.fichierId ?? "")} target="_blank" rel="noopener noreferrer" className="inline-flex h-7 items-center rounded-lg border px-2.5 text-sm">
               {t("releve")}
             </a>
           )}
-          {r.statut === "VALIDE" ? (
+          {r.statut === "VALIDE" && peut(moi?.role, "payerReversement") ? (
             <Button size="sm" variant="outline" onClick={() => { setAPayer(r.id ?? null); setErreur(null); }} aria-label={t("payerNom", { nom: r.proprietaireNom ?? "" })}>
               {t("marquerPaye")}
             </Button>
@@ -103,7 +108,7 @@ export function ReversementsListe() {
           {t("mois")}
           <Input type="month" value={mois} onChange={(e) => { setPage(0); setMois(e.target.value); }} className="w-44" />
         </label>
-        <Button
+        {peut(moi?.role, "calculerReversements") ? <Button
           variant="outline"
           disabled={!mois}
           onClick={() =>
@@ -115,7 +120,7 @@ export function ReversementsListe() {
           }
         >
           {t("calculer")}
-        </Button>
+        </Button> : null}
       </div>
       {erreur ? (
         <p role="alert" className="text-sm text-destructive">

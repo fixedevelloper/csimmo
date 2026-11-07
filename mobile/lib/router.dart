@@ -47,7 +47,7 @@ GoRouter router(Ref ref) {
       GoRoute(path: '/connexion', builder: (_, _) => const LoginScreen()),
       GoRoute(path: Role.locataire.homeRoute, builder: (_, _) => const LocataireShell()),
       GoRoute(path: Role.gestionnaire.homeRoute, builder: (_, _) => const AgentShell()),
-      for (final role in [Role.prestataire, Role.proprietaireTiers])
+      for (final role in [Role.prestataire, Role.proprietaireTiers, Role.comptable])
         GoRoute(path: role.homeRoute, builder: (_, _) => RoleHomeScreen(role)),
     ],
   );

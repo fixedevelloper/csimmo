@@ -80,6 +80,23 @@ describe("EquipeListe", () => {
     expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-2"]);
   });
 
+  it("crée un comptable avec ses immeubles affectés", async () => {
+    post.mockReturnValueOnce(ok({ id: "u-12" }));
+    put.mockReturnValueOnce(ok({ immeubleIds: ["i-1"] }));
+    rendu();
+    await userEvent.click(screen.getByRole("button", { name: "Nouvel employé" }));
+    await userEvent.selectOptions(screen.getByLabelText("Rôle"), "COMPTABLE");
+    expect(screen.getByText("Immeubles affectés")).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText("Nom"), "Carl Comptable");
+    await userEvent.type(screen.getByLabelText("Téléphone"), "+237688000333");
+    await userEvent.click(screen.getByRole("button", { name: "Générer un mot de passe" }));
+    await userEvent.click(screen.getByText("Résidence Palmiers"));
+    await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
+    await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
+    expect(post.mock.calls[0][1].body).toMatchObject({ role: "COMPTABLE", deuxFacteursActif: true });
+    expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-1"]);
+  });
+
   it("exige un téléphone et un mot de passe valides avant d'appeler l'API", async () => {
     rendu();
     await userEvent.click(screen.getByRole("button", { name: "Nouvel employé" }));

@@ -153,4 +153,5 @@ const _$ReponseConnexionRoleEnumEnumMap = {
   ReponseConnexionRoleEnum.PRESTATAIRE: 'PRESTATAIRE',
   ReponseConnexionRoleEnum.ENCAISSEUR: 'ENCAISSEUR',
   ReponseConnexionRoleEnum.GESTIONNAIRE_BIENS: 'GESTIONNAIRE_BIENS',
+  ReponseConnexionRoleEnum.COMPTABLE: 'COMPTABLE',
 };

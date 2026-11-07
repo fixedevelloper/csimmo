@@ -38,6 +38,7 @@
   "espaceAgent": "Management area",
   "espacePrestataire": "Contractor area",
   "espaceProprietaire": "Owner area",
+  "espaceComptable": "Accountant area",
   "chargement": "Loading…",
   "reessayer": "Try again",
   "errInconnue": "An unexpected error occurred. Try again.",

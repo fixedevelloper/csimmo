@@ -177,4 +177,5 @@ const _$UtilisateurDtoRoleEnumEnumMap = {
   UtilisateurDtoRoleEnum.PRESTATAIRE: 'PRESTATAIRE',
   UtilisateurDtoRoleEnum.ENCAISSEUR: 'ENCAISSEUR',
   UtilisateurDtoRoleEnum.GESTIONNAIRE_BIENS: 'GESTIONNAIRE_BIENS',
+  UtilisateurDtoRoleEnum.COMPTABLE: 'COMPTABLE',
 };

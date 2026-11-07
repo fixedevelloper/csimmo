@@ -33,3 +33,28 @@ export function useImmeublesChoix(q: string) {
       deballer(await api.GET("/api/v1/immeubles", { params: { query: { q: q || undefined, page: 0, size: 100, sort: "nom" } } })).content ?? [],
   });
 }
+
+/** Fiche d'un compte (GET /api/v1/utilisateurs/{id}). */
+export function useEmploye(id: string) {
+  return useQuery({
+    queryKey: ["utilisateurs", "fiche", id],
+    queryFn: async () => deballer(await api.GET("/api/v1/utilisateurs/{id}", { params: { path: { id } } })),
+  });
+}
+
+/** Encaissements saisis par un compte, les plus récents d'abord. */
+export function useEncaissementsDe(id: string, page: number) {
+  return useQuery({
+    queryKey: ["paiements", "saisis-par", id, page],
+    queryFn: async () =>
+      deballer(await api.GET("/api/v1/paiements", { params: { query: { saisiPar: id, page, size: 10, sort: "createdAt,desc" } } })),
+  });
+}
+
+/** Journal d'activité d'un compte (ADMIN) : date, action, entité visée. */
+export function useActivite(id: string, page: number) {
+  return useQuery({
+    queryKey: ["audit", id, page],
+    queryFn: async () => deballer(await api.GET("/api/v1/audit", { params: { query: { auteur: id, page, size: 10 } } })),
+  });
+}

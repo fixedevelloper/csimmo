@@ -9,6 +9,8 @@ import { DataTable, type Colonne } from "@/components/data-table";
 import { ErrorDisplay } from "@/components/error-display";
 import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
+import { useMe } from "@/hooks/use-me";
+import { peut } from "@/lib/droits";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useErrorMessage } from "@/hooks/use-error-message";
@@ -26,6 +28,8 @@ export function Depenses() {
   const locale = useLocale();
   const message = useErrorMessage();
   const queryClient = useQueryClient();
+  const { data: moi } = useMe();
+  const saisie = peut(moi?.role, "saisirDepense");
   const [rechercheImmeuble, setRechercheImmeuble] = useState("");
   const { data: immeubles } = useImmeubles({ q: rechercheImmeuble }, 0);
   const [mois, setMois] = useState(moisCourant());
@@ -94,7 +98,7 @@ export function Depenses() {
       id: "actions",
       entete: "",
       cellule: (d) =>
-        d.statut === "ENREGISTREE" ? (
+        d.statut === "ENREGISTREE" && saisie ? (
           <Button size="sm" variant="outline" onClick={() => { setCible(d.id ?? null); setErreurApi(null); }} aria-label={t("annulerNature", { nature: d.nature ?? "" })}>
             {t("annuler")}
           </Button>
@@ -108,6 +112,7 @@ export function Depenses() {
         <CardTitle>{t("titre")}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        {saisie ? (
         <form onSubmit={(e) => void enregistrer(e)} noValidate className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-1">
             <label htmlFor="d-recherche" className="text-sm font-medium">{t("rechercheImmeuble")}</label>
@@ -146,6 +151,7 @@ export function Depenses() {
             <Button type="submit">{t("enregistrer")}</Button>
           </div>
         </form>
+        ) : null}
         {erreurApi ? <p role="alert" className="text-sm text-destructive">{erreurApi}</p> : null}
         {cible ? (
           <div className="flex max-w-xl flex-col gap-2 rounded-lg border p-3" role="group" aria-label={t("annuler")}>

@@ -58,6 +58,12 @@ class LecteurLotsImpl implements LecteurLots {
         return immeubleIds.isEmpty() ? java.util.Set.of() : new java.util.HashSet<>(lots.idsDesImmeubles(immeubleIds));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public java.util.Set<UUID> proprietairesEntierementDans(java.util.Collection<UUID> immeubleIds) {
+        return immeubleIds.isEmpty() ? java.util.Set.of() : new java.util.HashSet<>(immeubles.proprietairesEntierementDans(immeubleIds));
+    }
+
     private static LotResume resume(com.immogest.app.patrimoine.domain.Lot l) {
         return new LotResume(l.getId(), l.getImmeuble().getId(), l.getReference(),
                 l.getStatut().name(), l.getLoyerIndicatif(), l.isArchive(), l.getType().name(), l.getSurfaceM2(), l.getPieces(),

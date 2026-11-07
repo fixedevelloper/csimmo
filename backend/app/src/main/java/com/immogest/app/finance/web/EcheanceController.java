@@ -29,7 +29,7 @@ class EcheanceController {
 
     /** Gestionnaires : toutes les échéances (filtres). Locataire : seulement celles d'un de ses baux (`bailId` obligatoire). */
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS', 'LOCATAIRE', 'ENCAISSEUR', 'COMPTABLE')")
     @io.swagger.v3.oas.annotations.Operation(operationId = "listerEcheances")
     PageReponse<EcheanceDto> lister(@RequestParam(required = false) UUID bailId, @RequestParam(required = false) StatutEcheance statut,
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size,

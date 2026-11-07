@@ -9,6 +9,8 @@ vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams()
 const post = vi.fn();
 vi.mock("@/lib/api/client", () => ({ api: { POST: (...a: unknown[]) => post(...a) } }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+let role = "GESTIONNAIRE";
+vi.mock("@/hooks/use-me", () => ({ useMe: () => ({ data: { role } }) }));
 vi.mock("@/hooks/use-reversements", () => ({
   useReversements: () => ({
     isPending: false,
@@ -32,7 +34,7 @@ const ko = (status: number, code: string) => Promise.resolve({ error: { code }, 
 const rendu = () => renderIntl(<QueryClientProvider client={new QueryClient()}><ReversementsListe /></QueryClientProvider>, "fr");
 
 describe("ReversementsListe", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => { vi.clearAllMocks(); role = "GESTIONNAIRE"; });
 
   it("montre le net, l'état et les actions propres à chaque état", () => {
     rendu();
@@ -81,5 +83,20 @@ describe("ReversementsListe", () => {
     await userEvent.click(screen.getByRole("button", { name: "Valider le reversement de Mme Ngono" }));
     await userEvent.click(within(await screen.findByRole("alertdialog")).getByRole("button", { name: "Valider" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("mois n'est pas terminé");
+  });
+
+  it("comptable : valide les reversements mais ne calcule ni ne paie", () => {
+    role = "COMPTABLE";
+    rendu();
+    expect(screen.getAllByRole("button", { name: /^Valider/ }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: /Calculer le mois/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Marquer payé|Payer/ })).not.toBeInTheDocument();
+  });
+
+  it("gestionnaire de biens : ni calcul, ni validation, ni paiement des reversements", () => {
+    role = "GESTIONNAIRE_BIENS";
+    rendu();
+    expect(screen.queryByRole("button", { name: /^Valider/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Calculer le mois/ })).not.toBeInTheDocument();
   });
 });
