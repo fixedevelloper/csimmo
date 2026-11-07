@@ -11,11 +11,27 @@ updates:
     schedule: { interval: weekly }
     groups:
       web: { patterns: ["*"] }
+    ignore:
+      # typescript-eslint (via eslint-config-next) ne gère pas TypeScript 7 ni ESLint 10 ; @types/node suit le Node 22 de la CI et du Dockerfile
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: npm
     directory: /license-web
     schedule: { interval: weekly }
     groups:
       license-web: { patterns: ["*"] }
+    ignore:
+      # typescript-eslint (via eslint-config-next) ne gère pas TypeScript 7 ni ESLint 10 ; @types/node suit le Node 22 de la CI et du Dockerfile
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: pub
     directory: /mobile
     schedule: { interval: weekly }
