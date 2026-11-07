@@ -146,7 +146,14 @@ jobs:
         run: |
           premiere=$(printf '%s\n' "$ETIQUETTES" | head -n1)
           # le condensé est le même pour toutes les étiquettes : on signe le condensé du dépôt, une seule fois
-          cosign sign --yes "${premiere%%:*}@${DIGEST}"
+          # Rekor (journal de transparence Sigstore) a des pannes passagères : jusqu'à 5 essais espacés. Si le service ne revient pas,
+          # l'étape échoue quand même (une image non signée ne doit pas passer pour une image vérifiable) : relancer le job plus tard.
+          for essai in 1 2 3 4 5; do
+            cosign sign --yes "${premiere%%:*}@${DIGEST}" && exit 0
+            echo "Signature échouée (essai $essai/5)" >&2
+            [ "$essai" -lt 5 ] && sleep $((essai * 30))
+          done
+          exit 1
 
       - name: Résumé
         run: |
