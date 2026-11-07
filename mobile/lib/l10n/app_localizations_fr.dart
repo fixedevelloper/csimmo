@@ -61,6 +61,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get motDePasseLabel => 'Mot de passe';
 
   @override
+  String get afficherMotDePasse => 'Afficher le mot de passe';
+
+  @override
+  String get masquerMotDePasse => 'Masquer le mot de passe';
+
+  @override
   String get seConnecter => 'Se connecter';
 
   @override

@@ -6,7 +6,7 @@ import { ACCESS_COOKIE, REFRESH_COOKIE } from "@/lib/auth/cookies";
  * Protège les pages : sans cookie de session on renvoie vers /login.
  * Le rafraîchissement du jeton se fait dans le proxy (une seule fois, mutualisé), pas ici.
  */
-export function middleware(requete: NextRequest) {
+export function proxy(requete: NextRequest) {
   const { pathname, search } = requete.nextUrl;
   // Pages publiques : connexion et assistant de premier lancement (aucune session n'existe encore)
   if (pathname.startsWith("/login") || pathname.startsWith("/installation")) return NextResponse.next();

@@ -62,7 +62,7 @@ export function TiersListe<T extends { id?: string; nom?: string }>({ utiliser, 
             {t("rechercher")}
           </Button>
         </form>
-        <Link href={nouveauHref} className={buttonVariants({})}>
+        <Link href={nouveauHref} className={buttonVariants({ variant: "accent" })}>
           {nouveauLabel}
         </Link>
       </div>

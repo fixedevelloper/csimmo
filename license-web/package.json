@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -12,7 +12,7 @@
     "gen:api": "echo \"api/openapi.yaml absent: g\u00e9n\u00e9r\u00e9 \u00e0 l'\u00e9tape 0.2\""
   },
   "dependencies": {
-    "next": "15.5.28",
+    "next": "16.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
@@ -27,7 +27,7 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.2.1",
     "eslint": "^9",
-    "eslint-config-next": "15.5.28",
+    "eslint-config-next": "16.4.5",
     "jsdom": "^26.1.0",
     "tailwindcss": "^4",
     "typescript": "^5",

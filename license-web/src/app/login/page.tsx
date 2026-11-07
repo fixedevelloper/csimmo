@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { ChampMotDePasse } from "@/components/champ-mot-de-passe";
 import { Champ, MessageErreur, classeBouton, classeChamp } from "@/components/ui";
 import { messageErreur } from "@/lib/messages";
 
@@ -43,7 +44,7 @@ export default function Connexion() {
           <input id="email" name="email" type="email" required autoComplete="username" className={classeChamp} />
         </Champ>
         <Champ id="motDePasse" label="Mot de passe">
-          <input id="motDePasse" name="motDePasse" type="password" required autoComplete="current-password" className={classeChamp} />
+          <ChampMotDePasse id="motDePasse" name="motDePasse" autoComplete="current-password" />
         </Champ>
         <MessageErreur message={erreur} />
         <button type="submit" className={classeBouton} disabled={envoi}>

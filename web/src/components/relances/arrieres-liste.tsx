@@ -128,10 +128,9 @@ export function ArrieresListe() {
       ) : null}
       <DataTable colonnes={colonnes} donnees={data} chargement={isPending} onPageChange={setPage} idLigne={(a) => a.echeanceId ?? ""} messageVide={t("aucunArriere")} />
       {ouvert ? (
-        <div className="rounded-lg border p-3">
-          <h2 className="mb-2 text-sm font-semibold">{t("historique.titre")}</h2>
+
           <HistoriqueRelances echeanceId={ouvert} />
-        </div>
+
       ) : null}
       <ConfirmDialog
         open={mise !== null}

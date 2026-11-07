@@ -16,6 +16,8 @@
   "connexionServeur": "Serveur : {url}",
   "identifiantLabel": "Téléphone ou e-mail",
   "motDePasseLabel": "Mot de passe",
+  "afficherMotDePasse": "Afficher le mot de passe",
+  "masquerMotDePasse": "Masquer le mot de passe",
   "seConnecter": "Se connecter",
   "connexionEnCours": "Connexion…",
   "connexionParSms": "Recevoir un code par SMS",

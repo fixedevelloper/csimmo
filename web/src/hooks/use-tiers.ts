@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
@@ -34,6 +34,7 @@ export function useLocataires(q: string, page: number) {
   return useQuery({
     queryKey: ["locataires", q, page],
     queryFn: async () => deballer(await api.GET("/api/v1/locataires", { params: { query: requete(q, page) } })),
+    placeholderData: keepPreviousData,
   });
 }
 

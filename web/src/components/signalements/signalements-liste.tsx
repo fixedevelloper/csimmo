@@ -16,6 +16,7 @@ import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import { urlDocument } from "@/lib/finance";
 import type { components } from "@/lib/api/schema";
+import { NativeSelect } from "@/components/ui/native-select";
 
 type SignalementDto = components["schemas"]["SignalementDto"];
 const STATUTS = ["NOUVEAU", "EN_COURS", "RESOLU", "REJETE"] as const;
@@ -99,14 +100,14 @@ export function SignalementsListe() {
     <div className="flex flex-col gap-4">
       <label className="flex w-52 flex-col gap-1 text-sm">
         {t("filtreStatut")}
-        <select value={statut} onChange={(e) => { setPage(0); setStatut(e.target.value); }} className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm">
+        <NativeSelect value={statut} onChange={(e) => { setPage(0); setStatut(e.target.value); }}>
           <option value="">{t("tous")}</option>
           {STATUTS.map((s) => (
             <option key={s} value={s}>
               {t(`statuts.${s}`)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       {cible ? (
         <div className="flex max-w-xl flex-col gap-2 rounded-lg border p-3" role="group" aria-label={t(`action.${cible.vers}`)}>

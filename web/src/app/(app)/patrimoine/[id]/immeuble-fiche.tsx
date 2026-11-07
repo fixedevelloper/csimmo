@@ -118,7 +118,7 @@ export function ImmeubleFiche() {
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle>{t("lots")}</CardTitle>
           {!immeuble.archive ? (
-            <Link href={`/patrimoine/lots/nouveau?immeubleId=${id}`} className={buttonVariants({ size: "sm" })}>
+            <Link href={`/patrimoine/lots/nouveau?immeubleId=${id}`} className={buttonVariants({ variant: "accent", size: "sm" })}>
               {t("nouveauLot")}
             </Link>
           ) : null}

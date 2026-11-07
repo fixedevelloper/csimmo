@@ -3,6 +3,7 @@
 import { Controller, type Control, type FieldPath, type FieldValues } from "react-hook-form";
 
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { NativeSelect } from "@/components/ui/native-select";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -20,18 +21,18 @@ export function SelectField<T extends FieldValues>({ control, name, label, optio
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
-          <select
+          <NativeSelect
             {...field}
             id={field.name}
             aria-invalid={fieldState.invalid}
-            className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="w-full"
           >
             {options.map((o) => (
               <option key={o.valeur} value={o.valeur}>
                 {o.libelle}
               </option>
             ))}
-          </select>
+          </NativeSelect>
           {fieldState.error?.message ? <FieldError>{fieldState.error.message}</FieldError> : null}
         </Field>
       )}

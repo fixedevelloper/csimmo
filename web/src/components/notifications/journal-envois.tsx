@@ -14,6 +14,7 @@ import { useJournal } from "@/hooks/use-notifications";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import { STATUTS_MESSAGE, type MessageDto } from "@/lib/notifications";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /** Journal des envois : statut, essais, dernière erreur ; relance manuelle d'un message en échec. */
 export function JournalEnvois() {
@@ -67,14 +68,14 @@ export function JournalEnvois() {
     <div className="flex flex-col gap-3">
       <label className="flex w-52 flex-col gap-1 text-sm">
         {t("filtreStatut")}
-        <select value={statut} onChange={(e) => { setPage(0); setStatut(e.target.value); }} className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm">
+        <NativeSelect value={statut} onChange={(e) => { setPage(0); setStatut(e.target.value); }}>
           <option value="">{t("tous")}</option>
           {STATUTS_MESSAGE.map((s) => (
             <option key={s} value={s}>
               {t(`statuts.${s}`)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       {erreur ? (
         <p role="alert" className="text-sm text-destructive">

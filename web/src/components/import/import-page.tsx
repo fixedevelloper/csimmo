@@ -11,6 +11,7 @@ import { useErrorMessage } from "@/hooks/use-error-message";
 import { enApiError } from "@/lib/api/errors";
 import type { components } from "@/lib/api/schema";
 import { EnteteParametres } from "@/components/entete-parametres";
+import { NativeSelect } from "@/components/ui/native-select";
 
 type Previsualisation = components["schemas"]["PrevisualisationDto"];
 type Resultat = components["schemas"]["ResultatImportDto"];
@@ -125,13 +126,13 @@ export function ImportPage() {
           {estCsv ? (
             <label className="flex flex-col gap-1 text-sm">
               {t("typeCsv")}
-              <select value={typeCsv} onChange={(e) => { setTypeCsv(e.target.value); setPrevisu(null); }} className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm">
+              <NativeSelect value={typeCsv} onChange={(e) => { setTypeCsv(e.target.value); setPrevisu(null); }}>
                 {TYPES.map((x) => (
                   <option key={x} value={x}>
                     {t(`types.${x}`)}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </label>
           ) : null}
           <Button onClick={() => void analyser()} disabled={!fichier || occupe}>

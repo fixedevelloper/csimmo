@@ -24,6 +24,7 @@ export function PageHeader({ titre, retour, statut, sousTitre, actions }: Props)
       ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
+          <span aria-hidden className="mb-1 h-1 w-8 rounded-full bg-marque" />
           <h1 className="flex flex-wrap items-center gap-3 text-2xl font-semibold tracking-tight">
             {titre}
             {statut}

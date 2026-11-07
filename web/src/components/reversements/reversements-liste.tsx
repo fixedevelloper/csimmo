@@ -19,6 +19,7 @@ import { deballer } from "@/lib/api/errors";
 import { formaterFcfa } from "@/lib/baux";
 import { urlDocument } from "@/lib/finance";
 import { MODES_REVERSEMENT, moisCourant, moisPrecedent, urlApercuReleve, type ReversementDto } from "@/lib/reversements";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /** Reversements d'un mois : calcul, aperçu du relevé, validation (fige et numérote), paiement. */
 export function ReversementsListe() {
@@ -125,13 +126,13 @@ export function ReversementsListe() {
         <div className="flex max-w-xl flex-col gap-2 rounded-lg border p-3" role="group" aria-label={t("marquerPaye")}>
           <label className="flex flex-col gap-1 text-sm">
             {t("modePaiement")}
-            <select value={mode} onChange={(e) => setMode(e.target.value)} className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm">
+            <NativeSelect value={mode} onChange={(e) => setMode(e.target.value)}>
               {MODES_REVERSEMENT.map((m) => (
                 <option key={m} value={m}>
                   {t(`modes.${m}`)}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="flex flex-col gap-1 text-sm">
             {mode === "ESPECES" ? t("referenceFacultative") : t("reference")}

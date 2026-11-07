@@ -17,6 +17,7 @@ import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import { formaterFcfa } from "@/lib/baux";
 import { MODES_PAIEMENT, type ModePaiement, type PaiementDto } from "@/lib/finance";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /** Liste filtrable des paiements ; `locataireId` fixe la liste au compte d'un locataire. Contre-passation avec motif obligatoire. */
 export function PaiementsListe({ locataireId }: { locataireId?: string }) {
@@ -96,10 +97,10 @@ export function PaiementsListe({ locataireId }: { locataireId?: string }) {
       <div className="flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1 text-sm">
           {t("mode")}
-          <select
+          <NativeSelect
             value={filtres.mode ?? ""}
             onChange={(e) => { setPage(0); setFiltres({ ...filtres, mode: e.target.value as ModePaiement | "" }); }}
-            className="h-8 w-44 rounded-lg border border-input bg-transparent px-2.5 text-sm"
+            className="w-44"
           >
             <option value="">{t("tous")}</option>
             {MODES_PAIEMENT.map((m) => (
@@ -107,7 +108,7 @@ export function PaiementsListe({ locataireId }: { locataireId?: string }) {
                 {t(`modes.${m}`)}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
         <label className="flex flex-col gap-1 text-sm">
           {t("du")}

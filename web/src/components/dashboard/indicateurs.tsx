@@ -3,7 +3,15 @@
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
-import { AlertTriangle, CalendarClock, Percent, PieChart, type LucideIcon } from "lucide-react";
+import {
+  AlertTriangle,
+  CalendarClock,
+  Percent,
+  PieChart,
+  type LucideIcon,
+  CheckCircle2,
+  AlertCircle, ExternalLink, House
+} from "lucide-react";
 import dynamic from "next/dynamic";
 
 import { DonutOccupation } from "@/components/dashboard/donut-occupation";
@@ -46,42 +54,117 @@ function Indicateur({ titre, valeur, detail, testid, icone: Icone, ton }: { titr
   );
 }
 
-function ListeArrieres({ titre, lignes, lien, vide }: { titre: string; lignes: LigneArriereDto[]; lien?: (id: string) => string; vide: string }) {
+
+function ListeArrieres({
+                         titre,
+                         lignes,
+                         lien,
+                         vide,
+                       }: {
+  titre: string;
+  lignes: LigneArriereDto[];
+  lien?: (id: string) => string;
+  vide: string;
+}) {
   const locale = useLocale();
   const t = useTranslations("dashboard");
+
   const max = Math.max(1, ...lignes.map((l) => l.total ?? 0));
+  const totalGlobal = lignes.reduce(
+    (acc, l) => acc + (l.total ?? 0),
+    0
+  );
+
   return (
-    <Card className="shadow-carte">
-      <CardHeader>
-        <CardTitle className="text-base">{titre}</CardTitle>
+    <Card className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition-shadow hover:shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div className="space-y-1">
+          <CardTitle className="text-base font-semibold tracking-tight">
+            {titre}
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">
+            {lignes.length} élément{lignes.length > 1 ? "s" : ""} en retard
+          </p>
+        </div>
+
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-destructive/10">
+          <AlertCircle className="h-5 w-5 text-destructive" />
+        </div>
       </CardHeader>
-      <CardContent>
-        {lignes.length === 0 ? <p className="text-sm text-muted-foreground">{vide}</p> : null}
-        <ul className="flex flex-col gap-2 text-sm">
-          {lignes.map((l) => (
-            <li key={l.id} className="flex flex-col gap-1">
-              <div className="flex items-baseline justify-between gap-3">
-                {lien && l.id ? (
-                  <Link href={lien(l.id)} className="truncate underline-offset-2 hover:underline">
-                    {l.libelle}
-                  </Link>
-                ) : (
-                  <span className="truncate">{l.libelle}</span>
-                )}
-                <span className="tabular whitespace-nowrap font-medium">
-                  {formaterFcfa(l.total, locale)} <span className="text-xs font-normal text-muted-foreground">({t("echeancesN", { n: l.echeances ?? 0 })})</span>
-                </span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
-                <div className="h-full rounded-full bg-destructive/70 transition-[width] duration-500" style={{ width: `${((l.total ?? 0) / max) * 100}%` }} />
-              </div>
-            </li>
-          ))}
-        </ul>
+
+      <CardContent className="space-y-4">
+        {lignes.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 px-4 py-8 text-center">
+            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/10">
+              <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+            </div>
+            <p className="text-sm font-medium">{vide}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Aucun arriéré à signaler.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="rounded-xl bg-destructive/[0.06] p-4">
+              <p className="text-xs font-medium text-muted-foreground">
+                Total des arriérés
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-destructive tabular-nums">
+                {formaterFcfa(totalGlobal, locale)}
+              </p>
+            </div>
+
+            <ul className="flex flex-col gap-4">
+              {lignes.map((l) => {
+                const montant = l.total ?? 0;
+                const progression = (montant / max) * 100;
+
+                return (
+                  <li key={l.id} className="group space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        {lien && l.id ? (
+                          <Link
+                            href={lien(l.id)}
+                            className="truncate font-medium underline-offset-4 transition-colors hover:text-primary hover:underline"
+                          >
+                            {l.libelle}
+                          </Link>
+                        ) : (
+                          <span className="truncate font-medium">
+                            {l.libelle}
+                          </span>
+                        )}
+
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {t("echeancesN", {
+                            n: l.echeances ?? 0,
+                          })}
+                        </p>
+                      </div>
+
+                      <span className="whitespace-nowrap text-sm font-semibold tabular-nums">
+                        {formaterFcfa(montant, locale)}
+                      </span>
+                    </div>
+
+                    <div className="h-2 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-destructive/60 to-destructive transition-all duration-500"
+                        style={{ width: `${progression}%` }}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
       </CardContent>
     </Card>
   );
 }
+
 
 /** Indicateurs de pilotage : occupation, recouvrement du mois, arriérés, baux à échéance, graphique attendu/encaissé. */
 export function Indicateurs() {
@@ -150,29 +233,97 @@ export function Indicateurs() {
         <ListeArrieres titre={t("arrieresParLocataire")} lignes={arrieres.data?.parLocataire ?? []} lien={(id) => `/locataires/${id}/compte`} vide={t("aucunArriere")} />
       </div>
 
-      <Card className="shadow-carte">
-        <CardHeader>
-          <CardTitle className="text-base">{t("bauxAEcheanceTitre")}</CardTitle>
+
+      <Card className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition-shadow hover:shadow-md">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <div className="space-y-1">
+            <CardTitle className="text-base font-semibold tracking-tight">
+              {t("bauxAEcheanceTitre")}
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              {(baux.data ?? []).length} bail(s) à échéance
+            </p>
+          </div>
+
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10">
+            <CalendarClock className="h-5 w-5 text-amber-600" />
+          </div>
         </CardHeader>
+
         <CardContent>
-          {(baux.data ?? []).length === 0 ? <p className="text-sm text-muted-foreground">{t("aucunBail")}</p> : null}
-          <ul className="flex flex-col gap-2 text-sm">
-            {(baux.data ?? []).map((b) => (
-              <li key={b.bailId} className="flex flex-wrap items-baseline justify-between gap-3">
-                <span>
-                  <Link href={`/baux/${b.bailId}`} className="font-medium underline-offset-2 hover:underline">
-                    {b.numero}
-                  </Link>{" "}
-                  — {b.locataireNom} — {b.logement}
+          {(baux.data ?? []).length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/20 px-4 py-8 text-center">
+              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/10">
+                <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+              </div>
+              <p className="text-sm font-medium">{t("aucunBail")}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Aucun bail ne nécessite de suivi particulier.
+              </p>
+            </div>
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {(baux.data ?? []).map((b) => (
+                <li
+                  key={b.bailId}
+                  className="group rounded-xl border border-border/60 bg-muted/10 p-3 transition-colors hover:bg-muted/30"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 space-y-1.5">
+                      <Link
+                        href={`/baux/${b.bailId}`}
+                        className="inline-flex items-center gap-1 font-semibold underline-offset-4 transition-colors hover:text-primary hover:underline"
+                      >
+                        {b.numero}
+                        <ExternalLink className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                      </Link>
+
+                      <p className="truncate text-sm text-muted-foreground">
+                        {b.locataireNom}
+                      </p>
+
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <House className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{b.logement}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex shrink-0 flex-col items-end gap-2">
+                <span className="whitespace-nowrap text-sm font-semibold tabular-nums">
+                  {b.dateFin}
                 </span>
-                <span className="whitespace-nowrap">
-                  {b.dateFin} ({t("dansJours", { n: b.joursRestants ?? 0 })}){b.statut === "RESILIE" ? ` — ${t("sortieAnnoncee")}` : ""}
+
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+                          b.statut === "RESILIE"
+                            ? "bg-destructive/10 text-destructive"
+                            : (b.joursRestants ?? 0) <= 7
+                              ? "bg-destructive/10 text-destructive"
+                              : (b.joursRestants ?? 0) <= 30
+                                ? "bg-amber-500/10 text-amber-600"
+                                : "bg-emerald-500/10 text-emerald-600"
+                        }`}
+                      >
+                  {t("dansJours", {
+                    n: b.joursRestants ?? 0,
+                  })}
                 </span>
-              </li>
-            ))}
-          </ul>
+                    </div>
+                  </div>
+
+                  {b.statut === "RESILIE" && (
+                    <div className="mt-3 flex items-center gap-2 border-t border-border/50 pt-2 text-xs text-destructive">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      {t("sortieAnnoncee")}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
+
     </div>
   );
 }

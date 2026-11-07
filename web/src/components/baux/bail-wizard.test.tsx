@@ -25,10 +25,10 @@ const ko = (status: number, code: string) => Promise.resolve({ error: { code }, 
 const rendu = () => renderIntl(<QueryClientProvider client={new QueryClient()}><BailWizard /></QueryClientProvider>, "fr");
 
 async function jusquAuxConditions() {
-  await userEvent.click(screen.getByRole("button", { name: "Palmiers — A1" }));
+  await userEvent.click(screen.getByRole("button", { name: /Palmiers — A1/ }));
   await userEvent.click(screen.getByRole("button", { name: "Suivant" }));
   await userEvent.click(screen.getByRole("button", { name: /Paul Mbarga/ }));
-  await userEvent.click(screen.getByLabelText(/Marie/));
+  await userEvent.click(screen.getByText("Marie"));
   await userEvent.click(screen.getByRole("button", { name: "Suivant" }));
 }
 
@@ -38,7 +38,7 @@ describe("BailWizard", () => {
   it("n'avance pas sans lot ni locataire", async () => {
     rendu();
     expect(screen.getByRole("button", { name: "Suivant" })).toBeDisabled();
-    await userEvent.click(screen.getByRole("button", { name: "Palmiers — A1" }));
+    await userEvent.click(screen.getByRole("button", { name: /Palmiers — A1/ }));
     await userEvent.click(screen.getByRole("button", { name: "Suivant" }));
     expect(screen.getByRole("button", { name: "Suivant" })).toBeDisabled();
   });

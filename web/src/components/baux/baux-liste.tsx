@@ -10,6 +10,7 @@ import { ErrorDisplay } from "@/components/error-display";
 import { buttonVariants } from "@/components/ui/button";
 import { useBaux } from "@/hooks/use-baux";
 import { STATUTS_BAIL, formaterFcfa, type BailDto } from "@/lib/baux";
+import { NativeSelect } from "@/components/ui/native-select";
 
 export function BauxListe() {
   const t = useTranslations("baux");
@@ -41,13 +42,13 @@ export function BauxListe() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <label className="flex flex-col gap-1 text-sm">
           {t("filtreStatut")}
-          <select
+          <NativeSelect
             value={statut}
             onChange={(e) => {
               setPage(0);
               setStatut(e.target.value);
             }}
-            className="h-8 w-48 rounded-lg border border-input bg-transparent px-2.5 text-sm"
+            className="w-48"
           >
             <option value="">{t("tous")}</option>
             {STATUTS_BAIL.map((s) => (
@@ -55,9 +56,9 @@ export function BauxListe() {
                 {t(`statuts.${s}`)}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
-        <Link href="/baux/nouveau" className={buttonVariants({})}>
+        <Link href="/baux/nouveau" className={buttonVariants({ variant: "accent" })}>
           {t("nouveau")}
         </Link>
       </div>

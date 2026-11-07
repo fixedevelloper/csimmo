@@ -18,6 +18,7 @@ import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import { entierSaisi, formaterFcfa } from "@/lib/baux";
 import { moisCourant, type DepenseDto } from "@/lib/reversements";
+import { NativeSelect } from "@/components/ui/native-select";
 
 /** Saisie simple des dépenses imputées au propriétaire d'un immeuble ; annulation avec motif (jamais de suppression). */
 export function Depenses() {
@@ -114,12 +115,12 @@ export function Depenses() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="d-immeuble" className="text-sm font-medium">{t("immeuble")}</label>
-            <select id="d-immeuble" value={immeubleId} onChange={(e) => setImmeubleId(e.target.value)} className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm">
+            <NativeSelect id="d-immeuble" value={immeubleId} onChange={(e) => setImmeubleId(e.target.value)}>
               <option value="">{t("choisirImmeuble")}</option>
               {(immeubles?.content ?? []).map((i) => (
                 <option key={i.id} value={i.id}>{i.nom}</option>
               ))}
-            </select>
+            </NativeSelect>
             {erreurs.immeuble ? <p className="text-sm text-destructive">{erreurs.immeuble}</p> : null}
           </div>
           <div className="flex flex-col gap-1">

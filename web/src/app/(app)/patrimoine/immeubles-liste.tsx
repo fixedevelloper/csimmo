@@ -62,7 +62,7 @@ export function ImmeublesListe() {
             {t("rechercher")}
           </Button>
         </form>
-        <Link href="/patrimoine/nouveau" className={buttonVariants({  })}>
+        <Link href="/patrimoine/nouveau" className={buttonVariants({ variant: "accent" })}>
           {t("nouvelImmeuble")}
         </Link>
       </div>

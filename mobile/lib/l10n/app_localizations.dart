@@ -194,6 +194,18 @@ abstract class AppLocalizations {
   /// **'Mot de passe'**
   String get motDePasseLabel;
 
+  /// No description provided for @afficherMotDePasse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher le mot de passe'**
+  String get afficherMotDePasse;
+
+  /// No description provided for @masquerMotDePasse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer le mot de passe'**
+  String get masquerMotDePasse;
+
   /// No description provided for @seConnecter.
   ///
   /// In fr, this message translates to:

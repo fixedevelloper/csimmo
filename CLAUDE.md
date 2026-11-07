@@ -43,7 +43,7 @@ Document de référence fonctionnel : `docs/ANALYSE.md` (exporté de l'analyse).
 | Fichiers | **Stockage objet compatible S3**, via AWS SDK for Java v2 (`software.amazon.awssdk:s3`, `forcePathStyle(true)`, endpoint configurable). Serveur livré chez le client : **SeaweedFS** (Apache 2.0) en mode `weed server -s3`. Le code ne dépend que de l'API S3 : MinIO, RustFS, Garage, AWS S3 ou Backblaze B2 se branchent par configuration. Voir §5 « Stockage » et `docs/adr/0002-stockage-s3.md` |
 | Doc API | springdoc-openapi → `api/openapi.yaml` |
 | Tests backend | JUnit 5, AssertJ, Testcontainers (PostgreSQL + conteneur SeaweedFS S3), MockMvc / RestAssured, `@ApplicationModuleTest` + `Scenario` (Spring Modulith) |
-| Web | Next.js 15 (App Router), TypeScript strict, Tailwind CSS, shadcn/ui, TanStack Query, react-hook-form + zod, next-intl, client API généré par `openapi-typescript` + `openapi-fetch` |
+| Web | Next.js 16 (App Router), TypeScript strict, Tailwind CSS, shadcn/ui, TanStack Query, react-hook-form + zod, next-intl, client API généré par `openapi-typescript` + `openapi-fetch` |
 | Tests web | Vitest + Testing Library, Playwright (parcours clés) |
 | Mobile | Flutter 3.x (Android d'abord), Riverpod, go_router, dio, drift (SQLite, hors ligne), client généré via `openapi-generator` (dart-dio), flutter_localizations |
 | Tests mobile | flutter_test, integration_test |

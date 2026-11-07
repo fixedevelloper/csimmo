@@ -27,6 +27,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   _Etape _etape = _Etape.motDePasse;
   bool _busy = false;
+  bool _motDePasseVisible = false;
   String? _error;
   String? _info;
 
@@ -124,9 +125,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   TextFormField(
                     key: const Key('champ-mot-de-passe'),
                     controller: _motDePasse,
-                    obscureText: true,
+                    obscureText: !_motDePasseVisible,
                     autofillHints: const [AutofillHints.password],
-                    decoration: InputDecoration(labelText: l.motDePasseLabel,),
+                    decoration: InputDecoration(
+                      labelText: l.motDePasseLabel,
+                      suffixIcon: IconButton(
+                        key: const Key('bouton-voir-mot-de-passe'),
+                        tooltip: _motDePasseVisible ? l.masquerMotDePasse : l.afficherMotDePasse,
+                        icon: Icon(_motDePasseVisible ? Icons.visibility_off : Icons.visibility),
+                        onPressed: () => setState(() => _motDePasseVisible = !_motDePasseVisible),
+                      ),
+                    ),
                     validator: (v) => (v == null || v.isEmpty) ? l.champRequis : null,
                     onFieldSubmitted: (_) => _connecter(),
                   ),

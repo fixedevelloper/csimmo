@@ -38,6 +38,11 @@
   "auth": {
     "titre": "Sign in",
     "sousTitre": "Sign in to your CSImmo workspace",
+    "accroche": "Manage your properties, simply.",
+    "accrocheTexte": "Rent, receipts, owner payouts and reminders in one place, on your own servers.",
+    "point1": "Buildings, units and leases tracked in real time",
+    "point2": "Receipts issued as soon as rent is collected",
+    "point3": "Your data stays with you, encrypted and backed up",
     "identifiant": "Phone or e-mail",
     "motDePasse": "Password",
     "seConnecter": "Sign in",
@@ -115,7 +120,9 @@
     "langue": "Language",
     "fr": "Français",
     "en": "English",
-    "retourAccueil": "Back to home"
+    "retourAccueil": "Back to home",
+    "afficherMotDePasse": "Show password",
+    "masquerMotDePasse": "Hide password"
   },
   "erreur": {
     "titre": "Something went wrong",

@@ -38,6 +38,11 @@
   "auth": {
     "titre": "Connexion",
     "sousTitre": "Connectez-vous à votre espace CSImmo",
+    "accroche": "Gérez vos biens, simplement.",
+    "accrocheTexte": "Loyers, quittances, reversements et relances au même endroit, sur vos propres serveurs.",
+    "point1": "Immeubles, lots et baux suivis en temps réel",
+    "point2": "Quittances et reçus générés dès l'encaissement",
+    "point3": "Vos données restent chez vous, chiffrées et sauvegardées",
     "identifiant": "Téléphone ou e-mail",
     "motDePasse": "Mot de passe",
     "seConnecter": "Se connecter",
@@ -115,7 +120,9 @@
     "langue": "Langue",
     "fr": "Français",
     "en": "English",
-    "retourAccueil": "Retour à l'accueil"
+    "retourAccueil": "Retour à l'accueil",
+    "afficherMotDePasse": "Afficher le mot de passe",
+    "masquerMotDePasse": "Masquer le mot de passe"
   },
   "erreur": {
     "titre": "Une erreur est survenue",
@@ -308,7 +315,7 @@
     "TROP_DE_REQUETES": "Trop de requêtes : réessayez dans quelques instants."
   },
   "installation": {
-    "titre": "Installation d'CSImmo",
+    "titre": "Installation de CSImmo",
     "sousTitre": "Quelques minutes suffisent : importez votre licence puis créez le compte administrateur.",
     "licenceTitre": "1. Licence",
     "empreinteTitre": "Empreinte de ce serveur",
@@ -1109,7 +1116,7 @@
     },
     "diagnostic": "Diagnostic",
     "diag": {
-      "version": "Version d'CSImmo",
+      "version": "Version de CSImmo",
       "java": "Java",
       "base": "Base de données",
       "disque": "Espace disque",

@@ -9,6 +9,7 @@ import { StatutPastille } from "@/components/statut-pastille";
 import { useTransactionsEnLigne } from "@/hooks/use-paiement-en-ligne";
 import { formaterFcfa } from "@/lib/baux";
 import type { components } from "@/lib/api/schema";
+import { NativeSelect } from "@/components/ui/native-select";
 
 type TransactionDto = components["schemas"]["TransactionDto"];
 const STATUTS = ["EN_ATTENTE", "CONFIRMEE", "ECHOUEE", "EXPIREE", "ANOMALIE"] as const;
@@ -41,14 +42,14 @@ export function TransactionsListe() {
     <div className="flex flex-col gap-3">
       <label className="flex w-52 flex-col gap-1 text-sm">
         {t("filtreStatut")}
-        <select value={statut} onChange={(e) => { setPage(0); setStatut(e.target.value); }} className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm">
+        <NativeSelect value={statut} onChange={(e) => { setPage(0); setStatut(e.target.value); }}>
           <option value="">{t("tous")}</option>
           {STATUTS.map((s) => (
             <option key={s} value={s}>
               {t(`statuts.${s}`)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
       <DataTable colonnes={colonnes} donnees={data} chargement={isPending} onPageChange={setPage} idLigne={(x) => x.id ?? ""} messageVide={t("aucune")} />
     </div>

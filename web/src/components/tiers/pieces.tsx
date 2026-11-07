@@ -98,7 +98,7 @@ export function Pieces({ locataireId, actif }: { locataireId: string; actif: boo
               accept="image/jpeg,image/png,image/webp,application/pdf"
               aria-label={t("choisirPiece")}
               onChange={(e) => setChoisi(e.target.files?.[0] ?? null)}
-              className="h-8 min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm file:mr-2 file:border-0 file:bg-transparent file:text-sm file:font-medium"
+              className="h-10 min-w-0 rounded-lg border border-input bg-muted/40 px-3 py-1.5 text-sm file:mr-2 file:border-0 file:bg-transparent file:text-sm file:font-medium"
             />
             <Button type="submit" disabled={envoyer.isPending || !choisi}>
               {t("ajouterPiece")}

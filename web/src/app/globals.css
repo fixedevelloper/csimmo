@@ -18,6 +18,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-ring: var(--ring);
+  --color-marque: var(--marque);
+  --color-marque-foreground: var(--marque-foreground);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
@@ -41,7 +43,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.75rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -69,9 +71,14 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.6 0.15 262);
   --marque-orange: oklch(0.7 0.19 48);
+  /* Accent de marque : texte SOMBRE dessus (le blanc sur cet orange n'atteint pas le contraste AA) */
+  --marque: oklch(0.74 0.17 52);
+  --marque-foreground: oklch(0.2 0.03 262);
 }
 
 .dark {
+  --marque: oklch(0.78 0.16 55);
+  --marque-foreground: oklch(0.2 0.03 262);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -119,7 +126,8 @@
   .animate-page-in { animation: none; }
   * { scroll-behavior: auto !important; }
 }
-:root { --shadow-carte: 0 1px 2px oklch(0.2 0.02 262 / 6%), 0 4px 16px oklch(0.2 0.02 262 / 5%); }
+:root { --shadow-carte: 0 1px 2px oklch(0.2 0.02 262 / 6%), 0 6px 20px oklch(0.2 0.02 262 / 6%); }
+.dark { --shadow-carte: 0 1px 2px oklch(0 0 0 / 30%); }
 .shadow-carte { box-shadow: var(--shadow-carte); }
 .tabular { font-variant-numeric: tabular-nums; }
 @layer base {

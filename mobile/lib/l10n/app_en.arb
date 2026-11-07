@@ -16,6 +16,8 @@
   "connexionServeur": "Server: {url}",
   "identifiantLabel": "Phone or e-mail",
   "motDePasseLabel": "Password",
+  "afficherMotDePasse": "Show password",
+  "masquerMotDePasse": "Hide password",
   "seConnecter": "Sign in",
   "connexionEnCours": "Signing in…",
   "connexionParSms": "Get a code by SMS",
