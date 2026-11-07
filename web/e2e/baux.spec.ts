@@ -8,7 +8,7 @@ const ADMIN = {
 async function connecterAdmin(page: Page) {
   await page.goto("/login");
   await page.getByLabel("Téléphone ou e-mail").fill(ADMIN.identifiant);
-  await page.getByLabel("Mot de passe").fill(ADMIN.motDePasse);
+  await page.getByLabel("Mot de passe", { exact: true }).fill(ADMIN.motDePasse);
   await page.getByRole("button", { name: "Se connecter" }).click();
   await expect(page).toHaveURL(/\/tableau-de-bord$/);
 }
@@ -40,7 +40,7 @@ test("bail : assistant en 4 étapes → PDF → activation → chevauchement ref
     await page.getByRole("button", { name: "Suivant" }).click();
     await page.getByLabel("Rechercher un locataire").fill(nomLocataire);
     await page.getByRole("button", { name: new RegExp(nomLocataire) }).click();
-    await page.getByLabel(/Marie Garant/).check();
+    await page.getByRole("checkbox", { name: /Marie Garant/ }).check();
     await page.getByRole("button", { name: "Suivant" }).click();
     await page.getByLabel("Date de début").fill(debut);
     if (fin) await page.getByLabel("Date de fin (facultative)").fill(fin);
@@ -96,7 +96,7 @@ test("bail : assistant en 4 étapes → PDF → activation → chevauchement ref
   await page.getByLabel("Motif de la résiliation").fill("Départ");
   await page.getByRole("button", { name: "Confirmer la résiliation" }).click();
   await expect(page.getByRole("alert").filter({ hasText: "préavis n'est pas respecté" })).toBeVisible();
-  await page.getByLabel("Les parties acceptent un préavis réduit").check();
+  await page.getByRole("checkbox", { name: "Les parties acceptent un préavis réduit" }).check();
   await page.getByRole("button", { name: "Confirmer la résiliation" }).click();
   await expect(page.getByTestId("statut-bail")).toHaveText("Résilié");
 });

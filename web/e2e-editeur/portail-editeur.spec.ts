@@ -28,7 +28,7 @@ function signatureValide(contenu: string): boolean {
 async function seConnecter(page: Page) {
   await page.goto("/login");
   await page.getByLabel("Adresse e-mail").fill(ADMIN.email);
-  await page.getByLabel("Mot de passe").fill(ADMIN.motDePasse);
+  await page.getByLabel("Mot de passe", { exact: true }).fill(ADMIN.motDePasse);
   await page.getByRole("button", { name: "Se connecter" }).click();
   await expect(page.getByRole("heading", { name: "Tableau de bord", level: 1 })).toBeVisible();
 }
@@ -57,7 +57,7 @@ test("accès protégé, mauvais mot de passe refusé, connexion réussie, aucun 
   expect(entetes["x-frame-options"]).toBe("DENY");
 
   await page.getByLabel("Adresse e-mail").fill(ADMIN.email);
-  await page.getByLabel("Mot de passe").fill("mauvais-mot-de-passe");
+  await page.getByLabel("Mot de passe", { exact: true }).fill("mauvais-mot-de-passe");
   await page.getByRole("button", { name: "Se connecter" }).click();
   await expect(page.locator('p[role="alert"]')).toContainText("Identifiants invalides");
   await expect(page).toHaveURL(/\/login$/);

@@ -137,10 +137,10 @@ export function ConformiteLocataire({ locataireId }: { locataireId: string }) {
         )}
 
         {/* Liste des finalités de traitement */}
-        <div className="flex flex-col gap-2.5">
+        <ul className="flex flex-col gap-2.5">
           {data?.finalites?.map((f) => {
             return (
-              <div
+              <li
                 key={f.finalite}
                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-border/50 bg-card hover:bg-muted/20 transition-all"
               >
@@ -187,10 +187,10 @@ export function ConformiteLocataire({ locataireId }: { locataireId: string }) {
                     {t("refusRetrait")}
                   </Button>
                 </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
 
         {/* Section Droits RGPD / Effacement (Soft Danger Zone) */}
         <div className="rounded-xl border border-border/60 bg-muted/20 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-2">

@@ -119,14 +119,14 @@ export function HistoriqueRelances({
       </CardHeader>
 
       <CardContent className="pt-4">
-        <div className="relative space-y-5">
+        <ul aria-label={t("titre")} className="relative space-y-5">
 
           {lignes.map((r, index) => {
             const IconeCanal = iconeCanal(r.canal);
             const IconeResultat = iconeResultat(r.resultat);
 
             return (
-              <div
+              <li
                 key={r.id}
                 className="relative flex gap-3"
               >
@@ -186,11 +186,11 @@ export function HistoriqueRelances({
                   </div>
 
                 </div>
-              </div>
+              </li>
             );
           })}
 
-        </div>
+        </ul>
       </CardContent>
     </Card>
   );

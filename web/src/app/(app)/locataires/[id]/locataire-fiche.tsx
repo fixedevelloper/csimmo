@@ -174,12 +174,12 @@ export function LocataireFiche() {
                     {l.dateNaissance ? formaterDate(l.dateNaissance, locale) : "—"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between py-3" data-testid="numero-cni">
+                <div className="flex items-center justify-between py-3">
                   <span className="text-muted-foreground flex items-center gap-2">
                     <CreditCard className="size-3.5" />
                     {t("numeroCni")}
                   </span>
-                  <span className="font-medium font-mono text-foreground">{l.numeroCni || "—"}</span>
+                  <span className="font-medium font-mono text-foreground" data-testid="numero-cni">{l.numeroCni || "—"}</span>
                 </div>
               </CardContent>
             </Card>

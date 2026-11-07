@@ -7,7 +7,7 @@ const CAPTURES = process.env.E2E_CAPTURES ?? "test-results/captures";
 async function seConnecter(page: Page) {
   await page.goto("/login");
   await page.getByLabel("Téléphone ou e-mail").fill(ADMIN.identifiant);
-  await page.getByLabel("Mot de passe").fill(ADMIN.motDePasse);
+  await page.getByLabel("Mot de passe", { exact: true }).fill(ADMIN.motDePasse);
   await page.getByRole("button", { name: "Se connecter" }).click();
   await expect(page).toHaveURL(/\/tableau-de-bord$/);
 }
@@ -164,7 +164,7 @@ test("limite de débit : trop d'essais de connexion → message clair dans le na
   }
   await page.goto("/login");
   await page.getByLabel("Téléphone ou e-mail").fill(ADMIN.identifiant);
-  await page.getByLabel("Mot de passe").fill(ADMIN.motDePasse);
+  await page.getByLabel("Mot de passe", { exact: true }).fill(ADMIN.motDePasse);
   await page.getByRole("button", { name: "Se connecter" }).click();
   await expect(page.locator('[role="alert"]:not(#__next-route-announcer__)')).toContainText(/Trop de requêtes/);
   await expect(page).toHaveURL(/\/login/);

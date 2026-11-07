@@ -8,7 +8,7 @@ const ADMIN = {
 
 async function seConnecter(page: Page, identifiant: string, motDePasse: string) {
   await page.getByLabel("Téléphone ou e-mail").fill(identifiant);
-  await page.getByLabel("Mot de passe").fill(motDePasse);
+  await page.getByLabel("Mot de passe", { exact: true }).fill(motDePasse);
   await page.getByRole("button", { name: "Se connecter" }).click();
 }
 
