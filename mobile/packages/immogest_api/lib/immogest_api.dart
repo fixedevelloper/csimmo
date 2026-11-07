@@ -38,6 +38,8 @@ export 'package:immogest_api/src/api/webhook_controller_api.dart';
 
 export 'package:immogest_api/src/model/accuse.dart';
 export 'package:immogest_api/src/model/administrateur.dart';
+export 'package:immogest_api/src/model/affectations_reponse.dart';
+export 'package:immogest_api/src/model/affectations_requete.dart';
 export 'package:immogest_api/src/model/annulation_requete.dart';
 export 'package:immogest_api/src/model/appareil_requete.dart';
 export 'package:immogest_api/src/model/arriere_dto.dart';

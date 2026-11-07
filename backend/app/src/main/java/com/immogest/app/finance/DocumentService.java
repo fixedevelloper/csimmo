@@ -222,8 +222,15 @@ public class DocumentService {
             return Page.empty(pageable);
         }
         boolean parLocataire = moi != null;
+        var visibles = baux.bailIdsVisibles(); // employé restreint : seulement les documents des baux de son périmètre
+        if (visibles.isPresent() && bailId != null && !visibles.get().contains(bailId)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Introuvable", HttpStatus.NOT_FOUND);
+        }
         Specification<DocumentPaiement> spec = (r, q, cb) -> {
             List<Predicate> c = new ArrayList<>();
+            if (visibles.isPresent()) {
+                c.add(visibles.get().isEmpty() ? cb.disjunction() : r.get("bailId").in(visibles.get()));
+            }
             if (bailId != null) {
                 c.add(cb.equal(r.get("bailId"), bailId));
             }

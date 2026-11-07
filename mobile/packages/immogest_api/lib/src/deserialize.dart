@@ -1,5 +1,7 @@
 import 'package:immogest_api/src/model/accuse.dart';
 import 'package:immogest_api/src/model/administrateur.dart';
+import 'package:immogest_api/src/model/affectations_reponse.dart';
+import 'package:immogest_api/src/model/affectations_requete.dart';
 import 'package:immogest_api/src/model/annulation_requete.dart';
 import 'package:immogest_api/src/model/appareil_requete.dart';
 import 'package:immogest_api/src/model/arriere_dto.dart';
@@ -147,6 +149,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return Accuse.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Administrateur':
           return Administrateur.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AffectationsReponse':
+          return AffectationsReponse.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AffectationsRequete':
+          return AffectationsRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AnnulationRequete':
           return AnnulationRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AppareilRequete':

@@ -15,4 +15,7 @@ public interface LecteurLots {
 
     /** Nombre de lots non archivés par statut (LIBRE, OCCUPE, EN_TRAVAUX) ; un statut absent vaut 0. */
     java.util.Map<String, Long> compterParStatut();
+
+    /** Identifiants de tous les lots (archivés compris) des immeubles donnés : base du périmètre des employés restreints. */
+    java.util.Set<UUID> lotIdsDesImmeubles(java.util.Collection<UUID> immeubleIds);
 }

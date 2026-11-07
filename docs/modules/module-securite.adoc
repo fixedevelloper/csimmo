@@ -5,6 +5,7 @@
 |Spring components
 |_Services_
 
+* `c.i.a.s.AffectationService`
 * `c.i.a.s.AuthService`
 * `c.i.a.s.UtilisateurService`
 

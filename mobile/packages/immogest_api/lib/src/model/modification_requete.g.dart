@@ -154,4 +154,5 @@ const _$ModificationRequeteRoleEnumEnumMap = {
   ModificationRequeteRoleEnum.PROPRIETAIRE_TIERS: 'PROPRIETAIRE_TIERS',
   ModificationRequeteRoleEnum.LOCATAIRE: 'LOCATAIRE',
   ModificationRequeteRoleEnum.PRESTATAIRE: 'PRESTATAIRE',
+  ModificationRequeteRoleEnum.ENCAISSEUR: 'ENCAISSEUR',
 };

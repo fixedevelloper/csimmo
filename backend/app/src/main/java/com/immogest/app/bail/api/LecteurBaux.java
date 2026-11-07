@@ -27,4 +27,10 @@ public interface LecteurBaux {
 
     /** Baux signés (ACTIF, RESILIE ou TERMINE) dont le début est au plus tard à la date donnée : base de la génération des échéances. */
     List<BailResume> bauxSignesCommencesAvant(LocalDate date);
+
+    /**
+     * Baux (tous statuts) visibles par l'utilisateur de la requête : vide = aucune restriction ; sinon les baux des lots des immeubles de
+     * son périmètre (ensemble vide = rien). Base du filtrage des paiements, échéances et documents.
+     */
+    Optional<java.util.Set<UUID>> bailIdsVisibles();
 }

@@ -19,7 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 
 /** Module patrimoine isolé : il réagit aux événements du bail sans en dépendre (outbox Modulith). */
 @ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.ALL_DEPENDENCIES)
-@Import(LicenceTestSupport.class)
+@Import({LicenceTestSupport.class, com.immogest.app.PerimetreTestSupport.class})
 @TestPropertySource(properties = {"immogest.dev.installation-auto=false", "db-scheduler.enabled=false"})
 class PatrimoineModuleTest {
 

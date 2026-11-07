@@ -40,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 class ImmeubleController {
 
     /** Un propriétaire tiers consulte (sans modifier) ses propres immeubles ; le service filtre ce qu'il voit. */
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'PROPRIETAIRE_TIERS')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'PROPRIETAIRE_TIERS', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("nom", "ville", "quartier", "createdAt");
 
     record ImmeubleRequete(

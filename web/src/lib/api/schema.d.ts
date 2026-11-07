@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/utilisateurs/{id}/affectations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listerAffectations"];
+        put: operations["definirAffectations"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/signalements/{id}/statut": {
         parameters: {
             query?: never;
@@ -1597,7 +1613,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE";
+            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
             actif?: boolean;
             deuxFacteursActif?: boolean;
         };
@@ -1608,10 +1624,16 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE";
+            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
             actif?: boolean;
             deuxFacteursActif?: boolean;
             verrouille?: boolean;
+        };
+        AffectationsRequete: {
+            immeubleIds: string[];
+        };
+        AffectationsReponse: {
+            immeubleIds?: string[];
         };
         StatutSignalementRequete: {
             /** @enum {string} */
@@ -1987,7 +2009,7 @@ export interface components {
             telephone?: string;
             email?: string;
             /** @enum {string} */
-            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE";
+            role: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
             deuxFacteursActif?: boolean;
             motDePasse: string;
         };
@@ -2444,7 +2466,7 @@ export interface components {
             expiresIn?: number;
             tokenType?: string;
             /** @enum {string} */
-            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE";
+            role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR";
             deuxFacteursRequis?: boolean;
         };
         OtpVerification: {
@@ -2989,6 +3011,54 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    listerAffectations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AffectationsReponse"];
+                };
+            };
+        };
+    };
+    definirAffectations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AffectationsRequete"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AffectationsReponse"];
+                };
             };
         };
     };

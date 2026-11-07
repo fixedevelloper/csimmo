@@ -361,6 +361,24 @@ corrige ce que tu trouves, en listant chaque correction dans CHANGELOG.md.
 
 ---
 
+## Lot 12 — Équipe et périmètres d'accès (voir `docs/adr/0009-equipe-et-perimetres.md`)
+
+Un employé n'accède qu'aux immeubles qui lui sont affectés ; sans affectation, il ne voit rien. Les employés restreints sont de **nouveaux rôles** (refus par défaut) ; `GESTIONNAIRE` reste à accès total.
+
+### [x] 12.1 Socle : affectations et périmètre (phase A, backend)
+Migration `sec_affectation` ; rôle `ENCAISSEUR` (double authentification obligatoire, révocation des sessions à la désactivation) ; `shared.PerimetreAcces` et `shared.LocatairesDuPerimetre` ; filtrage de patrimoine, bail, finance (paiements, échéances, caisse, documents), tiers (locataires) ; ouverture des seules routes de l'encaisseur ; audit des affectations ; OpenAPI et clients TS/Dart régénérés. Tests : « interdit hors périmètre » par route, non-régression ADMIN/GESTIONNAIRE, matrice des droits.
+
+### [ ] 12.2 Page Équipe (phase A, web) et espace agent (mobile)
+Menu Administration > Équipe : liste, création, affectation multiple, fiche employé (encaissements, caisse, audit). Mobile : espace agent pour `ENCAISSEUR`, cache limité au périmètre, vidé quand les affectations changent. e2e : un encaisseur n'encaisse que dans son périmètre.
+
+### [ ] 12.3 Gestionnaire de biens (phase B)
+Rôle `GESTIONNAIRE_BIENS` : baux, locataires, relances, signalements sur son périmètre ; règle de visibilité des locataires sans bail à décider (créés par lui ?).
+
+### [ ] 12.4 Comptable (phase C)
+Rôle `COMPTABLE` : lecture des paiements, dépenses et reversements du périmètre, validation des reversements.
+
+---
+
 ## Après le pilote — V2 (≈ 12 semaines)
 
 Une étape par module, même format : maintenance (tickets, devis, prestataires), états des lieux mobiles avec photos et signature, charges et régularisation, GED, signature électronique, annonces et prospects, messagerie, exports comptables SYSCOHADA.

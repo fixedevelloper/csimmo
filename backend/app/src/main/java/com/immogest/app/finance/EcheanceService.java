@@ -222,6 +222,15 @@ public class EcheanceService {
                 throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
             }
         }
+        var visibles = baux.bailIdsVisibles();
+        if (visibles.isPresent()) { // employé restreint : les échéances d'un bail de son périmètre, jamais une liste globale
+            if (bailId == null) {
+                return Page.empty(pageable);
+            }
+            if (!visibles.get().contains(bailId)) {
+                throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
+            }
+        }
         return echeances.rechercher(bailId, statut, pageable).map(EcheanceService::versDto);
     }
 

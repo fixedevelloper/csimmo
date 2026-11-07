@@ -63,6 +63,49 @@ paths:
       responses:
         "200":
           description: OK
+  /api/v1/utilisateurs/{id}/affectations:
+    get:
+      tags:
+      - utilisateur-controller
+      operationId: listerAffectations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AffectationsReponse"
+    put:
+      tags:
+      - utilisateur-controller
+      operationId: definirAffectations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AffectationsRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AffectationsReponse"
   /api/v1/signalements/{id}/statut:
     put:
       tags:
@@ -3352,6 +3395,7 @@ components:
           - PROPRIETAIRE_TIERS
           - LOCATAIRE
           - PRESTATAIRE
+          - ENCAISSEUR
         actif:
           type: boolean
         deuxFacteursActif:
@@ -3379,12 +3423,33 @@ components:
           - PROPRIETAIRE_TIERS
           - LOCATAIRE
           - PRESTATAIRE
+          - ENCAISSEUR
         actif:
           type: boolean
         deuxFacteursActif:
           type: boolean
         verrouille:
           type: boolean
+    AffectationsRequete:
+      type: object
+      properties:
+        immeubleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          maxItems: 500
+          minItems: 0
+      required:
+      - immeubleIds
+    AffectationsReponse:
+      type: object
+      properties:
+        immeubleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
     StatutSignalementRequete:
       type: object
       properties:
@@ -4245,6 +4310,7 @@ components:
           - PROPRIETAIRE_TIERS
           - LOCATAIRE
           - PRESTATAIRE
+          - ENCAISSEUR
         deuxFacteursActif:
           type: boolean
         motDePasse:
@@ -5170,6 +5236,7 @@ components:
           - PROPRIETAIRE_TIERS
           - LOCATAIRE
           - PRESTATAIRE
+          - ENCAISSEUR
         deuxFacteursRequis:
           type: boolean
     OtpVerification:

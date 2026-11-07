@@ -44,7 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE')")
 class LotController {
 
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'PROPRIETAIRE_TIERS')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'PROPRIETAIRE_TIERS', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("reference", "loyerIndicatif", "surfaceM2", "type", "statut", "createdAt");
 
     record CompteurRequete(@NotNull TypeCompteur type, @NotBlank @Size(max = 50) String numero) {

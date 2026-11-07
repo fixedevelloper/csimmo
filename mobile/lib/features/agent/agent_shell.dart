@@ -11,7 +11,7 @@ import 'file_encaissements.dart';
 import 'listes_screens.dart';
 import 'synchro_encaissements.dart';
 
-/// Espace de l'agent de terrain (ADMIN et GESTIONNAIRE) : encaisser en espèces même sans réseau, suivre la file d'envoi, consulter lots et locataires.
+/// Espace de l'agent de terrain (ADMIN, GESTIONNAIRE et ENCAISSEUR, ce dernier limité à son périmètre par le serveur) : encaisser en espèces même sans réseau, suivre la file d'envoi, consulter lots et locataires.
 class AgentShell extends ConsumerStatefulWidget {
   const AgentShell({super.key});
 

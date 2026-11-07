@@ -42,10 +42,18 @@ class UtilisateurController {
     record ReinitialisationRequete(@NotBlank @Size(min = 8, max = 100) String motDePasse) {
     }
 
-    private final UtilisateurService service;
+    record AffectationsRequete(@jakarta.validation.constraints.NotNull @Size(max = 500) java.util.List<UUID> immeubleIds) {
+    }
 
-    UtilisateurController(UtilisateurService service) {
+    record AffectationsReponse(java.util.List<UUID> immeubleIds) {
+    }
+
+    private final UtilisateurService service;
+    private final com.immogest.app.securite.AffectationService affectations;
+
+    UtilisateurController(UtilisateurService service, com.immogest.app.securite.AffectationService affectations) {
         this.service = service;
+        this.affectations = affectations;
     }
 
     @GetMapping
@@ -94,5 +102,19 @@ class UtilisateurController {
     ResponseEntity<Void> reinitialiser(@PathVariable UUID id, @Valid @RequestBody ReinitialisationRequete r) {
         service.reinitialiserMotDePasse(id, r.motDePasse());
         return ResponseEntity.noContent().build();
+    }
+
+    /** Immeubles affectés à un employé restreint. */
+    @GetMapping("/{id}/affectations")
+    @io.swagger.v3.oas.annotations.Operation(operationId = "listerAffectations")
+    AffectationsReponse listerAffectations(@PathVariable UUID id) {
+        return new AffectationsReponse(affectations.lister(id));
+    }
+
+    /** Remplace les immeubles affectés à un employé restreint (les autres rôles : 409). */
+    @PutMapping("/{id}/affectations")
+    @io.swagger.v3.oas.annotations.Operation(operationId = "definirAffectations")
+    AffectationsReponse definirAffectations(@PathVariable UUID id, @Valid @RequestBody AffectationsRequete r) {
+        return new AffectationsReponse(affectations.definir(id, r.immeubleIds()));
     }
 }

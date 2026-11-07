@@ -4,6 +4,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+- feat(securite): rôle `ENCAISSEUR` et affectations d'immeubles (`PUT /api/v1/utilisateurs/{id}/affectations`, migration V23) : un employé restreint ne voit et n'encaisse que dans son périmètre (immeubles, lots, baux, locataires, paiements, échéances, documents, caisse), sans affectation il ne voit rien, hors périmètre 404 ; double authentification obligatoire ; `shared.PerimetreAcces` et `shared.LocatairesDuPerimetre`. Voir ADR 0009 (étape 12.1, backend). OpenAPI et clients TS/Dart régénérés ; le mobile reconnaît le rôle (espace agent).
 - feat(web): écran Paramètres > Utilisateurs (ADMIN : création de compte, mot de passe généré ou saisi, réinitialisation, activation, déverrouillage) et bouton « Créer l'accès » sur la fiche locataire (compte LOCATAIRE créé puis rattaché). `optionnel()` accepte les `null` renvoyés par l'API.
 
 - feat(deploy): `update.sh --version X [--registre PREFIX]` change de version en tirant les images par tag, même sur une installation qui n'avait pas les noms d'images du registre (écrits dans `.env`) ; le retour arrière garde les anciens noms.

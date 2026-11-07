@@ -7,12 +7,14 @@ void main() {
     expect(Role.locataire.homeRoute, '/locataire');
     expect(Role.gestionnaire.homeRoute, '/agent');
     expect(Role.admin.homeRoute, '/agent');
+    expect(Role.encaisseur.homeRoute, '/agent');
     expect(Role.prestataire.homeRoute, '/prestataire');
     expect(Role.proprietaireTiers.homeRoute, '/proprietaire');
   });
 
   test('Role.fromCode lit les codes du backend', () {
     expect(Role.fromCode('PROPRIETAIRE_TIERS'), Role.proprietaireTiers);
+    expect(Role.fromCode('ENCAISSEUR'), Role.encaisseur);
     expect(Role.fromCode('INCONNU'), isNull);
     expect(Role.fromCode(null), isNull);
   });

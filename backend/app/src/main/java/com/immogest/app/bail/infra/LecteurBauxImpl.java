@@ -13,14 +13,37 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-class LecteurBauxImpl implements LecteurBaux {
+class LecteurBauxImpl implements LecteurBaux, com.immogest.app.shared.LocatairesDuPerimetre {
 
     private final BailRepository baux;
     private final com.immogest.app.bail.ModeleBailService modele;
+    private final com.immogest.app.shared.PerimetreAcces perimetre;
+    private final com.immogest.app.patrimoine.api.LecteurLots lots;
 
-    LecteurBauxImpl(BailRepository baux, com.immogest.app.bail.ModeleBailService modele) {
+    LecteurBauxImpl(BailRepository baux, com.immogest.app.bail.ModeleBailService modele, com.immogest.app.shared.PerimetreAcces perimetre,
+            com.immogest.app.patrimoine.api.LecteurLots lots) {
         this.baux = baux;
         this.modele = modele;
+        this.perimetre = perimetre;
+        this.lots = lots;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<java.util.Set<UUID>> bailIdsVisibles() {
+        return perimetre.immeublesVisibles().map(immeubles -> {
+            var lotIds = lots.lotIdsDesImmeubles(immeubles);
+            return lotIds.isEmpty() ? java.util.Set.<UUID>of() : new java.util.HashSet<>(baux.idsDesLots(lotIds));
+        });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<java.util.Set<UUID>> locatairesVisibles() {
+        return perimetre.immeublesVisibles().map(immeubles -> {
+            var lotIds = lots.lotIdsDesImmeubles(immeubles);
+            return lotIds.isEmpty() ? java.util.Set.<UUID>of() : new java.util.HashSet<>(baux.locataireIdsDesLots(lotIds));
+        });
     }
 
     @Override

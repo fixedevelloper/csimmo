@@ -18,6 +18,15 @@ public final class PatrimoineSpecifications {
     private PatrimoineSpecifications() {
     }
 
+    /** Restriction au périmètre d'un employé : ensemble vide = aucun résultat. */
+    public static Specification<Immeuble> immeublesDans(java.util.Set<java.util.UUID> ids) {
+        return (racine, requete, cb) -> ids.isEmpty() ? cb.disjunction() : racine.get("id").in(ids);
+    }
+
+    public static Specification<Lot> lotsDansImmeubles(java.util.Set<java.util.UUID> immeubleIds) {
+        return (racine, requete, cb) -> immeubleIds.isEmpty() ? cb.disjunction() : racine.get("immeuble").get("id").in(immeubleIds);
+    }
+
     public static Specification<Immeuble> immeubles(FiltreImmeubles f) {
         return (racine, requete, cb) -> {
             List<Predicate> criteres = new ArrayList<>();

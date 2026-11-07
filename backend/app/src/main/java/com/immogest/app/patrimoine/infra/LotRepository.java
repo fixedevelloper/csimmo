@@ -20,6 +20,9 @@ public interface LotRepository extends JpaRepository<Lot, UUID>, JpaSpecificatio
         long getNombre();
     }
 
+    @Query("select l.id from Lot l where l.immeuble.id in :immeubleIds")
+    List<UUID> idsDesImmeubles(@Param("immeubleIds") Collection<UUID> immeubleIds);
+
     long countByArchiveFalse();
 
     @org.springframework.data.jpa.repository.Query("select l.statut, count(l) from Lot l where l.archive = false group by l.statut")

@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -69,10 +70,12 @@ public class BailService {
     private final ApplicationEventPublisher evenements;
     private final ActeurCourant acteurCourant;
     private final Clock horloge;
+    private final com.immogest.app.shared.PerimetreAcces perimetre;
 
     BailService(BailRepository baux, BailDocumentRepository documents, LecteurLots lots, LecteurTiers tiers, ModeleBailService modeles,
             GenerateurBailPdf generateur, StockageService stockage, ApplicationEventPublisher evenements, ActeurCourant acteurCourant,
-            Clock horloge) {
+            Clock horloge, com.immogest.app.shared.PerimetreAcces perimetre) {
+        this.perimetre = perimetre;
         this.baux = baux;
         this.documents = documents;
         this.lots = lots;
@@ -90,6 +93,7 @@ public class BailService {
     @Transactional(readOnly = true)
     public Page<BailDto> lister(FiltreBaux filtre, Pageable pageable) {
         UUID imposeLocataire = locataireImpose();
+        Optional<Set<UUID>> lotsVisibles = lotsVisibles();
         Specification<Bail> spec = (racine, requete, cb) -> {
             List<Predicate> criteres = new ArrayList<>();
             if (filtre.statut() != null) {
@@ -97,6 +101,9 @@ public class BailService {
             }
             if (filtre.lotId() != null) {
                 criteres.add(cb.equal(racine.get("lotId"), filtre.lotId()));
+            }
+            if (lotsVisibles.isPresent()) { // employé restreint : seulement les baux des lots de ses immeubles (rien s'il n'en a pas)
+                criteres.add(lotsVisibles.get().isEmpty() ? cb.disjunction() : racine.get("lotId").in(lotsVisibles.get()));
             }
             UUID locataire = imposeLocataire != null ? imposeLocataire : filtre.locataireId();
             if (locataire != null) {
@@ -392,7 +399,15 @@ public class BailService {
         if (impose != null && !impose.equals(bail.getLocataireId())) {
             throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
         }
+        if (lotsVisibles().map(lotsAutorises -> !lotsAutorises.contains(bail.getLotId())).orElse(false)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
+        }
         return bail;
+    }
+
+    /** Pour un employé restreint : les lots de ses immeubles. Vide pour les autres (aucune restriction). */
+    private Optional<Set<UUID>> lotsVisibles() {
+        return perimetre.immeublesVisibles().map(lots::lotIdsDesImmeubles);
     }
 
     /** Pour un LOCATAIRE : sa fiche (ou un identifiant impossible s'il n'en a pas). Vide pour les autres rôles. */

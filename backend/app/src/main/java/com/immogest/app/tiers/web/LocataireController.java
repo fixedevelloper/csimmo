@@ -64,7 +64,9 @@ class LocataireController {
         this.service = service;
     }
 
+    /** Liste sans numéro de CNI ; l'ENCAISSEUR la lit pour chercher un locataire, limitée à son périmètre (voir LocataireService). */
     @GetMapping("/locataires")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'ENCAISSEUR')")
     @io.swagger.v3.oas.annotations.Operation(operationId = "listerLocataires")
     PageReponse<LocataireDto> lister(@RequestParam(required = false) String q, @RequestParam(defaultValue = "false") boolean inclureArchives,
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(required = false) String sort) {

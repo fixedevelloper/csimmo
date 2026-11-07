@@ -25,6 +25,13 @@ public interface BailRepository extends JpaRepository<Bail, UUID>, JpaSpecificat
 
     boolean existsByBailPrecedentId(UUID bailPrecedentId);
 
+    /** Baux (tous statuts) des lots donnés : base du périmètre des employés restreints. */
+    @Query("select b.id from Bail b where b.lotId in :lotIds")
+    List<UUID> idsDesLots(@Param("lotIds") Collection<UUID> lotIds);
+
+    @Query("select distinct b.locataireId from Bail b where b.lotId in :lotIds")
+    List<UUID> locataireIdsDesLots(@Param("lotIds") Collection<UUID> lotIds);
+
     /** Bails ACTIF/RESILIE du lot encore en vigueur à la date donnée ou à venir (autres que {@code exclu}). */
     @Query("select count(b) > 0 from Bail b where b.lotId = :lot and b.statut in :statuts and b.id <> :exclu "
             + "and (b.dateFinEffective is null or b.dateFinEffective >= :date)")

@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.RestController;
 class BailController {
 
     private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE')";
+    /** Liste et fiche d'un bail : l'ENCAISSEUR les lit dans son périmètre (BailService) ; pas les documents ni les actions. */
+    private static final String LECTURE_BAIL = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("numero", "dateDebut", "dateFin", "loyer", "statut", "createdAt");
 
     /** Montants en FCFA entiers. */
@@ -89,7 +91,7 @@ class BailController {
     }
 
     @GetMapping
-    @PreAuthorize(LECTURE)
+    @PreAuthorize(LECTURE_BAIL)
     @io.swagger.v3.oas.annotations.Operation(operationId = "listerBaux")
     PageReponse<BailDto> lister(@RequestParam(required = false) StatutBail statut, @RequestParam(required = false) UUID lotId,
             @RequestParam(required = false) UUID locataireId, @RequestParam(defaultValue = "0") int page,
@@ -99,7 +101,7 @@ class BailController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize(LECTURE)
+    @PreAuthorize(LECTURE_BAIL)
     BailDto obtenir(@PathVariable UUID id) {
         return service.obtenir(id);
     }

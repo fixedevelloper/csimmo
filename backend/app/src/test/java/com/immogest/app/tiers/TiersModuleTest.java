@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 /** Module tiers isolé : une création publie l'événement d'audit, sans donnée d'identité en clair. */
 @ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.ALL_DEPENDENCIES)
-@Import({TestcontainersConfiguration.class, SeaweedFsTestConfiguration.class})
+@Import({TestcontainersConfiguration.class, SeaweedFsTestConfiguration.class, com.immogest.app.PerimetreTestSupport.class})
 @TestPropertySource(properties = {"immogest.dev.installation-auto=false", "db-scheduler.enabled=false"})
 class TiersModuleTest {
 

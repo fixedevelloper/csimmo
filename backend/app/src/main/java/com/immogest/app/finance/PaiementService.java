@@ -86,6 +86,7 @@ public class PaiementService {
         if (s.bailId() == null || s.mode() == null || s.montant() == null) {
             throw new ErreurMetier("PAIEMENT_CHAMPS_REQUIS", "Bail, montant et mode sont obligatoires", HttpStatus.BAD_REQUEST);
         }
+        verifierBailVisible(s.bailId()); // employé restreint : hors périmètre = introuvable, avant tout rejeu d'idempotence
         // Verrou du bail d'abord : deux requêtes simultanées de même clé se suivent, la seconde voit la première
         moteur.verrouiller(s.bailId());
         String reference = texte(s.reference(), 100);
@@ -185,8 +186,15 @@ public class PaiementService {
         if (bailIds != null && bailIds.isEmpty()) {
             return Page.empty(pageable);
         }
+        Optional<Set<UUID>> visibles = baux.bailIdsVisibles(); // employé restreint : seulement les baux de son périmètre
+        if (visibles.isPresent() && bailId != null && !visibles.get().contains(bailId)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Introuvable", HttpStatus.NOT_FOUND);
+        }
         Specification<Paiement> spec = (racine, requete, cb) -> {
             List<Predicate> c = new ArrayList<>();
+            if (visibles.isPresent()) {
+                c.add(visibles.get().isEmpty() ? cb.disjunction() : racine.get("bailId").in(visibles.get()));
+            }
             if (bailId != null) {
                 c.add(cb.equal(racine.get("bailId"), bailId));
             }
@@ -245,6 +253,13 @@ public class PaiementService {
         var locataire = tiers.locataire(locataireId)
                 .orElseThrow(() -> new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable", HttpStatus.NOT_FOUND));
         List<BailResume> liste = baux.bauxDuLocataire(locataireId);
+        Optional<Set<UUID>> visibles = baux.bailIdsVisibles();
+        if (visibles.isPresent()) { // employé restreint : seuls les baux de son périmètre comptent (jamais ceux d'un autre immeuble)
+            liste = liste.stream().filter(b -> visibles.get().contains(b.id())).toList();
+            if (liste.isEmpty()) {
+                throw new ErreurMetier("LOCATAIRE_INTROUVABLE", "Locataire introuvable", HttpStatus.NOT_FOUND);
+            }
+        }
         List<UUID> ids = liste.stream().map(BailResume::id).toList();
         long arrieres = 0;
         long aVenir = 0;
@@ -264,6 +279,12 @@ public class PaiementService {
     }
 
     // ================================================================== interne
+
+    private void verifierBailVisible(UUID bailId) {
+        if (baux.bailIdsVisibles().map(ids -> !ids.contains(bailId)).orElse(false)) {
+            throw new ErreurMetier("BAIL_INTROUVABLE", "Bail introuvable", HttpStatus.NOT_FOUND);
+        }
+    }
 
     private List<PaiementDto> versDto(List<Paiement> liste) {
         Set<UUID> annules = new java.util.HashSet<>(liste.isEmpty() ? List.of()

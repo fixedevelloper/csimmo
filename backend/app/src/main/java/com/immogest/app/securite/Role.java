@@ -1,15 +1,27 @@
 package com.immogest.app.securite;
 
-/** Rôles de l'application (CLAUDE.md §6). */
+/** Rôles de l'application (CLAUDE.md §6, docs/adr/0009-equipe-et-perimetres.md). */
 public enum Role {
     ADMIN,
     GESTIONNAIRE,
     PROPRIETAIRE_TIERS,
     LOCATAIRE,
-    PRESTATAIRE;
+    PRESTATAIRE,
+    /** Employé qui encaisse sur les immeubles qui lui sont affectés (refus par défaut : chaque route doit l'ouvrir). */
+    ENCAISSEUR;
 
     /** Rôles qui doivent toujours s'authentifier par mot de passe (la connexion par OTP seul leur est interdite). */
     public boolean motDePasseObligatoire() {
-        return this == ADMIN || this == GESTIONNAIRE;
+        return this == ADMIN || this == GESTIONNAIRE || this == ENCAISSEUR;
+    }
+
+    /** Employés limités aux immeubles qui leur sont affectés ; sans affectation, ils ne voient rien. */
+    public boolean restreintAuxAffectations() {
+        return this == ENCAISSEUR;
+    }
+
+    /** Rôles pour lesquels la double authentification est imposée (aucun compte ne peut s'en passer). */
+    public boolean deuxFacteursObligatoire() {
+        return this == ENCAISSEUR;
     }
 }

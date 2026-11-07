@@ -18,8 +18,13 @@ Container_Boundary("ImmoGestApplication.ImmoGestApplication_boundary", "ImmoGest
   Component(ImmoGestApplication.ImmoGestApplication.Tiers, "Tiers", $techn="Module", $descr="", $tags="", $link="")
 }
 
-Rel(ImmoGestApplication.ImmoGestApplication.Licence, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Commun, "listens to", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Baux, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
@@ -29,13 +34,8 @@ Rel(ImmoGestApplication.ImmoGestApplication.Paiementenligne, ImmoGestApplication
 Rel(ImmoGestApplication.ImmoGestApplication.Paiementenligne, ImmoGestApplication.ImmoGestApplication.Licence, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Paiementenligne, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Paiementenligne, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Commun, "listens to", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Baux, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Licence, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

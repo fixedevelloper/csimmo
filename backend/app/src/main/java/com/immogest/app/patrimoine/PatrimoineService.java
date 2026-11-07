@@ -52,10 +52,11 @@ public class PatrimoineService {
     private final ApplicationEventPublisher evenements;
     private final ActeurCourant acteurCourant;
     private final LecteurTiers tiers;
+    private final com.immogest.app.shared.PerimetreAcces perimetre;
 
     PatrimoineService(ImmeubleRepository immeubles, LotRepository lots, PhotoRepository photos, PatrimoineMapper mapper,
             ControlePalier palier, StockageService stockage, ApplicationEventPublisher evenements,
-            ActeurCourant acteurCourant, LecteurTiers tiers) {
+            ActeurCourant acteurCourant, LecteurTiers tiers, com.immogest.app.shared.PerimetreAcces perimetre) {
         this.immeubles = immeubles;
         this.lots = lots;
         this.photos = photos;
@@ -65,6 +66,7 @@ public class PatrimoineService {
         this.evenements = evenements;
         this.acteurCourant = acteurCourant;
         this.tiers = tiers;
+        this.perimetre = perimetre;
     }
 
     // ================================================================== immeubles
@@ -73,7 +75,7 @@ public class PatrimoineService {
     public Page<ImmeubleDto> listerImmeubles(FiltreImmeubles filtre, Pageable pageable) {
         FiltreImmeubles f = new FiltreImmeubles(filtre.ville(), filtre.quartier(), filtre.q(), filtre.inclureArchives(),
                 proprietaireImpose().orElse(filtre.proprietaireTiersId()));
-        Page<Immeuble> page = immeubles.findAll(PatrimoineSpecifications.immeubles(f), pageable);
+        Page<Immeuble> page = immeubles.findAll(PatrimoineSpecifications.immeubles(f).and(perimetre.immeublesVisibles().map(PatrimoineSpecifications::immeublesDans).orElse(null)), pageable);
         Map<UUID, int[]> comptes = comptes(page.getContent().stream().map(Immeuble::getId).toList());
         return page.map(i -> avecComptes(mapper.versDto(i), comptes));
     }
@@ -124,7 +126,7 @@ public class PatrimoineService {
     public Page<LotDto> listerLots(FiltreLots filtre, Pageable pageable) {
         FiltreLots f = new FiltreLots(filtre.immeubleId(), filtre.statut(), filtre.type(), filtre.ville(), filtre.quartier(),
                 filtre.q(), filtre.inclureArchives(), proprietaireImpose().orElse(filtre.proprietaireTiersId()));
-        return lots.findAll(PatrimoineSpecifications.lots(f), pageable).map(mapper::versDto);
+        return lots.findAll(PatrimoineSpecifications.lots(f).and(perimetre.immeublesVisibles().map(PatrimoineSpecifications::lotsDansImmeubles).orElse(null)), pageable).map(mapper::versDto);
     }
 
     @Transactional(readOnly = true)
@@ -315,7 +317,8 @@ public class PatrimoineService {
     }
 
     private boolean visible(Immeuble immeuble) {
-        return proprietaireImpose().map(p -> p.equals(immeuble.getProprietaireTiersId())).orElse(true);
+        return proprietaireImpose().map(p -> p.equals(immeuble.getProprietaireTiersId())).orElse(true)
+                && perimetre.immeublesVisibles().map(ids -> ids.contains(immeuble.getId())).orElse(true);
     }
 
     /** Un immeuble qu'on n'a pas le droit de voir est « introuvable » (on ne révèle pas son existence). */

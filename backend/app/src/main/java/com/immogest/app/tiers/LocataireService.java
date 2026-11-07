@@ -44,9 +44,12 @@ public class LocataireService {
     private final StockageService stockage;
     private final LiensUtilisateur liens;
     private final JournalTiers journal;
+    private final com.immogest.app.shared.LocatairesDuPerimetre perimetre;
 
     LocataireService(LocataireRepository locataires, GarantRepository garants, PieceIdentiteRepository pieces, TiersMapper mapper,
-            ChiffrementDonnees chiffrement, StockageService stockage, LiensUtilisateur liens, JournalTiers journal) {
+            ChiffrementDonnees chiffrement, StockageService stockage, LiensUtilisateur liens, JournalTiers journal,
+            com.immogest.app.shared.LocatairesDuPerimetre perimetre) {
+        this.perimetre = perimetre;
         this.locataires = locataires;
         this.garants = garants;
         this.pieces = pieces;
@@ -61,7 +64,10 @@ public class LocataireService {
 
     @Transactional(readOnly = true)
     public Page<LocataireDto> lister(String q, boolean inclureArchives, Pageable pageable) {
-        return locataires.findAll(RechercheSpecifications.<Locataire>parNomOuTelephone(q, inclureArchives), pageable)
+        org.springframework.data.jpa.domain.Specification<Locataire> restriction = perimetre.locatairesVisibles() // employé restreint
+                .<org.springframework.data.jpa.domain.Specification<Locataire>>map(ids -> (r, cq, cb) -> ids.isEmpty() ? cb.disjunction() : r.get("id").in(ids))
+                .orElse(null);
+        return locataires.findAll(RechercheSpecifications.<Locataire>parNomOuTelephone(q, inclureArchives).and(restriction), pageable)
                 .map(mapper::versDto); // numéro de CNI absent des listes
     }
 

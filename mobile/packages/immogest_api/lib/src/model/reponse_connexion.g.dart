@@ -151,4 +151,5 @@ const _$ReponseConnexionRoleEnumEnumMap = {
   ReponseConnexionRoleEnum.PROPRIETAIRE_TIERS: 'PROPRIETAIRE_TIERS',
   ReponseConnexionRoleEnum.LOCATAIRE: 'LOCATAIRE',
   ReponseConnexionRoleEnum.PRESTATAIRE: 'PRESTATAIRE',
+  ReponseConnexionRoleEnum.ENCAISSEUR: 'ENCAISSEUR',
 };

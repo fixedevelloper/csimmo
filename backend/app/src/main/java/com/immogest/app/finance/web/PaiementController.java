@@ -35,7 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 class PaiementController {
 
     private static final String GESTION = "hasAnyRole('ADMIN', 'GESTIONNAIRE')";
-    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE')";
+    private static final String LECTURE = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'LOCATAIRE', 'ENCAISSEUR')";
+    /** Saisie d'un encaissement et caisse du jour : l'ENCAISSEUR n'agit que dans son périmètre (filtré par PaiementService). */
+    private static final String ENCAISSEMENT = "hasAnyRole('ADMIN', 'GESTIONNAIRE', 'ENCAISSEUR')";
     private static final Set<String> TRIS = Set.of("datePaiement", "montant", "createdAt");
 
     /** @param montant FCFA entiers */
@@ -54,7 +56,7 @@ class PaiementController {
 
     /** Idempotent avec `Idempotency-Key` : un rejeu renvoie 200 et le paiement d'origine, sans rien recréer. */
     @PostMapping("/paiements")
-    @PreAuthorize(GESTION)
+    @PreAuthorize(ENCAISSEMENT)
     ResponseEntity<PaiementDto> enregistrer(@Valid @RequestBody PaiementRequete r,
             @RequestHeader(value = "Idempotency-Key", required = false) String cle) {
         ResultatPaiement res = service.enregistrer(new PaiementSaisie(r.bailId(), r.montant(), r.mode(), r.reference(), r.datePaiement()), cle);
@@ -81,7 +83,7 @@ class PaiementController {
 
     /** Rapprochement de caisse : espèces du jour par agent (un gestionnaire ne voit que les siennes). */
     @GetMapping("/paiements/caisse")
-    @PreAuthorize(GESTION)
+    @PreAuthorize(ENCAISSEMENT)
     List<CaisseLigne> caisse(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate jour) {
         return service.caisse(jour);
     }

@@ -44,6 +44,10 @@ class ControleAccesDocuments implements ControleAccesFichier {
             return proprietaire != null && reversements.findById(entiteId)
                     .map(r -> proprietaire.equals(r.getProprietaireId()) && !"CALCULE".equals(r.getStatut())).orElse(false);
         }
+        if (acteur.aLeRole("ENCAISSEUR") && "documents".equals(entite)) { // quittances et reçus des baux de son périmètre, jamais les annulés
+            return documents.findById(entiteId).filter(d -> DocumentPaiement.EMIS.equals(d.getStatut()))
+                    .map(d -> baux.bailIdsVisibles().map(ids -> ids.contains(d.getBailId())).orElse(false)).orElse(false);
+        }
         if (!acteur.aLeRole("LOCATAIRE") || !"documents".equals(entite)) {
             return false;
         }

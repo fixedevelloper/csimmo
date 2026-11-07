@@ -141,13 +141,17 @@ public class UtilisateurService {
         if (telephone != null && !Identifiants.telephoneValide(telephone)) {
             throw new ErreurMetier("UTILISATEUR_TELEPHONE_INVALIDE", "Numéro de téléphone invalide", HttpStatus.BAD_REQUEST);
         }
+        if (saisie.role().deuxFacteursObligatoire() && !saisie.deuxFacteursActif()) {
+            throw new ErreurMetier("UTILISATEUR_2FA_OBLIGATOIRE",
+                    "La double authentification est obligatoire pour ce rôle", HttpStatus.BAD_REQUEST);
+        }
         if (saisie.deuxFacteursActif() && telephone == null) {
             throw new ErreurMetier("UTILISATEUR_TELEPHONE_REQUIS_2FA",
                     "Un numéro de téléphone est requis pour la double authentification", HttpStatus.BAD_REQUEST);
         }
         if (saisie.deuxFacteursActif() && !saisie.role().motDePasseObligatoire()) {
             throw new ErreurMetier("UTILISATEUR_2FA_ROLE_NON_CONCERNE",
-                    "La double authentification concerne les rôles ADMIN et GESTIONNAIRE", HttpStatus.BAD_REQUEST);
+                    "La double authentification concerne les rôles ADMIN, GESTIONNAIRE et ENCAISSEUR", HttpStatus.BAD_REQUEST);
         }
     }
 
