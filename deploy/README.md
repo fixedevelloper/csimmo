@@ -59,6 +59,13 @@ Changer de version par tag : `./update.sh --version 1.4.0` tire les trois images
 `--verifier-signature` contrôle d'abord la signature cosign, cosign requis), puis le reste de l'ordre ci-dessous s'applique (même retour arrière).
 Les scripts et le compose de `deploy/` ne sont pas mis à jour par ce mode : récupérez-les avec la version (dépôt ou archive) si elle les a modifiés.
 
+**Depuis la version 0.1.0** : son `update.sh` se recopie lui-même pendant qu'il tourne et se perd (« unbound variable »). Extrayez d'abord celui de la nouvelle archive, puis lancez-le :
+```bash
+tar -xzf immogest-0.2.0.tar.gz -C /tmp deploy/update.sh && cp /tmp/deploy/update.sh ./update.sh
+./update.sh --archive immogest-0.2.0.tar.gz --sha256 <somme> --yes
+```
+À partir de 0.2.0 le script est protégé (tout est dans une fonction lue en entier) : plus aucune manipulation.
+
 Ordre : téléchargement → somme de contrôle (avant toute modification) → sauvegarde → chargement des images → redémarrage (migrations Flyway) → contrôle de
 santé et d'intégrité des données. **En cas d'échec : retour arrière automatique** (restauration de la sauvegarde d'avant + ancienne image). `./package-release.sh X.Y.Z --prefixe ghcr.io/fixedevelloper/immogest`
 construit l'archive à publier (portail éditeur > Versions).

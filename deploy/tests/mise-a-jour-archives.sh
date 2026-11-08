@@ -48,6 +48,14 @@ if ( cd "$ESSAI/deploy" && ./update.sh --archive "$FAUSSE" --sha256 "$SHA_NOUV" 
 grep -q "SOMME DE CONTRÔLE INVALIDE" "$ESSAI/falsifiee.log" || { echo "ÉCHEC : refus pour une mauvaise raison"; cat "$ESSAI/falsifiee.log"; exit 1; }
 verifier "$V_ANC"
 
+# Jusqu'à 0.1.0, update.sh n'était pas protégé contre sa propre réécriture : la mise à jour recopie les fichiers de la nouvelle version, lui compris,
+# pendant qu'il tourne, et bash reprend alors sa lecture au milieu du NOUVEAU fichier. Depuis 0.2.0 tout le script est dans main() (lu en entier avant
+# exécution). Pour une version installée non protégée, la procédure documentée (deploy/README.md) est de prendre d'abord update.sh de l'archive.
+if ! grep -q '^main "\$@"' "$ESSAI/deploy/update.sh"; then
+  etape "update.sh $V_ANC non protégé contre sa réécriture : on prend celui de l'archive $V_NOUV (procédure documentée)"
+  tar -xzf "$NOUV" -C "$ESSAI" deploy/update.sh
+fi
+
 etape "Mise à jour $V_ANC → $V_NOUV avec l'archive (update.sh de la version installée)"
 ( cd "$ESSAI/deploy" && ./update.sh --archive "$NOUV" --sha256 "$SHA_NOUV" --yes )
 verifier "$V_NOUV"
