@@ -4,6 +4,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+## [0.2.0] - 2026-11-08
+
+Équipe et périmètres d'accès (lot 12), jeu de données de démonstration, suites de l'audit de sécurité.
+
+**Mise à jour depuis 0.1.0** : trois migrations Flyway (V23 à V25 : rôles `ENCAISSEUR`, `GESTIONNAIRE_BIENS`, `COMPTABLE`, affectations d'immeubles, créateur d'un locataire). Elles ne sont pas réversibles : `update.sh` sauvegarde avant et restaure en cas d'échec. Les comptes existants gardent leur mot de passe ; les nouveaux mots de passe font 12 caractères au moins.
+
 - fix(securite): suites de l'audit — mot de passe de 12 caractères minimum (création de compte, réinitialisation, changement, installation ; web aligné) ; limite de débit par adresse IP sur `POST /api/v1/installation` (compteur séparé de la connexion) ; images de `docker-compose.yml` épinglées (`postgres:16.15`, `caddy:2.11.9-alpine`, `cloudflare/cloudflared:2026.10.7`, comme `Dockerfile.sauvegarde`) et suivies par Dependabot (écosystème `docker-compose`). Les comptes existants gardent leur mot de passe.
 - feat(demo): profil `demo` (étape 0.6) : `SPRING_PROFILES_ACTIVE=dev,demo` charge une seule fois, par les services métier, 2 propriétaires avec mandats, 4 immeubles, 17 lots, 12 baux actifs et 1 brouillon, 13 locataires, ~75 paiements (à jour, partiels, en retard), 3 dépenses, reversements calculés, et un compte par rôle (gestionnaire, encaisseur, gestionnaire de biens, comptable, locataire). Les encaissements du premier immeuble sont saisis au nom de l'encaisseur. Refusé avec le profil `prod`. Les paiements historiques sont imputés à la date du chargement, donc le reversement du mois courant les inclut tous.
 - feat(securite,web): rôle `COMPTABLE` (étape 12.4, migration V25) : paiements, dépenses et reversements en lecture et validation des reversements dans son périmètre ; un reversement n'est visible que si tous les immeubles de son propriétaire y sont. Fiche employé `/equipe/{id}` : immeubles, caisse du jour, encaissements récents (`GET /api/v1/paiements?saisiPar=`) et journal d'activité (`GET /api/v1/audit?auteur=`, ADMIN, sans valeurs avant/après). L'interface masque les actions que le rôle ne permet pas.
