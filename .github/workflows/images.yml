@@ -138,7 +138,23 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.image }}
 
       # 4. Signature : le condensé (digest) est signé, pas une étiquette modifiable ; vérifiable sans clé à distribuer
+      # cosign est téléchargé depuis les releases GitHub, qui ont des pannes passagères (504) : jusqu'à 3 essais espacés.
+      # Le dernier essai n'est pas toléré : sans cosign, le job échoue (jamais d'image ou d'archive non signée).
       - uses: sigstore/cosign-installer@v3
+        id: cosign1
+        continue-on-error: true
+      - name: Nouvel essai de l'installation de cosign (pause)
+        if: steps.cosign1.outcome == 'failure'
+        run: sleep 45
+      - uses: sigstore/cosign-installer@v3
+        id: cosign2
+        if: steps.cosign1.outcome == 'failure'
+        continue-on-error: true
+      - name: Nouvel essai de l'installation de cosign (pause)
+        if: steps.cosign1.outcome == 'failure' && steps.cosign2.outcome == 'failure'
+        run: sleep 90
+      - uses: sigstore/cosign-installer@v3
+        if: steps.cosign1.outcome == 'failure' && steps.cosign2.outcome == 'failure'
       - name: Signature (cosign, sans clé)
         env:
           DIGEST: ${{ steps.publier.outputs.digest }}

@@ -68,7 +68,23 @@ jobs:
         working-directory: deploy
         run: |
           ./package-release.sh "${{ steps.v.outputs.version }}" --prefixe "ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/immogest" --source-tag "${{ steps.v.outputs.source }}"
+      # cosign est téléchargé depuis les releases GitHub, qui ont des pannes passagères (504) : jusqu'à 3 essais espacés.
+      # Le dernier essai n'est pas toléré : sans cosign, le job échoue (jamais d'image ou d'archive non signée).
       - uses: sigstore/cosign-installer@v3
+        id: cosign1
+        continue-on-error: true
+      - name: Nouvel essai de l'installation de cosign (pause)
+        if: steps.cosign1.outcome == 'failure'
+        run: sleep 45
+      - uses: sigstore/cosign-installer@v3
+        id: cosign2
+        if: steps.cosign1.outcome == 'failure'
+        continue-on-error: true
+      - name: Nouvel essai de l'installation de cosign (pause)
+        if: steps.cosign1.outcome == 'failure' && steps.cosign2.outcome == 'failure'
+        run: sleep 90
+      - uses: sigstore/cosign-installer@v3
+        if: steps.cosign1.outcome == 'failure' && steps.cosign2.outcome == 'failure'
       - name: Signature de l'archive (cosign, sans clé)
         working-directory: deploy/dist
         run: cosign sign-blob --yes --bundle "immogest-${{ steps.v.outputs.version }}.tar.gz.bundle" "immogest-${{ steps.v.outputs.version }}.tar.gz"

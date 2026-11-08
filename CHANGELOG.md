@@ -4,14 +4,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
-### Modifié
-- **Double authentification par application (TOTP : Google Authenticator, Microsoft Authenticator, Authy…) à la place du SMS**, sur le web et le mobile. Facultative et désactivée par défaut pour tous les comptes (plus imposée aux employés restreints) ; activation/désactivation depuis le profil (mot de passe + code), réinitialisation par l'ADMIN depuis la page Équipe en cas de perte du téléphone. Le téléphone n'est plus exigé : téléphone ou e-mail suffit. La connexion par SMS des locataires et prestataires est inchangée. Voir `docs/adr/0010-double-authentification-totp.md`.
-
 ## [0.2.0] - 2026-11-08
 
 Équipe et périmètres d'accès (lot 12), jeu de données de démonstration, suites de l'audit de sécurité.
 
-**Mise à jour depuis 0.1.0** : trois migrations Flyway (V23 à V25 : rôles `ENCAISSEUR`, `GESTIONNAIRE_BIENS`, `COMPTABLE`, affectations d'immeubles, créateur d'un locataire). Elles ne sont pas réversibles : `update.sh` sauvegarde avant et restaure en cas d'échec. Les comptes existants gardent leur mot de passe ; les nouveaux mots de passe font 12 caractères au moins.
+**Mise à jour depuis 0.1.0** : cinq migrations Flyway (V23 à V25 : rôles `ENCAISSEUR`, `GESTIONNAIRE_BIENS`, `COMPTABLE`, affectations d'immeubles, créateur d'un locataire ; V26 : double authentification par application ; V27 : désactive la double authentification des comptes sans application configurée). Elles ne sont pas réversibles : `update.sh` sauvegarde avant et restaure en cas d'échec. Les comptes existants gardent leur mot de passe ; les nouveaux mots de passe font 12 caractères au moins.
 
 - feat(securite,web,mobile): profil de chaque utilisateur — modifier son nom, son téléphone et son e-mail (`PUT /api/v1/auth/moi`, mot de passe actuel exigé), changer son mot de passe, activer (mot de passe puis code SMS) ou désactiver (mot de passe) la double authentification (`POST /api/v1/auth/moi/double-authentification/{demander,activer,desactiver}`) ; la double authentification reste obligatoire pour les employés restreints et le téléphone ne peut pas être retiré tant qu'elle est active. Chaque mot de passe faux compte comme à la connexion (verrouillage) et ces routes sont limitées en débit. Page web « Mon profil » (menu du compte) et écran mobile. Corrige aussi les libellés de rôle des employés dans l'en-tête et plusieurs codes d'erreur sans message.
 - fix(deploy): `update.sh` est protégé contre sa propre réécriture (tout le script dans `main()`, lu en entier avant exécution) : la mise à jour recopie les fichiers de la nouvelle version, lui compris ; sans cela une mise à jour depuis 0.1.0 s'interrompait (« META: unbound variable »). **Depuis 0.1.0, extraire d'abord `update.sh` de la nouvelle archive** (voir `deploy/README.md`) ; ensuite plus rien à faire. Le test de release applique cette procédure aux versions non protégées.
@@ -28,6 +25,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 - chore(web): migration vers Next.js 16.4.5 (`web` et `license-web`) : `middleware.ts` renommé `proxy.ts`, ESLint en config plate native (`eslint-config-next` 16), Turbopack par défaut.
 
 - feat(deploy): installation et mise à jour à partir des images publiques GHCR (`install.sh --images-prebuilt [--registre]`, `update.sh --version X [--verifier-signature]`), noms d'images mémorisés dans `.env`.
+
+### Modifié
+- **Double authentification par application (TOTP : Google Authenticator, Microsoft Authenticator, Authy…) à la place du SMS**, sur le web et le mobile. Facultative et désactivée par défaut pour tous les comptes (plus imposée aux employés restreints) ; activation/désactivation depuis le profil (mot de passe + code), réinitialisation par l'ADMIN depuis la page Équipe en cas de perte du téléphone. Le téléphone n'est plus exigé : téléphone ou e-mail suffit. La connexion par SMS des locataires et prestataires est inchangée. Voir `docs/adr/0010-double-authentification-totp.md`.
+
+### Corrigé
+- CI/CD : l'installation de cosign est retentée (3 essais espacés) en cas de panne passagère des releases GitHub ; la signature reste obligatoire.
 
 ## [0.1.0] - 2026-11-05
 

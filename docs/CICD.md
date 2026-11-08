@@ -12,6 +12,8 @@
 | `codeql.yml` | **manuel seulement** (désactivé) | Analyse statique Java et TypeScript : indisponible sur un dépôt privé sans GitHub Advanced Security (« Code scanning is not enabled »). Déclencheurs à remettre si le dépôt devient public ou si GHAS est activé |
 | `dependabot.yml` | chaque semaine | PR groupées de mises à jour (Maven, npm ×2, pub, Docker, Actions) |
 
+L'installation de cosign (téléchargement depuis les releases GitHub, sujet à des pannes passagères 504) est tentée jusqu'à **3 fois** avec pause dans `images.yml` et `release.yml` ; le dernier essai n'est pas toléré (aucune image ni archive non signée ne sort).
+
 Images publiées (`ghcr.io/fixedevelloper/immogest-<nom>`) : `app` (jar obfusqué), `web`, `sauvegarde`, `license-server`, `license-web`. Une seule architecture : **linux/amd64**.
 
 Étiquettes : `edge` et `sha-xxxxxxx` à chaque fusion sur `main` ; `X.Y.Z`, `X.Y` et `latest` sur un tag. Une étiquette peut bouger, **le condensé (digest) signé non** : c'est lui qui fait foi.
