@@ -40,6 +40,10 @@ updates:
   - package-ecosystem: docker
     directory: /deploy
     schedule: { interval: weekly }
+  # images épinglées de docker-compose.yml (postgres, caddy, cloudflared, seaweedfs) : sans cela, elles ne seraient plus jamais relevées
+  - package-ecosystem: docker-compose
+    directory: /deploy
+    schedule: { interval: weekly }
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }

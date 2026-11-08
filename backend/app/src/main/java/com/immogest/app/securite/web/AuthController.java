@@ -34,7 +34,7 @@ class AuthController {
     }
 
     record ChangementMotDePasse(@NotBlank String ancienMotDePasse,
-            @NotBlank @Size(min = 8, max = 100) String nouveauMotDePasse) {
+            @NotBlank @Size(min = 12, max = 100) String nouveauMotDePasse) {
     }
 
     private final AuthService auth;

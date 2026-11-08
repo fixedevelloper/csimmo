@@ -58,6 +58,18 @@ class UtilisateurApiTest {
     // ------------------------------------------------------------------ ADMIN
 
     @Test
+    void le_mot_de_passe_d_un_compte_a_au_moins_12_caracteres() throws Exception {
+        for (String court : new String[] {"Court1234!", "Onze-chars1"}) { // 10 et 11 caractères
+            mvc.perform(post("/api/v1/utilisateurs").with(jwtRole(Role.ADMIN)).contentType(MediaType.APPLICATION_JSON)
+                    .content(json("nom", "Trop court", "telephone", telephoneUnique(), "role", "LOCATAIRE", "motDePasse", court)))
+                    .andExpect(status().isBadRequest());
+        }
+        mvc.perform(post("/api/v1/utilisateurs").with(jwtRole(Role.ADMIN)).contentType(MediaType.APPLICATION_JSON)
+                .content(json("nom", "Assez long", "telephone", telephoneUnique(), "role", "LOCATAIRE", "motDePasse", "Douze-chars12")))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
     void adminCreeUnUtilisateurQuiPeutSeConnecter() throws Exception {
         String telephone = telephoneUnique();
 

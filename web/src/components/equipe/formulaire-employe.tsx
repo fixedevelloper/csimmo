@@ -43,7 +43,7 @@ export function FormulaireEmploye({ onCree, onAnnuler }: Props) {
         telephone: z.string().trim().min(1, t("erreurs.telephone")).max(30),
         email: z.string().trim().max(200).refine((v) => v === "" || /^\S+@\S+\.\S+$/.test(v), tu("erreurs.email")),
         role: z.enum(ROLES_EMPLOYES),
-        motDePasse: z.string().min(8, tu("erreurs.motDePasse")).max(100, tu("erreurs.motDePasse")),
+        motDePasse: z.string().min(12, tu("erreurs.motDePasse")).max(100, tu("erreurs.motDePasse")),
       }),
     [t, tu],
   );

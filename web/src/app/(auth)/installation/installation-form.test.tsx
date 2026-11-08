@@ -60,7 +60,7 @@ describe("InstallationForm", () => {
 
     expect(await screen.findByText("La licence est obligatoire")).toBeInTheDocument();
     expect(screen.getByText("Le nom est obligatoire")).toBeInTheDocument();
-    expect(screen.getAllByText("8 caractères minimum").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("12 caractères minimum").length).toBeGreaterThan(0);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

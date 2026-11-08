@@ -38,14 +38,15 @@ final class LimiteDebitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest requete) {
-        return !"POST".equals(requete.getMethod()) || !requete.getRequestURI().startsWith("/api/v1/auth/");
+        return !"POST".equals(requete.getMethod()) || !(requete.getRequestURI().startsWith("/api/v1/auth/") || estInstallation(requete));
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest requete, HttpServletResponse reponse, FilterChain chaine) throws ServletException, IOException {
         boolean refresh = requete.getRequestURI().endsWith("/refresh");
         int limite = refresh ? proprietes.limiteRefreshParMinute() : proprietes.limiteAuthParMinute();
-        String cle = (refresh ? "refresh:" : "auth:") + requete.getRemoteAddr();
+        // l'assistant d'installation est public tant qu'aucune installation n'existe : même limite par adresse que la connexion, compteur à part
+        String cle = (estInstallation(requete) ? "installation:" : refresh ? "refresh:" : "auth:") + requete.getRemoteAddr();
         long maintenant = horloge.millis();
         if (compteurs.size() > ENTREES_MAX) {
             nettoyer(maintenant);
@@ -67,6 +68,10 @@ final class LimiteDebitFilter extends OncePerRequestFilter {
             return;
         }
         chaine.doFilter(requete, reponse);
+    }
+
+    private static boolean estInstallation(HttpServletRequest requete) {
+        return "/api/v1/installation".equals(requete.getRequestURI());
     }
 
     private void nettoyer(long maintenant) {

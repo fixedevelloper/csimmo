@@ -339,7 +339,7 @@
     "confirmation": "Confirmer le mot de passe",
     "nomRequis": "Le nom est obligatoire",
     "contactRequis": "Indiquez un téléphone ou un e-mail",
-    "motDePasseCourt": "8 caractères minimum",
+    "motDePasseCourt": "12 caractères minimum",
     "confirmationDifferente": "Les mots de passe ne correspondent pas",
     "installer": "Terminer l'installation",
     "installationEnCours": "Installation…",
@@ -427,7 +427,7 @@
       "nom": "Le nom est obligatoire.",
       "email": "Adresse e-mail invalide.",
       "contact": "Un téléphone ou un e-mail est obligatoire.",
-      "motDePasse": "Le mot de passe contient entre 8 et 100 caractères."
+      "motDePasse": "Le mot de passe contient entre 12 et 100 caractères."
     }
   },
   "equipe": {

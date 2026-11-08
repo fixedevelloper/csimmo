@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 class InstallationController {
 
     record Administrateur(@NotBlank @Size(max = 200) String nom, @Size(max = 30) String telephone,
-            @Size(max = 200) String email, @NotBlank @Size(min = 8, max = 100) String motDePasse) {
+            @Size(max = 200) String email, @NotBlank @Size(min = 12, max = 100) String motDePasse) {
     }
 
     record InstallationRequete(@NotNull @Valid Administrateur admin, @NotBlank @Size(max = 65536) String licence) {

@@ -46,7 +46,7 @@ describe("UtilisateursListe", () => {
     await userEvent.click(screen.getByRole("button", { name: "Nouvel utilisateur" }));
     await userEvent.click(screen.getByRole("button", { name: "Créer le compte" }));
     expect(await screen.findByText("Le nom est obligatoire.")).toBeInTheDocument();
-    expect(screen.getByText("Le mot de passe contient entre 8 et 100 caractères.")).toBeInTheDocument();
+    expect(screen.getByText("Le mot de passe contient entre 12 et 100 caractères.")).toBeInTheDocument();
 
     await userEvent.type(screen.getByLabelText("Nom"), "Paul");
     await userEvent.type(screen.getByLabelText("Mot de passe", { exact: true }), "Abcdef12!");

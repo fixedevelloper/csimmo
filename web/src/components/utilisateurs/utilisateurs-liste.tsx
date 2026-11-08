@@ -82,7 +82,7 @@ function FormulaireCreation({ onCree, onAnnuler }: { onCree: (identifiant: strin
           telephone: z.string().trim().max(30),
           email: z.string().trim().max(200).refine((v) => v === "" || /^\S+@\S+\.\S+$/.test(v), t("erreurs.email")),
           role: z.enum(ROLES_CREATION_GENERIQUE),
-          motDePasse: z.string().min(8, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")),
+          motDePasse: z.string().min(12, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")),
         })
         .refine((v) => v.telephone !== "" || v.email !== "", { path: ["telephone"], message: t("erreurs.contact") }),
     [t],
@@ -157,7 +157,7 @@ export function FormulaireReinitialisation({ utilisateur, onFait, onAnnuler }: {
   const t = useTranslations("utilisateurs");
   const message = useErrorMessage();
   const [erreur, setErreur] = useState<string | null>(null);
-  const schema = useMemo(() => z.object({ motDePasse: z.string().min(8, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")) }), [t]);
+  const schema = useMemo(() => z.object({ motDePasse: z.string().min(12, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")) }), [t]);
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { motDePasse: "" } });
 
   async function soumettre(v: z.infer<typeof schema>) {

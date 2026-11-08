@@ -32,14 +32,14 @@ class UtilisateurController {
 
     record CreationRequete(@NotBlank @Size(max = 200) String nom, @Size(max = 30) String telephone,
             @Size(max = 200) String email, @NotNull Role role, boolean deuxFacteursActif,
-            @NotBlank @Size(min = 8, max = 100) String motDePasse) {
+            @NotBlank @Size(min = 12, max = 100) String motDePasse) {
     }
 
     record ModificationRequete(@NotBlank @Size(max = 200) String nom, @Size(max = 30) String telephone,
             @Size(max = 200) String email, @NotNull Role role, boolean actif, boolean deuxFacteursActif) {
     }
 
-    record ReinitialisationRequete(@NotBlank @Size(min = 8, max = 100) String motDePasse) {
+    record ReinitialisationRequete(@NotBlank @Size(min = 12, max = 100) String motDePasse) {
     }
 
     record AffectationsRequete(@jakarta.validation.constraints.NotNull @Size(max = 500) java.util.List<UUID> immeubleIds) {

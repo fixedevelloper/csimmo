@@ -33,7 +33,7 @@ export function AccesLocataire({ locataire }: { locataire: Locataire }) {
   const [erreur, setErreur] = useState<string | null>(null);
   const [recap, setRecap] = useState<{ identifiant: string; motDePasse: string } | null>(null);
 
-  const schema = useMemo(() => z.object({ motDePasse: z.string().min(8, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")) }), [t]);
+  const schema = useMemo(() => z.object({ motDePasse: z.string().min(12, t("erreurs.motDePasse")).max(100, t("erreurs.motDePasse")) }), [t]);
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema), defaultValues: { motDePasse: "" } });
 
   if (moi?.role !== "ADMIN") return null;

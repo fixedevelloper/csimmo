@@ -103,7 +103,7 @@ describe("EquipeListe", () => {
     await userEvent.type(screen.getByLabelText("Nom"), "Nina");
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
     expect(await screen.findByText(/Le téléphone est obligatoire/)).toBeInTheDocument();
-    expect(screen.getByText("Le mot de passe contient entre 8 et 100 caractères.")).toBeInTheDocument();
+    expect(screen.getByText("Le mot de passe contient entre 12 et 100 caractères.")).toBeInTheDocument();
     expect(post).not.toHaveBeenCalled();
   });
 

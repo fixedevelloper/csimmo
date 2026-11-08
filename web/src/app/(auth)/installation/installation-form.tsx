@@ -30,7 +30,7 @@ export function InstallationForm({ empreinte }: { empreinte: string | null }) {
           nom: z.string().trim().min(1, t("nomRequis")),
           telephone: z.string().trim(),
           email: z.string().trim(),
-          motDePasse: z.string().min(8, t("motDePasseCourt")),
+          motDePasse: z.string().min(12, t("motDePasseCourt")),
           confirmation: z.string(),
         })
         .refine((v) => v.telephone !== "" || v.email !== "", { path: ["telephone"], message: t("contactRequis") })

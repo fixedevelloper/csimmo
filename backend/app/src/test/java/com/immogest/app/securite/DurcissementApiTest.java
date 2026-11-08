@@ -41,6 +41,26 @@ class DurcissementApiTest {
     // ------------------------------------------------------------------ limite de débit
 
     @Test
+    void l_assistant_d_installation_est_limite_par_adresse_ip_avec_son_propre_compteur() throws Exception {
+        // corps invalide (400) : seul le filtre compte les essais
+        for (int i = 0; i < 5; i++) {
+            mvc.perform(post("/api/v1/installation").with(depuis("203.0.113.40")).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                    .andExpect(status().isBadRequest());
+        }
+        mvc.perform(post("/api/v1/installation").with(depuis("203.0.113.40")).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isTooManyRequests()).andExpect(jsonPath("$.code").value("TROP_DE_REQUETES")).andExpect(header().exists("Retry-After"));
+        // une autre adresse n'est pas touchée, et la connexion de la même adresse non plus (compteurs séparés)
+        mvc.perform(post("/api/v1/installation").with(depuis("203.0.113.41")).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/v1/auth/login").with(depuis("203.0.113.40")).contentType(MediaType.APPLICATION_JSON).content(json("identifiant", "x@y.cm", "motDePasse", "faux")))
+                .andExpect(status().isUnauthorized());
+        // la lecture de l'état n'est pas comptée
+        for (int i = 0; i < 10; i++) {
+            mvc.perform(get("/api/v1/installation").with(depuis("203.0.113.40"))).andExpect(status().isOk());
+        }
+    }
+
+    @Test
     void laConnexionEstLimiteeParAdresseIp() throws Exception {
         for (int i = 0; i < 5; i++) {
             mvc.perform(post("/api/v1/auth/login").with(depuis("203.0.113.10")).contentType(MediaType.APPLICATION_JSON).content(json("identifiant", "x@y.cm", "motDePasse", "faux")))

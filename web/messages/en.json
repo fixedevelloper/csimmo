@@ -339,7 +339,7 @@
     "confirmation": "Confirm password",
     "nomRequis": "The name is required",
     "contactRequis": "Enter a phone number or an e-mail",
-    "motDePasseCourt": "8 characters minimum",
+    "motDePasseCourt": "12 characters minimum",
     "confirmationDifferente": "The passwords do not match",
     "installer": "Finish setup",
     "installationEnCours": "Setting up…",
@@ -427,7 +427,7 @@
       "nom": "Name is required.",
       "email": "Invalid email address.",
       "contact": "A phone number or an email is required.",
-      "motDePasse": "The password must be 8 to 100 characters long."
+      "motDePasse": "The password must be 12 to 100 characters long."
     }
   },
   "equipe": {
