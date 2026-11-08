@@ -579,4 +579,156 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profilTitre => 'My profile';
+
+  @override
+  String get profilBouton => 'My profile';
+
+  @override
+  String get profilInfosTitre => 'Personal information';
+
+  @override
+  String get profilNom => 'Name';
+
+  @override
+  String get profilTelephone => 'Phone';
+
+  @override
+  String get profilEmail => 'Email';
+
+  @override
+  String get profilMotDePasseActuel => 'Current password';
+
+  @override
+  String get profilEnregistrer => 'Save';
+
+  @override
+  String get profilEnregistre => 'Profile updated.';
+
+  @override
+  String get profilNomRequis => 'Name is required.';
+
+  @override
+  String get profilContactRequis => 'A phone number or an email is required.';
+
+  @override
+  String get profilMotDePasseRequis => 'Enter your current password.';
+
+  @override
+  String get profilAideInfos =>
+      'To change this information, confirm with your current password.';
+
+  @override
+  String get mdpTitre => 'Password';
+
+  @override
+  String get mdpNouveau => 'New password';
+
+  @override
+  String get mdpConfirmation => 'Confirm the new password';
+
+  @override
+  String get mdpChanger => 'Change password';
+
+  @override
+  String get mdpCourt => '12 characters minimum';
+
+  @override
+  String get mdpDifferent => 'The confirmation does not match.';
+
+  @override
+  String get mdpIdentique =>
+      'The new password must differ from the current one.';
+
+  @override
+  String get mdpChange =>
+      'Password changed: sign in again with the new password.';
+
+  @override
+  String get mdpAide => 'After the change, all your sessions are closed.';
+
+  @override
+  String get deuxTitre => 'Two-factor authentication';
+
+  @override
+  String get deuxActive => 'On';
+
+  @override
+  String get deuxInactive => 'Off';
+
+  @override
+  String get deuxAideActive =>
+      'A code received by SMS is requested at each sign-in.';
+
+  @override
+  String get deuxAideInactive =>
+      'Adds a security step: a code received by SMS is requested after your password.';
+
+  @override
+  String get deuxObligatoire =>
+      'Mandatory for your role: it cannot be turned off.';
+
+  @override
+  String get deuxSansTelephone =>
+      'Add a phone number above to be able to turn it on.';
+
+  @override
+  String get deuxActiver => 'Turn on';
+
+  @override
+  String get deuxDesactiver => 'Turn off';
+
+  @override
+  String get deuxEnvoyerCode => 'Send the code';
+
+  @override
+  String deuxCodeEnvoye(String telephone) {
+    return 'A 6-digit code was sent by SMS to $telephone.';
+  }
+
+  @override
+  String get deuxCode => 'Code received by SMS';
+
+  @override
+  String get deuxConfirmer => 'Confirm activation';
+
+  @override
+  String get deuxActivee => 'Two-factor authentication turned on.';
+
+  @override
+  String get deuxDesactivee => 'Two-factor authentication turned off.';
+
+  @override
+  String get deuxAnnuler => 'Cancel';
+
+  @override
+  String get errMotDePasseActuel => 'Current password is incorrect.';
+
+  @override
+  String get errDeuxFacteursObligatoire =>
+      'Two-factor authentication is mandatory for your role.';
+
+  @override
+  String get errDeuxFacteursDejaActifs =>
+      'Two-factor authentication is already on.';
+
+  @override
+  String get errTelephoneRequisCode =>
+      'Add a phone number to your profile first.';
+
+  @override
+  String get errContactDejaUtilise =>
+      'This phone number or email is already in use.';
+
+  @override
+  String get errTelephoneInvalide => 'Invalid phone number.';
+
+  @override
+  String get errTelephoneRequis2fa =>
+      'A phone number is required while two-factor authentication is on.';
+
+  @override
+  String get errTropDeRequetes => 'Too many attempts: try again in a moment.';
 }

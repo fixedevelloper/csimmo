@@ -78,6 +78,25 @@ public class UtilisateurService {
         return dto(u);
     }
 
+    /**
+     * Modification de SON PROPRE profil (nom, téléphone, e-mail). Rôle, activité et double authentification ne changent pas ; le téléphone ne
+     * peut pas être retiré tant que la double authentification est active (le code SMS ne pourrait plus partir).
+     */
+    @Transactional
+    public UtilisateurDto modifierProfil(UUID id, String nom, String telephoneSaisi, String emailSaisi) {
+        Utilisateur u = charger(id);
+        String telephone = Identifiants.normaliserTelephone(telephoneSaisi);
+        String email = Identifiants.normaliserEmail(emailSaisi);
+        Saisie saisie = new Saisie(nom.strip(), telephone, email, u.getRole(), u.isActif(), u.isDeuxFacteursActif());
+        verifier(saisie, telephone, email);
+        verifierUnicite(id, telephone, email);
+        Map<String, Object> avant = resume(u);
+        u.modifier(saisie.nom(), telephone, email, u.getRole(), u.isActif(), u.isDeuxFacteursActif());
+        utilisateurs.save(u);
+        evenements.publishEvent(new EvenementSecurite("SECURITE.PROFIL_MODIFIE", u.getId(), avant, resume(u), id.toString()));
+        return dto(u);
+    }
+
     /** « Suppression » = désactivation : le compte reste référencé par l'audit et l'historique. */
     @Transactional
     public void desactiver(UUID id) {

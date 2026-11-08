@@ -195,6 +195,87 @@ public class AuthService {
                 u.getId().toString()));
     }
 
+    // ---------------------------------------------------------------- profil : mot de passe actuel et double authentification
+
+    /**
+     * Confirme l'identité d'un utilisateur déjà connecté avant une opération sensible sur son profil. Chaque mot de passe faux compte comme à
+     * la connexion (verrouillage au-delà du seuil) : un jeton volé ne permet pas de deviner le mot de passe ici.
+     */
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public void verifierMotDePasseActuel(UUID utilisateurId, String motDePasse) {
+        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
+        OffsetDateTime maintenant = maintenant();
+        if (u.estVerrouille(maintenant)) {
+            throw compteVerrouille();
+        }
+        if (!encodeur.matches(motDePasse, u.getMotDePasseHash())) {
+            boolean verrouille = u.enregistrerEchec(proprietes.echecsMax(), maintenant.plusMinutes(proprietes.verrouillageMinutes()));
+            utilisateurs.save(u);
+            if (verrouille) {
+                evenements.publishEvent(new EvenementSecurite("SECURITE.COMPTE_VERROUILLE", u.getId(), null,
+                        Map.of("verrouilleJusqua", u.getVerrouilleJusqua().toString()), "systeme"));
+                throw compteVerrouille();
+            }
+            throw new ErreurMetier("MOT_DE_PASSE_ACTUEL_INCORRECT", "Mot de passe actuel incorrect", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /** Étape 1 de l'activation : mot de passe confirmé, puis code SMS envoyé au numéro du compte (preuve qu'on le reçoit avant de l'exiger à la connexion). */
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public void demanderActivationDeuxFacteurs(UUID utilisateurId, String motDePasse) {
+        verifierMotDePasseActuel(utilisateurId, motDePasse);
+        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
+        verifierDeuxFacteursPossible(u);
+        envoyerOtp(u, maintenant());
+    }
+
+    /** Étape 2 : le bon code active la double authentification. */
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public void activerDeuxFacteurs(UUID utilisateurId, String code) {
+        OffsetDateTime maintenant = maintenant();
+        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
+        verifierDeuxFacteursPossible(u);
+        OtpCode otp = otps.findFirstByUtilisateurIdOrderByCreatedAtDesc(u.getId())
+                .filter(o -> o.estValide(maintenant, proprietes.otpTentativesMax()))
+                .orElseThrow(AuthService::otpInvalide);
+        if (!hash(u.getId() + ":" + code).equals(otp.getCodeHash())) {
+            otp.compterTentative();
+            otps.save(otp);
+            throw otpInvalide();
+        }
+        otp.consommer();
+        otps.save(otp);
+        u.definirDeuxFacteurs(true);
+        utilisateurs.save(u);
+        evenements.publishEvent(new EvenementSecurite("SECURITE.DEUX_FACTEURS_ACTIVES", u.getId(), null, null, u.getId().toString()));
+    }
+
+    /** Désactivation : mot de passe exigé ; impossible pour les rôles qui doivent toujours avoir la double authentification. */
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public void desactiverDeuxFacteurs(UUID utilisateurId, String motDePasse) {
+        verifierMotDePasseActuel(utilisateurId, motDePasse);
+        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
+        if (u.getRole().deuxFacteursObligatoire()) {
+            throw new ErreurMetier("DEUX_FACTEURS_OBLIGATOIRE", "La double authentification est obligatoire pour votre rôle", HttpStatus.CONFLICT);
+        }
+        if (!u.isDeuxFacteursActif()) {
+            return;
+        }
+        u.definirDeuxFacteurs(false);
+        utilisateurs.save(u);
+        evenements.publishEvent(new EvenementSecurite("SECURITE.DEUX_FACTEURS_DESACTIVES", u.getId(), null, null, u.getId().toString()));
+    }
+
+    private static void verifierDeuxFacteursPossible(Utilisateur u) {
+        if (!u.getRole().motDePasseObligatoire()) {
+            throw new ErreurMetier("UTILISATEUR_2FA_ROLE_NON_CONCERNE",
+                    "La double authentification concerne les rôles ADMIN, GESTIONNAIRE, ENCAISSEUR, GESTIONNAIRE_BIENS et COMPTABLE", HttpStatus.CONFLICT);
+        }
+        if (u.isDeuxFacteursActif()) {
+            throw new ErreurMetier("DEUX_FACTEURS_DEJA_ACTIFS", "La double authentification est déjà activée", HttpStatus.CONFLICT);
+        }
+    }
+
     // ---------------------------------------------------------------- interne
 
     private ReponseConnexion ouvrirSession(Utilisateur u, OffsetDateTime maintenant) {

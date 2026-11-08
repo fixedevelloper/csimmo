@@ -28,6 +28,7 @@ void main() {
       expect(redirection(serveur: null, role: null, chemin: '/connexion'), '/serveur');
       expect(redirection(serveur: null, role: null, chemin: '/agent'), '/serveur');
       expect(redirection(serveur: null, role: null, chemin: '/serveur'), isNull);
+      expect(redirection(serveur: null, role: null, chemin: '/profil'), '/serveur');
       expect(redirection(serveur: null, role: null, chemin: '/serveur/scan'), isNull);
     });
 

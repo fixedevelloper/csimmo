@@ -38,7 +38,8 @@ final class LimiteDebitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest requete) {
-        return !"POST".equals(requete.getMethod()) || !(requete.getRequestURI().startsWith("/api/v1/auth/") || estInstallation(requete));
+        boolean ecriture = "POST".equals(requete.getMethod()) || "PUT".equals(requete.getMethod());
+        return !ecriture || !(requete.getRequestURI().startsWith("/api/v1/auth/") || estInstallation(requete));
     }
 
     @Override

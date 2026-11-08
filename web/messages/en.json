@@ -55,6 +55,7 @@
     "retour": "Back",
     "deconnexion": "Sign out",
     "sessionExpiree": "Your session has expired. Please sign in again.",
+    "motDePasseChange": "Password changed: sign in again with the new password.",
     "inactivite": "You were signed out after 30 minutes of inactivity.",
     "identifiantRequis": "Identifier is required",
     "motDePasseRequis": "Password is required",
@@ -67,7 +68,10 @@
     "GESTIONNAIRE": "Manager",
     "PROPRIETAIRE_TIERS": "Owner",
     "LOCATAIRE": "Tenant",
-    "PRESTATAIRE": "Contractor"
+    "PRESTATAIRE": "Contractor",
+    "ENCAISSEUR": "Cashier",
+    "GESTIONNAIRE_BIENS": "Property manager",
+    "COMPTABLE": "Accountant"
   },
   "dashboard": {
     "titre": "Dashboard",
@@ -159,6 +163,12 @@
     "UTILISATEUR_2FA_ROLE_NON_CONCERNE": "Two-factor authentication only applies to administrators and managers.",
     "UTILISATEUR_AUTO_DESACTIVATION": "You cannot deactivate your own account.",
     "UTILISATEUR_AUTO_RETRAIT": "You cannot remove your own administrator role.",
+    "DEUX_FACTEURS_DEJA_ACTIFS": "Two-factor authentication is already on.",
+    "DEUX_FACTEURS_OBLIGATOIRE": "Two-factor authentication is mandatory for your role: it cannot be turned off.",
+    "OTP_TELEPHONE_REQUIS": "Add a phone number to your profile first to receive the code.",
+    "UTILISATEUR_2FA_OBLIGATOIRE": "Two-factor authentication is mandatory for this role.",
+    "AFFECTATION_ROLE_NON_CONCERNE": "Assigned buildings only apply to restricted employees.",
+    "AFFECTATION_TROP_NOMBREUSES": "Too many assigned buildings (500 at most).",
     "FICHIER_INTROUVABLE": "File not found.",
     "FICHIER_ACCES_REFUSE": "Access to the file denied.",
     "FICHIER_TYPE_INTERDIT": "File type not allowed (jpeg, png, webp or pdf).",
@@ -428,6 +438,66 @@
       "email": "Invalid email address.",
       "contact": "A phone number or an email is required.",
       "motDePasse": "The password must be 12 to 100 characters long."
+    }
+  },
+  "profil": {
+    "titre": "My profile",
+    "description": "Your personal information, your password and two-factor authentication.",
+    "menu": "My profile",
+    "infos": {
+      "titre": "Personal information",
+      "nom": "Name",
+      "telephone": "Phone",
+      "email": "Email",
+      "aide": "Your phone receives the two-factor codes. To change this information, confirm with your current password.",
+      "motDePasseActuel": "Current password",
+      "enregistrer": "Save",
+      "enregistre": "Profile updated.",
+      "erreurs": {
+        "nom": "Name is required.",
+        "contact": "A phone number or an email is required.",
+        "email": "Invalid email address.",
+        "motDePasse": "Enter your current password."
+      }
+    },
+    "motDePasse": {
+      "titre": "Password",
+      "actuel": "Current password",
+      "nouveau": "New password",
+      "confirmation": "Confirm the new password",
+      "aide": "At least 12 characters. After the change, all your sessions are closed: you sign in again with the new password.",
+      "changer": "Change password",
+      "change": "Password changed.",
+      "erreurs": {
+        "actuel": "Enter your current password.",
+        "court": "12 characters minimum",
+        "different": "The confirmation does not match.",
+        "identique": "The new password must differ from the current one."
+      }
+    },
+    "deuxFacteurs": {
+      "titre": "Two-factor authentication",
+      "active": "On",
+      "inactive": "Off",
+      "aideActive": "A code received by SMS is requested at each sign-in.",
+      "aideInactive": "Adds a security step: a code received by SMS is requested after your password.",
+      "obligatoire": "Mandatory for your role: it cannot be turned off.",
+      "sansTelephone": "Add a phone number above to be able to turn it on.",
+      "activer": "Turn on",
+      "envoyerCode": "Send the code",
+      "codeEnvoye": "A 6-digit code was sent by SMS to {telephone}.",
+      "code": "Code received by SMS",
+      "confirmer": "Confirm activation",
+      "activee": "Two-factor authentication turned on.",
+      "desactiver": "Turn off",
+      "desactivee": "Two-factor authentication turned off.",
+      "confirmerMotDePasse": "Current password",
+      "annuler": "Cancel",
+      "nonConcerne": "Two-factor authentication is only offered to employee accounts.",
+      "erreurs": {
+        "motDePasse": "Enter your password.",
+        "code": "The code has 6 digits."
+      }
     }
   },
   "equipe": {

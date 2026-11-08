@@ -582,4 +582,159 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profilTitre => 'Mon profil';
+
+  @override
+  String get profilBouton => 'Mon profil';
+
+  @override
+  String get profilInfosTitre => 'Informations personnelles';
+
+  @override
+  String get profilNom => 'Nom';
+
+  @override
+  String get profilTelephone => 'Téléphone';
+
+  @override
+  String get profilEmail => 'E-mail';
+
+  @override
+  String get profilMotDePasseActuel => 'Mot de passe actuel';
+
+  @override
+  String get profilEnregistrer => 'Enregistrer';
+
+  @override
+  String get profilEnregistre => 'Profil mis à jour.';
+
+  @override
+  String get profilNomRequis => 'Le nom est obligatoire.';
+
+  @override
+  String get profilContactRequis =>
+      'Un téléphone ou un e-mail est obligatoire.';
+
+  @override
+  String get profilMotDePasseRequis => 'Saisissez votre mot de passe actuel.';
+
+  @override
+  String get profilAideInfos =>
+      'Pour modifier ces informations, confirmez avec votre mot de passe actuel.';
+
+  @override
+  String get mdpTitre => 'Mot de passe';
+
+  @override
+  String get mdpNouveau => 'Nouveau mot de passe';
+
+  @override
+  String get mdpConfirmation => 'Confirmer le nouveau mot de passe';
+
+  @override
+  String get mdpChanger => 'Changer le mot de passe';
+
+  @override
+  String get mdpCourt => '12 caractères minimum';
+
+  @override
+  String get mdpDifferent => 'La confirmation ne correspond pas.';
+
+  @override
+  String get mdpIdentique =>
+      'Le nouveau mot de passe doit être différent de l\'actuel.';
+
+  @override
+  String get mdpChange =>
+      'Mot de passe modifié : reconnectez-vous avec le nouveau mot de passe.';
+
+  @override
+  String get mdpAide =>
+      'Après le changement, toutes vos sessions sont fermées.';
+
+  @override
+  String get deuxTitre => 'Double authentification';
+
+  @override
+  String get deuxActive => 'Activée';
+
+  @override
+  String get deuxInactive => 'Désactivée';
+
+  @override
+  String get deuxAideActive =>
+      'Un code reçu par SMS est demandé à chaque connexion.';
+
+  @override
+  String get deuxAideInactive =>
+      'Ajoute une étape de sécurité : un code reçu par SMS est demandé après votre mot de passe.';
+
+  @override
+  String get deuxObligatoire =>
+      'Obligatoire pour votre rôle : elle ne peut pas être désactivée.';
+
+  @override
+  String get deuxSansTelephone =>
+      'Ajoutez un numéro de téléphone ci-dessus pour pouvoir l\'activer.';
+
+  @override
+  String get deuxActiver => 'Activer';
+
+  @override
+  String get deuxDesactiver => 'Désactiver';
+
+  @override
+  String get deuxEnvoyerCode => 'Envoyer le code';
+
+  @override
+  String deuxCodeEnvoye(String telephone) {
+    return 'Un code à 6 chiffres a été envoyé par SMS au $telephone.';
+  }
+
+  @override
+  String get deuxCode => 'Code reçu par SMS';
+
+  @override
+  String get deuxConfirmer => 'Confirmer l\'activation';
+
+  @override
+  String get deuxActivee => 'Double authentification activée.';
+
+  @override
+  String get deuxDesactivee => 'Double authentification désactivée.';
+
+  @override
+  String get deuxAnnuler => 'Annuler';
+
+  @override
+  String get errMotDePasseActuel => 'Mot de passe actuel incorrect.';
+
+  @override
+  String get errDeuxFacteursObligatoire =>
+      'La double authentification est obligatoire pour votre rôle.';
+
+  @override
+  String get errDeuxFacteursDejaActifs =>
+      'La double authentification est déjà activée.';
+
+  @override
+  String get errTelephoneRequisCode =>
+      'Ajoutez d\'abord un numéro de téléphone à votre profil.';
+
+  @override
+  String get errContactDejaUtilise =>
+      'Ce téléphone ou cet e-mail est déjà utilisé.';
+
+  @override
+  String get errTelephoneInvalide => 'Numéro de téléphone invalide.';
+
+  @override
+  String get errTelephoneRequis2fa =>
+      'Un numéro de téléphone est requis tant que la double authentification est activée.';
+
+  @override
+  String get errTropDeRequetes =>
+      'Trop de tentatives : réessayez dans un instant.';
 }

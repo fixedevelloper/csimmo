@@ -18,6 +18,7 @@ import 'package:immogest_api/src/model/canal_parametres_dto.dart';
 import 'package:immogest_api/src/model/canal_requete.dart';
 import 'package:immogest_api/src/model/champ_dto.dart';
 import 'package:immogest_api/src/model/changement_mot_de_passe.dart';
+import 'package:immogest_api/src/model/code_requete.dart';
 import 'package:immogest_api/src/model/compte_locataire_dto.dart';
 import 'package:immogest_api/src/model/compteur_dto.dart';
 import 'package:immogest_api/src/model/compteur_requete.dart';
@@ -66,6 +67,7 @@ import 'package:immogest_api/src/model/modele_consentement_dto.dart';
 import 'package:immogest_api/src/model/modele_requete.dart';
 import 'package:immogest_api/src/model/modification_requete.dart';
 import 'package:immogest_api/src/model/mois.dart';
+import 'package:immogest_api/src/model/mot_de_passe_requete.dart';
 import 'package:immogest_api/src/model/obstacle_dto.dart';
 import 'package:immogest_api/src/model/occupation.dart';
 import 'package:immogest_api/src/model/operation_sauvegarde_dto.dart';
@@ -100,6 +102,7 @@ import 'package:immogest_api/src/model/piece_dto.dart';
 import 'package:immogest_api/src/model/prestataire_dto.dart';
 import 'package:immogest_api/src/model/prestataire_requete.dart';
 import 'package:immogest_api/src/model/previsualisation_dto.dart';
+import 'package:immogest_api/src/model/profil_requete.dart';
 import 'package:immogest_api/src/model/proprietaire_dto.dart';
 import 'package:immogest_api/src/model/proprietaire_requete.dart';
 import 'package:immogest_api/src/model/push_mobile.dart';
@@ -187,6 +190,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ChampDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ChangementMotDePasse':
           return ChangementMotDePasse.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CodeRequete':
+          return CodeRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CompteLocataireDto':
           return CompteLocataireDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CompteurDto':
@@ -283,6 +288,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ModificationRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Mois':
           return Mois.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MotDePasseRequete':
+          return MotDePasseRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ObstacleDto':
           return ObstacleDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Occupation':
@@ -351,6 +358,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return PrestataireRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PrevisualisationDto':
           return PrevisualisationDto.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ProfilRequete':
+          return ProfilRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ProprietaireDto':
           return ProprietaireDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ProprietaireRequete':

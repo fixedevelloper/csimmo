@@ -20,6 +20,7 @@ import {
   Settings,
   Users,
   UserCog,
+  UserRound,
   Wallet,
   Wrench,
   X,
@@ -520,6 +521,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                     </DropdownMenuGroup>
 
                     <DropdownMenuSeparator />
+
+                    <DropdownMenuItem onClick={() => router.push("/profil")} className="cursor-pointer rounded-lg">
+                      <UserRound aria-hidden />
+                      {t("profil.menu")}
+                    </DropdownMenuItem>
 
                     <DropdownMenuItem
                       onClick={() => void deconnecter()}

@@ -108,7 +108,9 @@ export function LoginForm() {
         ? t("sessionExpiree")
         : raison === "installe"
           ? t("installationTerminee")
-          : null;
+          : raison === "mot-de-passe"
+            ? t("motDePasseChange")
+            : null;
 
   function termine() {
     router.replace(destinationSure(params.get("next")));

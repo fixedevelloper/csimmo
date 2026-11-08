@@ -38,6 +38,15 @@ String errorMessage(AppLocalizations l, Object erreur) {
       'PAIEMENT_MONTANT_INVALIDE' || 'PAIEMENT_CHAMPS_REQUIS' || 'VALIDATION_ERREUR' => l.errPaiementInvalide,
       'PAIEMENT_DATE_FUTURE' => l.errPaiementDateFuture,
       'IDEMPOTENCE_CONFLIT' || 'IDEMPOTENCE_CLE_INVALIDE' => l.errIdempotence,
+      'MOT_DE_PASSE_ACTUEL_INCORRECT' => l.errMotDePasseActuel,
+      'DEUX_FACTEURS_OBLIGATOIRE' => l.errDeuxFacteursObligatoire,
+      'DEUX_FACTEURS_DEJA_ACTIFS' => l.errDeuxFacteursDejaActifs,
+      'OTP_TELEPHONE_REQUIS' => l.errTelephoneRequisCode,
+      'UTILISATEUR_CONTACT_REQUIS' => l.profilContactRequis,
+      'UTILISATEUR_DEJA_EXISTANT' => l.errContactDejaUtilise,
+      'UTILISATEUR_TELEPHONE_INVALIDE' => l.errTelephoneInvalide,
+      'UTILISATEUR_TELEPHONE_REQUIS_2FA' => l.errTelephoneRequis2fa,
+      'TROP_DE_REQUETES' => l.errTropDeRequetes,
       _ => l.errInconnue,
     };
   }

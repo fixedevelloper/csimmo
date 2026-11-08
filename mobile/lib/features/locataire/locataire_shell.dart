@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,6 +30,12 @@ class _LocataireShellState extends ConsumerState<LocataireShell> {
       appBar: AppBar(
         title: TitreMarque(l.espaceLocataire, cleTexte: const Key('titre-LOCATAIRE')),
         actions: [
+          IconButton(
+            key: const Key('bouton-profil'),
+            tooltip: l.profilBouton,
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: () => context.push('/profil'),
+          ),
           IconButton(
             key: const Key('bouton-deconnexion'),
             tooltip: l.deconnexion,

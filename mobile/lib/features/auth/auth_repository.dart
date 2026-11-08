@@ -42,6 +42,35 @@ class AuthRepository {
         return data;
       });
 
+  /// Modifie son propre profil ; le mot de passe actuel est exigé.
+  Future<UtilisateurDto> modifierProfil({required String nom, String? telephone, String? email, required String motDePasse}) => guard(() async {
+        final data = (await _auth.modifierProfil(
+          profilRequete: ProfilRequete(nom: nom, telephone: telephone, email: email, motDePasse: motDePasse),
+        ))
+            .data;
+        if (data == null) throw const AppError(AppError.inconnue);
+        return data;
+      });
+
+  /// Change le mot de passe : le serveur ferme ensuite toutes les sessions.
+  Future<void> changerMotDePasse(String ancien, String nouveau) => guard(() =>
+      _auth.changerMotDePasse(changementMotDePasse: ChangementMotDePasse(ancienMotDePasse: ancien, nouveauMotDePasse: nouveau)));
+
+  Future<void> demanderDeuxFacteurs(String motDePasse) =>
+      guard(() => _auth.demanderDeuxFacteurs(motDePasseRequete: MotDePasseRequete(motDePasse: motDePasse)));
+
+  Future<UtilisateurDto> activerDeuxFacteurs(String code) => guard(() async {
+        final data = (await _auth.activerDeuxFacteurs(codeRequete: CodeRequete(code: code))).data;
+        if (data == null) throw const AppError(AppError.inconnue);
+        return data;
+      });
+
+  Future<UtilisateurDto> desactiverDeuxFacteurs(String motDePasse) => guard(() async {
+        final data = (await _auth.desactiverDeuxFacteurs(motDePasseRequete: MotDePasseRequete(motDePasse: motDePasse))).data;
+        if (data == null) throw const AppError(AppError.inconnue);
+        return data;
+      });
+
   Future<void> deconnecter(String refreshToken) =>
       guard(() => _auth.logout(refreshRequete: RefreshRequete(refreshToken: refreshToken)));
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,6 +56,12 @@ class _AgentShellState extends ConsumerState<AgentShell> {
       appBar: AppBar(
         title: TitreMarque(l.espaceAgent, cleTexte: const Key('titre-GESTIONNAIRE')),
         actions: [
+          IconButton(
+            key: const Key('bouton-profil'),
+            tooltip: l.profilBouton,
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: () => context.push('/profil'),
+          ),
           IconButton(key: const Key('bouton-deconnexion'), tooltip: l.deconnexion, icon: const Icon(Icons.logout), onPressed: _deconnecter),
         ],
       ),

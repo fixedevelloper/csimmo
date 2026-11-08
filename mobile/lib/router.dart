@@ -8,6 +8,7 @@ import 'features/auth/login_screen.dart';
 import 'features/home/role_home_screen.dart';
 import 'features/agent/agent_shell.dart';
 import 'features/locataire/locataire_shell.dart';
+import 'features/profil/profil_screen.dart';
 import 'features/server_setup/qr_scan_screen.dart';
 import 'features/server_setup/server_setup_screen.dart';
 
@@ -19,6 +20,7 @@ part 'router.g.dart';
 String? redirection({required String? serveur, required Role? role, required String chemin}) {
   if (serveur == null) return chemin.startsWith('/serveur') ? null : '/serveur';
   if (role == null) return (chemin == '/connexion' || chemin.startsWith('/serveur')) ? null : '/connexion';
+  if (chemin == '/profil') return null; // profil : ouvert à tous les rôles connectés, par-dessus l'accueil
   return chemin == role.homeRoute ? null : role.homeRoute;
 }
 
@@ -45,6 +47,7 @@ GoRouter router(Ref ref) {
         routes: [GoRoute(path: 'scan', builder: (_, _) => const QrScanScreen())],
       ),
       GoRoute(path: '/connexion', builder: (_, _) => const LoginScreen()),
+      GoRoute(path: '/profil', builder: (_, _) => const ProfilScreen()),
       GoRoute(path: Role.locataire.homeRoute, builder: (_, _) => const LocataireShell()),
       GoRoute(path: Role.gestionnaire.homeRoute, builder: (_, _) => const AgentShell()),
       for (final role in [Role.prestataire, Role.proprietaireTiers, Role.comptable])

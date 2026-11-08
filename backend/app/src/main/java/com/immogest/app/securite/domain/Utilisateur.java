@@ -91,6 +91,10 @@ public class Utilisateur extends BaseEntity {
         this.deuxFacteursActif = deuxFacteursActif;
     }
 
+    public void definirDeuxFacteurs(boolean actif) {
+        this.deuxFacteursActif = actif;
+    }
+
     public void changerMotDePasse(String hash) {
         this.motDePasseHash = hash;
         deverrouiller();

@@ -55,6 +55,7 @@
     "retour": "Retour",
     "deconnexion": "Se déconnecter",
     "sessionExpiree": "Votre session a expiré. Reconnectez-vous.",
+    "motDePasseChange": "Mot de passe modifié : reconnectez-vous avec le nouveau mot de passe.",
     "inactivite": "Vous avez été déconnecté après 30 minutes d'inactivité.",
     "identifiantRequis": "L'identifiant est obligatoire",
     "motDePasseRequis": "Le mot de passe est obligatoire",
@@ -67,7 +68,10 @@
     "GESTIONNAIRE": "Gestionnaire",
     "PROPRIETAIRE_TIERS": "Propriétaire",
     "LOCATAIRE": "Locataire",
-    "PRESTATAIRE": "Prestataire"
+    "PRESTATAIRE": "Prestataire",
+    "ENCAISSEUR": "Encaisseur",
+    "GESTIONNAIRE_BIENS": "Gestionnaire de biens",
+    "COMPTABLE": "Comptable"
   },
   "dashboard": {
     "titre": "Tableau de bord",
@@ -159,6 +163,12 @@
     "UTILISATEUR_2FA_ROLE_NON_CONCERNE": "La double authentification concerne uniquement les administrateurs et gestionnaires.",
     "UTILISATEUR_AUTO_DESACTIVATION": "Vous ne pouvez pas désactiver votre propre compte.",
     "UTILISATEUR_AUTO_RETRAIT": "Vous ne pouvez pas retirer votre propre rôle d'administrateur.",
+    "DEUX_FACTEURS_DEJA_ACTIFS": "La double authentification est déjà activée.",
+    "DEUX_FACTEURS_OBLIGATOIRE": "La double authentification est obligatoire pour votre rôle : elle ne peut pas être désactivée.",
+    "OTP_TELEPHONE_REQUIS": "Ajoutez d'abord un numéro de téléphone à votre profil pour recevoir le code.",
+    "UTILISATEUR_2FA_OBLIGATOIRE": "La double authentification est obligatoire pour ce rôle.",
+    "AFFECTATION_ROLE_NON_CONCERNE": "Les immeubles affectés ne concernent que les employés restreints.",
+    "AFFECTATION_TROP_NOMBREUSES": "Trop d'immeubles affectés (500 au plus).",
     "FICHIER_INTROUVABLE": "Fichier introuvable.",
     "FICHIER_ACCES_REFUSE": "Accès au fichier refusé.",
     "FICHIER_TYPE_INTERDIT": "Type de fichier non autorisé (jpeg, png, webp ou pdf).",
@@ -428,6 +438,66 @@
       "email": "Adresse e-mail invalide.",
       "contact": "Un téléphone ou un e-mail est obligatoire.",
       "motDePasse": "Le mot de passe contient entre 12 et 100 caractères."
+    }
+  },
+  "profil": {
+    "titre": "Mon profil",
+    "description": "Vos informations personnelles, votre mot de passe et la double authentification.",
+    "menu": "Mon profil",
+    "infos": {
+      "titre": "Informations personnelles",
+      "nom": "Nom",
+      "telephone": "Téléphone",
+      "email": "E-mail",
+      "aide": "Le téléphone reçoit les codes de la double authentification. Pour modifier ces informations, confirmez avec votre mot de passe actuel.",
+      "motDePasseActuel": "Mot de passe actuel",
+      "enregistrer": "Enregistrer",
+      "enregistre": "Profil mis à jour.",
+      "erreurs": {
+        "nom": "Le nom est obligatoire.",
+        "contact": "Un téléphone ou un e-mail est obligatoire.",
+        "email": "Adresse e-mail invalide.",
+        "motDePasse": "Saisissez votre mot de passe actuel."
+      }
+    },
+    "motDePasse": {
+      "titre": "Mot de passe",
+      "actuel": "Mot de passe actuel",
+      "nouveau": "Nouveau mot de passe",
+      "confirmation": "Confirmer le nouveau mot de passe",
+      "aide": "12 caractères au moins. Après le changement, toutes vos sessions sont fermées : vous vous reconnectez avec le nouveau mot de passe.",
+      "changer": "Changer le mot de passe",
+      "change": "Mot de passe modifié.",
+      "erreurs": {
+        "actuel": "Saisissez votre mot de passe actuel.",
+        "court": "12 caractères minimum",
+        "different": "La confirmation ne correspond pas.",
+        "identique": "Le nouveau mot de passe doit être différent de l'actuel."
+      }
+    },
+    "deuxFacteurs": {
+      "titre": "Double authentification",
+      "active": "Activée",
+      "inactive": "Désactivée",
+      "aideActive": "Un code reçu par SMS est demandé à chaque connexion.",
+      "aideInactive": "Ajoute une étape de sécurité : un code reçu par SMS est demandé après votre mot de passe.",
+      "obligatoire": "Obligatoire pour votre rôle : elle ne peut pas être désactivée.",
+      "sansTelephone": "Ajoutez un numéro de téléphone ci-dessus pour pouvoir l'activer.",
+      "activer": "Activer",
+      "envoyerCode": "Envoyer le code",
+      "codeEnvoye": "Un code à 6 chiffres a été envoyé par SMS au {telephone}.",
+      "code": "Code reçu par SMS",
+      "confirmer": "Confirmer l'activation",
+      "activee": "Double authentification activée.",
+      "desactiver": "Désactiver",
+      "desactivee": "Double authentification désactivée.",
+      "confirmerMotDePasse": "Mot de passe actuel",
+      "annuler": "Annuler",
+      "nonConcerne": "La double authentification n'est proposée qu'aux comptes d'employés.",
+      "erreurs": {
+        "motDePasse": "Saisissez votre mot de passe.",
+        "code": "Le code contient 6 chiffres."
+      }
     }
   },
   "equipe": {

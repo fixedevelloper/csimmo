@@ -1123,6 +1123,282 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{n, plural, =1{1 encaissement en attente d\'envoi} other{{n} encaissements en attente d\'envoi}}'**
   String bandeauFile(int n);
+
+  /// No description provided for @profilTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil'**
+  String get profilTitre;
+
+  /// No description provided for @profilBouton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil'**
+  String get profilBouton;
+
+  /// No description provided for @profilInfosTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations personnelles'**
+  String get profilInfosTitre;
+
+  /// No description provided for @profilNom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get profilNom;
+
+  /// No description provided for @profilTelephone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get profilTelephone;
+
+  /// No description provided for @profilEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'E-mail'**
+  String get profilEmail;
+
+  /// No description provided for @profilMotDePasseActuel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe actuel'**
+  String get profilMotDePasseActuel;
+
+  /// No description provided for @profilEnregistrer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get profilEnregistrer;
+
+  /// No description provided for @profilEnregistre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Profil mis à jour.'**
+  String get profilEnregistre;
+
+  /// No description provided for @profilNomRequis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le nom est obligatoire.'**
+  String get profilNomRequis;
+
+  /// No description provided for @profilContactRequis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un téléphone ou un e-mail est obligatoire.'**
+  String get profilContactRequis;
+
+  /// No description provided for @profilMotDePasseRequis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisissez votre mot de passe actuel.'**
+  String get profilMotDePasseRequis;
+
+  /// No description provided for @profilAideInfos.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour modifier ces informations, confirmez avec votre mot de passe actuel.'**
+  String get profilAideInfos;
+
+  /// No description provided for @mdpTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get mdpTitre;
+
+  /// No description provided for @mdpNouveau.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get mdpNouveau;
+
+  /// No description provided for @mdpConfirmation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer le nouveau mot de passe'**
+  String get mdpConfirmation;
+
+  /// No description provided for @mdpChanger.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer le mot de passe'**
+  String get mdpChanger;
+
+  /// No description provided for @mdpCourt.
+  ///
+  /// In fr, this message translates to:
+  /// **'12 caractères minimum'**
+  String get mdpCourt;
+
+  /// No description provided for @mdpDifferent.
+  ///
+  /// In fr, this message translates to:
+  /// **'La confirmation ne correspond pas.'**
+  String get mdpDifferent;
+
+  /// No description provided for @mdpIdentique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le nouveau mot de passe doit être différent de l\'actuel.'**
+  String get mdpIdentique;
+
+  /// No description provided for @mdpChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe modifié : reconnectez-vous avec le nouveau mot de passe.'**
+  String get mdpChange;
+
+  /// No description provided for @mdpAide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après le changement, toutes vos sessions sont fermées.'**
+  String get mdpAide;
+
+  /// No description provided for @deuxTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Double authentification'**
+  String get deuxTitre;
+
+  /// No description provided for @deuxActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activée'**
+  String get deuxActive;
+
+  /// No description provided for @deuxInactive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désactivée'**
+  String get deuxInactive;
+
+  /// No description provided for @deuxAideActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un code reçu par SMS est demandé à chaque connexion.'**
+  String get deuxAideActive;
+
+  /// No description provided for @deuxAideInactive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute une étape de sécurité : un code reçu par SMS est demandé après votre mot de passe.'**
+  String get deuxAideInactive;
+
+  /// No description provided for @deuxObligatoire.
+  ///
+  /// In fr, this message translates to:
+  /// **'Obligatoire pour votre rôle : elle ne peut pas être désactivée.'**
+  String get deuxObligatoire;
+
+  /// No description provided for @deuxSansTelephone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez un numéro de téléphone ci-dessus pour pouvoir l\'activer.'**
+  String get deuxSansTelephone;
+
+  /// No description provided for @deuxActiver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Activer'**
+  String get deuxActiver;
+
+  /// No description provided for @deuxDesactiver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désactiver'**
+  String get deuxDesactiver;
+
+  /// No description provided for @deuxEnvoyerCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le code'**
+  String get deuxEnvoyerCode;
+
+  /// No description provided for @deuxCodeEnvoye.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un code à 6 chiffres a été envoyé par SMS au {telephone}.'**
+  String deuxCodeEnvoye(String telephone);
+
+  /// No description provided for @deuxCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code reçu par SMS'**
+  String get deuxCode;
+
+  /// No description provided for @deuxConfirmer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer l\'activation'**
+  String get deuxConfirmer;
+
+  /// No description provided for @deuxActivee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Double authentification activée.'**
+  String get deuxActivee;
+
+  /// No description provided for @deuxDesactivee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Double authentification désactivée.'**
+  String get deuxDesactivee;
+
+  /// No description provided for @deuxAnnuler.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get deuxAnnuler;
+
+  /// No description provided for @errMotDePasseActuel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe actuel incorrect.'**
+  String get errMotDePasseActuel;
+
+  /// No description provided for @errDeuxFacteursObligatoire.
+  ///
+  /// In fr, this message translates to:
+  /// **'La double authentification est obligatoire pour votre rôle.'**
+  String get errDeuxFacteursObligatoire;
+
+  /// No description provided for @errDeuxFacteursDejaActifs.
+  ///
+  /// In fr, this message translates to:
+  /// **'La double authentification est déjà activée.'**
+  String get errDeuxFacteursDejaActifs;
+
+  /// No description provided for @errTelephoneRequisCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoutez d\'abord un numéro de téléphone à votre profil.'**
+  String get errTelephoneRequisCode;
+
+  /// No description provided for @errContactDejaUtilise.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce téléphone ou cet e-mail est déjà utilisé.'**
+  String get errContactDejaUtilise;
+
+  /// No description provided for @errTelephoneInvalide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone invalide.'**
+  String get errTelephoneInvalide;
+
+  /// No description provided for @errTelephoneRequis2fa.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un numéro de téléphone est requis tant que la double authentification est activée.'**
+  String get errTelephoneRequis2fa;
+
+  /// No description provided for @errTropDeRequetes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop de tentatives : réessayez dans un instant.'**
+  String get errTropDeRequetes;
 }
 
 class _AppLocalizationsDelegate

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/auth/role.dart';
@@ -31,6 +32,12 @@ class RoleHomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: TitreMarque(_titre(l), cleTexte: Key('titre-${role.code}')),
         actions: [
+          IconButton(
+            key: const Key('bouton-profil'),
+            tooltip: l.profilBouton,
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: () => context.push('/profil'),
+          ),
           IconButton(
             key: const Key('bouton-deconnexion'),
             tooltip: l.deconnexion,

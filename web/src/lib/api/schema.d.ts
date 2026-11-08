@@ -260,6 +260,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/moi": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["moi"];
+        put: operations["modifierProfil"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/webhooks/{fournisseur}": {
         parameters: {
             query?: never;
@@ -1060,6 +1076,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/moi/double-authentification/desactiver": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["desactiverDeuxFacteurs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/moi/double-authentification/demander": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["demanderDeuxFacteurs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/moi/double-authentification/activer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["activerDeuxFacteurs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/logout": {
         parameters: {
             query?: never;
@@ -1540,22 +1604,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/moi": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["moi"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/audit": {
         parameters: {
             query?: never;
@@ -2015,6 +2063,12 @@ export interface components {
             clauses?: string;
             piedDePage?: string;
             variables?: string[];
+        };
+        ProfilRequete: {
+            nom: string;
+            telephone?: string;
+            email?: string;
+            motDePasse: string;
         };
         Accuse: {
             /** @enum {string} */
@@ -2495,6 +2549,12 @@ export interface components {
         ChangementMotDePasse: {
             ancienMotDePasse: string;
             nouveauMotDePasse: string;
+        };
+        MotDePasseRequete: {
+            motDePasse: string;
+        };
+        CodeRequete: {
+            code: string;
         };
         ConnexionRequete: {
             identifiant: string;
@@ -3807,6 +3867,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ModeleBailDto"];
+                };
+            };
+        };
+    };
+    moi: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UtilisateurDto"];
+                };
+            };
+        };
+    };
+    modifierProfil: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfilRequete"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UtilisateurDto"];
                 };
             };
         };
@@ -5644,6 +5748,76 @@ export interface operations {
             };
         };
     };
+    desactiverDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MotDePasseRequete"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UtilisateurDto"];
+                };
+            };
+        };
+    };
+    demanderDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MotDePasseRequete"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    activerDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CodeRequete"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UtilisateurDto"];
+                };
+            };
+        };
+    };
     logout: {
         parameters: {
             query?: never;
@@ -6308,26 +6482,6 @@ export interface operations {
                 };
                 content: {
                     "application/pdf": string;
-                };
-            };
-        };
-    };
-    moi: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UtilisateurDto"];
                 };
             };
         };
