@@ -242,7 +242,7 @@ class DeuxFacteursApiTest {
         assertThat(service.obtenir(u.id()).deuxFacteursActif()).isFalse(); // pas encore activée
 
         mvc.perform(post("/api/v1/auth/moi/double-authentification/activer").with(moi).contentType(MediaType.APPLICATION_JSON)
-                .content(json("code", fauxCode(code(secret, 0))))).andExpect(status().isUnauthorized());
+                .content(json("code", fauxCode(code(secret, 0))))).andExpect(status().isUnprocessableEntity());
         mvc.perform(post("/api/v1/auth/moi/double-authentification/activer").with(moi).contentType(MediaType.APPLICATION_JSON)
                 .content(json("code", code(secret, -1)))).andExpect(status().isOk());
         assertThat(service.obtenir(u.id()).deuxFacteursActif()).isTrue();
@@ -260,7 +260,7 @@ class DeuxFacteursApiTest {
         RequestPostProcessor moi = jwtRole(Role.ADMIN, c.utilisateur().id());
 
         mvc.perform(post("/api/v1/auth/moi/double-authentification/desactiver").with(moi).contentType(MediaType.APPLICATION_JSON)
-                .content(json("motDePasse", MOT_DE_PASSE))).andExpect(status().isUnauthorized()); // le code est exigé
+                .content(json("motDePasse", MOT_DE_PASSE))).andExpect(status().isUnprocessableEntity()); // le code est exigé
         mvc.perform(post("/api/v1/auth/moi/double-authentification/desactiver").with(moi).contentType(MediaType.APPLICATION_JSON)
                 .content(json("motDePasse", "faux-faux-faux", "code", code(c.secret(), 0)))).andExpect(status().isUnprocessableEntity());
         assertThat(service.obtenir(c.utilisateur().id()).deuxFacteursActif()).isTrue();

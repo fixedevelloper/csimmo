@@ -225,7 +225,9 @@ public class DeuxFacteursService {
                     Map.of("verrouilleJusqua", u.getVerrouilleJusqua().toString()), "systeme"));
             return new ErreurMetier("COMPTE_VERROUILLE", "Compte temporairement verrouillé", HttpStatus.LOCKED);
         }
-        return new ErreurMetier("OTP_INVALIDE", "Code invalide ou expiré", HttpStatus.UNAUTHORIZED);
+        // Utilisateur déjà connecté (profil) : 422, comme un mauvais mot de passe actuel. Un 401 serait lu par le web comme une session perdue et le déconnecterait.
+        boolean connecte = defi == null ? true : defi.getType() == Type.PROFIL;
+        return new ErreurMetier("OTP_INVALIDE", "Code invalide ou expiré", connecte ? HttpStatus.UNPROCESSABLE_ENTITY : HttpStatus.UNAUTHORIZED);
     }
 
     private DefiDeuxFacteurs defiValide(String jeton, Type type) {

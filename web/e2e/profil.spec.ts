@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { codeTotp } from "./totp";
+
 const ADMIN = {
   identifiant: process.env.E2E_ADMIN_IDENTIFIANT ?? "admin@immogest.local",
   motDePasse: process.env.E2E_ADMIN_MOT_DE_PASSE ?? "Admin1234!",
@@ -14,7 +16,7 @@ async function connecter(page: Page, identifiant: string, motDePasse: string) {
 }
 
 test("profil : modifier ses informations puis son mot de passe, avec le mot de passe actuel", async ({ page }) => {
-  // un compte jetable (gestionnaire sans double authentification pour pouvoir se connecter sans SMS)
+  // un compte jetable (gestionnaire sans double authentification : elle est facultative et désactivée par défaut)
   await connecter(page, ADMIN.identifiant, ADMIN.motDePasse);
   await expect(page).toHaveURL(/\/tableau-de-bord$/);
   const tel = telephone();
@@ -44,9 +46,9 @@ test("profil : modifier ses informations puis son mot de passe, avec le mot de p
   await expect(page.getByText("Profil mis à jour.")).toBeVisible();
   await expect(page.getByRole("button", { name: "Mon compte" })).toContainText(nouveauNom);
 
-  // double authentification : proposée (compte non restreint), jamais activée ici (le code SMS n'est lisible que dans la console)
+  // double authentification : proposée, désactivée par défaut (l'activation par application est couverte par le test suivant)
   await expect(page.getByText("Désactivée", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Activer" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Configurer" })).toBeVisible();
 
   // mot de passe : 12 caractères, puis retour à la connexion avec le nouveau
   await page.getByLabel("Nouveau mot de passe", { exact: true }).fill("court");
@@ -66,13 +68,61 @@ test("profil : modifier ses informations puis son mot de passe, avec le mot de p
   await expect(page).toHaveURL(/\/tableau-de-bord$/);
 });
 
-test("profil : un employé restreint voit la double authentification comme obligatoire", async ({ page }) => {
+test("double authentification par application : activation depuis le profil, puis connexion avec le code", async ({ page }) => {
   await connecter(page, ADMIN.identifiant, ADMIN.motDePasse);
   await expect(page).toHaveURL(/\/tableau-de-bord$/);
-  // l'écran Équipe crée l'encaisseur avec la double authentification ; son profil est vérifié côté API (le code SMS n'est pas lisible ici)
+  const tel = telephone();
   const creation = await page.request.post("/api/proxy/api/v1/utilisateurs", {
-    data: { nom: `Encaisseur Profil ${Date.now().toString(36)}`, telephone: telephone(), role: "ENCAISSEUR", deuxFacteursActif: true, motDePasse: "Profil-e2e-ancien1" },
+    data: { nom: `Totp E2E ${Date.now().toString(36)}`, telephone: tel, role: "GESTIONNAIRE", deuxFacteursActif: false, motDePasse: "Totp-e2e-ancien1" },
   });
   expect(creation.status()).toBe(201);
-  expect(((await creation.json()) as { deuxFacteursActif: boolean }).deuxFacteursActif).toBe(true);
+  expect(((await creation.json()) as { deuxFacteursActif: boolean }).deuxFacteursActif).toBe(false);
+  await page.request.post("/api/auth/logout");
+
+  // connexion directe (pas de second facteur par défaut), puis activation depuis le profil : mot de passe, clé, premier code
+  await connecter(page, tel, "Totp-e2e-ancien1");
+  await expect(page).toHaveURL(/\/tableau-de-bord$/);
+  await page.getByRole("button", { name: "Mon compte" }).click();
+  await page.getByRole("menuitem", { name: "Mon profil" }).click();
+  await page.getByRole("button", { name: "Configurer" }).click();
+  await page.locator("#df-mdp").fill("Totp-e2e-ancien1");
+  await page.getByRole("button", { name: "Continuer" }).click();
+  const cle = (await page.getByTestId("cle-application").textContent()) ?? "";
+  expect(cle.replace(/\s+/g, "")).toMatch(/^[A-Z2-7]{32}$/);
+  await page.locator("#df-code").fill("000000");
+  await page.getByRole("button", { name: "Confirmer et activer" }).click();
+  await expect(page.locator("main").getByRole("alert")).toBeVisible(); // code faux refusé
+  await page.locator("#df-code").fill(codeTotp(cle));
+  await page.getByRole("button", { name: "Confirmer et activer" }).click();
+  await expect(page.getByText("Double authentification activée.")).toBeVisible();
+  await expect(page.getByText("Activée", { exact: true })).toBeVisible();
+
+  // nouvelle connexion : le mot de passe seul ne suffit plus ; le code (pas suivant : un pas déjà accepté ne rejoue pas) ouvre la session
+  await page.request.post("/api/auth/logout");
+  await connecter(page, tel, "Totp-e2e-ancien1");
+  await expect(page).toHaveURL(/\/login/);
+  await page.getByLabel("Code de l'application").fill("000000");
+  await page.getByRole("button", { name: "Vérifier" }).click();
+  await expect(page.getByRole("alert").first()).toBeVisible();
+  await page.getByLabel("Code de l'application").fill(codeTotp(cle, 1));
+  await page.getByRole("button", { name: "Vérifier" }).click();
+  await expect(page).toHaveURL(/\/tableau-de-bord$/);
+});
+
+test("double authentification : première connexion avec enrôlement (compte créé avec l'option activée)", async ({ page }) => {
+  await connecter(page, ADMIN.identifiant, ADMIN.motDePasse);
+  await expect(page).toHaveURL(/\/tableau-de-bord$/);
+  const tel = telephone();
+  const creation = await page.request.post("/api/proxy/api/v1/utilisateurs", {
+    data: { nom: `Enrolement E2E ${Date.now().toString(36)}`, telephone: tel, role: "ENCAISSEUR", deuxFacteursActif: true, motDePasse: "Totp-e2e-ancien1" },
+  });
+  expect(creation.status()).toBe(201);
+  await page.request.post("/api/auth/logout");
+
+  await connecter(page, tel, "Totp-e2e-ancien1");
+  await expect(page.getByText("Configurez votre application d'authentification")).toBeVisible();
+  const cle = (await page.getByTestId("cle-application").textContent()) ?? "";
+  await page.getByLabel("Code de l'application").fill(codeTotp(cle));
+  await page.getByRole("button", { name: "Confirmer et se connecter" }).click();
+  await expect(page).not.toHaveURL(/\/login/);
 });
