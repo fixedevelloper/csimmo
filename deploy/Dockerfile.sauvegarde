@@ -1,5 +1,5 @@
 # Service de sauvegarde : pg_dump 16 + rclone. Contexte de build : deploy/
-FROM postgres:16.15
+FROM postgres:18.4
 RUN apt-get update && apt-get install -y --no-install-recommends rclone openssl ca-certificates util-linux \
     # apt 3.0.4 corrige CVE-2026-109518 (HIGH) présent dans postgres:16 ; zlib1g 1.3.1-1+deb13u1 corrige CVE-2026-76844 et CVE-2026-85091 (HIGH),
     # présents dans postgres:16.15 ; inutile dès que l'image de base les embarque
