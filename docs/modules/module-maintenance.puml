@@ -25,6 +25,7 @@ Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.Immo
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Baux, "uses", $techn="", $tags="", $link="")
@@ -32,7 +33,6 @@ Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.Imm
 Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Maintenance, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

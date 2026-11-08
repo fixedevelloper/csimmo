@@ -89,6 +89,8 @@ cd deploy && ./install.sh && ./backup.sh && ./update.sh && ./restore.sh <id> && 
 
 # Environnement de dev complet
 docker compose -f deploy/docker-compose.dev.yml up -d   # postgres + seaweedfs (S3 sur :8333) + mailpit
+# Données de démonstration (base VIDE de préférence ; jamais en production) : un compte par rôle, mot de passe Demo1234!, codes SMS dans la console
+cd backend && SPRING_PROFILES_ACTIVE=dev,demo ./mvnw -pl app spring-boot:run
 
 # Spring Modulith
 cd backend && ./mvnw -pl app -am test -Dtest=ModularityTests -Dsurefire.failIfNoSpecifiedTests=false   # vérifie les frontières + régénère docs/modules/

@@ -1,0 +1,18 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`com.immogest.app.demo`
+|Bean references
+|* `c.i.a.p.PatrimoineService` (in Patrimoine)
+* `c.i.a.t.ProprietaireService` (in Tiers)
+* `c.i.a.t.LocataireService` (in Tiers)
+* `c.i.a.b.BailService` (in Baux)
+* `c.i.a.f.EcheanceService` (in Finance)
+* `c.i.a.f.PaiementService` (in Finance)
+* `c.i.a.f.DepenseService` (in Finance)
+* `c.i.a.f.ReversementService` (in Finance)
+* `c.i.a.s.UtilisateurService` (in Sécurité)
+* `c.i.a.s.AffectationService` (in Sécurité)
+|Events listened to
+|* `org.springframework.boot.context.event.ApplicationReadyEvent` 
+|===

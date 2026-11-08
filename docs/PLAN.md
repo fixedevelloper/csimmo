@@ -104,8 +104,8 @@ TanStack Query, composants DataTable paginée, Form (react-hook-form + zod), Toa
 et une fonction qui traduit les codes d'erreur ProblemDetail. Test Playwright du parcours de connexion.
 ```
 
-### [ ] 0.6 Jeu de données de démonstration
-**Livrables** : profil `demo` qui charge un jeu cohérent (immeubles, lots, locataires, baux, échéances, paiements) pour développer, présenter et tester de bout en bout.
+### [x] 0.6 Jeu de données de démonstration
+**Livrables** : profil `demo` qui charge un jeu cohérent (immeubles, lots, locataires, baux, échéances, paiements) pour développer, présenter et tester de bout en bout. `SPRING_PROFILES_ACTIVE=dev,demo` ; module `demo` ; chargé une seule fois, refusé avec le profil `prod`.
 
 ### [x] 0.5 Socle mobile Flutter
 **Objectif** : coquille de l'app mobile.
