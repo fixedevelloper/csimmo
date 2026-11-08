@@ -185,7 +185,6 @@ class _DoubleAuthentification extends ConsumerStatefulWidget {
 
 class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification> {
   static const _roles = {Role.admin, Role.gestionnaire, Role.encaisseur, Role.gestionnaireBiens, Role.comptable};
-  static const _obligatoire = {Role.encaisseur, Role.gestionnaireBiens, Role.comptable};
 
   _Etape _etape = _Etape.repos;
   final _motDePasse = TextEditingController();
@@ -232,7 +231,6 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
     if (!concerne) return const SizedBox.shrink();
     final active = widget.utilisateur.deuxFacteursActif == true;
     final configuree = active && widget.utilisateur.deuxFacteursConfigure == true;
-    final obligatoire = _obligatoire.contains(role);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -242,7 +240,6 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
             Chip(key: const Key('deux-etat'), label: Text(!active ? l.deuxInactive : configuree ? l.deuxActive : l.deuxAConfigurer)),
           ]),
           Text(configuree ? l.deuxAideActive : active ? l.deuxAideAConfigurer : l.deuxAideInactive, style: Theme.of(context).textTheme.bodySmall),
-          if (obligatoire) Padding(padding: const EdgeInsets.only(top: 8), child: Text(l.deuxObligatoire, key: const Key('deux-obligatoire'))),
           const SizedBox(height: 8),
           if (_etape == _Etape.repos) ...[
             if (!configuree)
@@ -251,7 +248,7 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
                 onPressed: () => setState(() => _etape = _Etape.motDePasse),
                 child: Text(active ? l.deuxConfigurerMaintenant : l.deuxConfigurer),
               ),
-            if (configuree && !obligatoire)
+            if (configuree)
               OutlinedButton(key: const Key('deux-desactiver'), onPressed: () => setState(() => _etape = _Etape.desactiver), child: Text(l.deuxDesactiver)),
           ],
           if (_etape == _Etape.motDePasse || _etape == _Etape.desactiver) ...[

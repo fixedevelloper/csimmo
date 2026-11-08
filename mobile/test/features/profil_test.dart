@@ -206,11 +206,10 @@ void main() {
       expect(serveur.ecritures.single.$3, {'motDePasse': 'Motdepasse123', 'code': '123456'});
     });
 
-    testWidgets('un employé restreint ne peut pas la désactiver', (tester) async {
+    testWidgets('un employé restreint peut la désactiver (facultative pour tous)', (tester) async {
       await ouvrir(tester, _moi('ENCAISSEUR', deuxFacteurs: true));
-      expect(find.byKey(const Key('deux-obligatoire')), findsOneWidget);
-      expect(find.byKey(const Key('deux-desactiver')), findsNothing);
-      expect(find.byKey(const Key('deux-configurer')), findsNothing);
+      expect(find.byKey(const Key('deux-obligatoire')), findsNothing);
+      expect(find.byKey(const Key('deux-desactiver')), findsOneWidget);
     });
 
     testWidgets('propose de configurer maintenant quand elle est exigée sans application', (tester) async {

@@ -273,12 +273,12 @@ class DeuxFacteursApiTest {
     }
 
     @Test
-    void les_employes_restreints_ne_peuvent_pas_la_desactiver() throws Exception {
+    void les_employes_restreints_peuvent_la_desactiver() throws Exception {
         for (Role role : new Role[] {Role.ENCAISSEUR, Role.GESTIONNAIRE_BIENS, Role.COMPTABLE}) {
             Configure c = configurer(role);
             mvc.perform(post("/api/v1/auth/moi/double-authentification/desactiver").with(jwtRole(role, c.utilisateur().id())).contentType(MediaType.APPLICATION_JSON)
-                    .content(json("motDePasse", MOT_DE_PASSE, "code", code(c.secret(), 0)))).andExpect(status().isConflict());
-            assertThat(service.obtenir(c.utilisateur().id()).deuxFacteursActif()).isTrue();
+                    .content(json("motDePasse", MOT_DE_PASSE, "code", code(c.secret(), 0)))).andExpect(status().isOk());
+            assertThat(service.obtenir(c.utilisateur().id()).deuxFacteursActif()).isFalse();
         }
     }
 

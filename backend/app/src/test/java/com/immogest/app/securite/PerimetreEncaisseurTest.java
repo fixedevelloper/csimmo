@@ -208,11 +208,11 @@ class PerimetreEncaisseurTest {
     // ------------------------------------------------------------------ gestion des employés (ADMIN)
 
     @Test
-    void un_encaisseur_exige_la_double_authentification() throws Exception {
+    void un_encaisseur_n_a_pas_la_double_authentification_par_defaut() throws Exception {
         mvc.perform(post("/api/v1/utilisateurs").with(ADMIN).contentType(MediaType.APPLICATION_JSON)
                 .content(json("nom", "Sans 2FA", "telephone", tel(), "role", "ENCAISSEUR", "deuxFacteursActif", false,
                         "motDePasse", SecuriteTestSupport.MOT_DE_PASSE)))
-                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("UTILISATEUR_2FA_OBLIGATOIRE"));
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.deuxFacteursActif").value(false));
         // la double authentification passe par une application : un employé restreint n'a pas besoin de téléphone (un e-mail suffit)
         mvc.perform(post("/api/v1/utilisateurs").with(ADMIN).contentType(MediaType.APPLICATION_JSON)
                 .content(json("nom", "Sans tel", "email", "sans.tel." + System.nanoTime() + "@x.cm", "role", "ENCAISSEUR", "deuxFacteursActif", true,

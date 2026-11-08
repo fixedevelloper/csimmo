@@ -137,7 +137,7 @@ class OtpApiTest {
     @Test
     void lesComptesAMotDePasseObligatoireNeSeConnectentJamaisParSms() throws Exception {
         for (Role role : new Role[] {Role.ADMIN, Role.GESTIONNAIRE, Role.ENCAISSEUR, Role.GESTIONNAIRE_BIENS, Role.COMPTABLE}) {
-            UtilisateurDto u = creer(role, role.deuxFacteursObligatoire());
+            UtilisateurDto u = creer(role, false);
             assertThat(demander(u.telephone()).statut()).isEqualTo(202); // réponse uniforme : ne révèle rien
             assertThat(sms.pour(u.telephone())).isEmpty();                // et aucun SMS n'est envoyé
             assertThat(verifier(u.telephone(), "123456").statut()).isEqualTo(401);

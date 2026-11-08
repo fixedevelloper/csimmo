@@ -233,11 +233,11 @@ class PerimetreGestionnaireBiensTest {
     }
 
     @Test
-    void la_double_authentification_est_obligatoire_et_les_affectations_acceptees() throws Exception {
+    void les_affectations_sont_acceptees_sans_double_authentification() throws Exception {
         mvc.perform(post("/api/v1/utilisateurs").with(ADMIN).contentType(MediaType.APPLICATION_JSON)
                 .content(json("nom", "Sans 2FA", "telephone", tel(), "role", "GESTIONNAIRE_BIENS", "deuxFacteursActif", false,
                         "motDePasse", SecuriteTestSupport.MOT_DE_PASSE)))
-                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("UTILISATEUR_2FA_OBLIGATOIRE"));
+                .andExpect(status().isCreated());
         mvc.perform(get("/api/v1/utilisateurs/{id}/affectations", employe).with(ADMIN)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.immeubleIds[0]").value(immeubleA.toString()));
     }

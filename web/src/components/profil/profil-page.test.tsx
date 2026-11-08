@@ -148,11 +148,11 @@ describe("ProfilPage", () => {
       expect(post.mock.calls[0][1].body).toEqual({ motDePasse: "Motdepasse123", code: "123456" });
     });
 
-    it("ne propose pas la désactivation à un employé restreint", () => {
+    it("laisse un employé restreint la désactiver (facultative pour tous)", () => {
       moi = { ...gestionnaire, role: "ENCAISSEUR", deuxFacteursActif: true, deuxFacteursConfigure: true };
       rendu();
-      expect(screen.getByText("Obligatoire pour votre rôle : elle ne peut pas être désactivée.")).toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: "Désactiver" })).not.toBeInTheDocument();
+      expect(screen.queryByText(/Obligatoire pour votre rôle/)).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Désactiver" })).toBeInTheDocument();
     });
 
     it("invite à configurer maintenant quand elle est exigée mais pas encore configurée", () => {

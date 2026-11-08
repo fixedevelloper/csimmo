@@ -166,10 +166,6 @@ public class UtilisateurService {
         if (telephone != null && !Identifiants.telephoneValide(telephone)) {
             throw new ErreurMetier("UTILISATEUR_TELEPHONE_INVALIDE", "Numéro de téléphone invalide", HttpStatus.BAD_REQUEST);
         }
-        if (saisie.role().deuxFacteursObligatoire() && !saisie.deuxFacteursActif()) {
-            throw new ErreurMetier("UTILISATEUR_2FA_OBLIGATOIRE",
-                    "La double authentification est obligatoire pour ce rôle", HttpStatus.BAD_REQUEST);
-        }
         if (saisie.deuxFacteursActif() && !saisie.role().motDePasseObligatoire()) {
             throw new ErreurMetier("UTILISATEUR_2FA_ROLE_NON_CONCERNE",
                     "La double authentification concerne les rôles ADMIN, GESTIONNAIRE et les employés restreints (ENCAISSEUR, GESTIONNAIRE_BIENS, COMPTABLE)", HttpStatus.BAD_REQUEST);

@@ -533,7 +533,7 @@
       "COMPTABLE": "Lit les paiements, dépenses et reversements des immeubles qui lui sont affectés et valide les reversements. Il n'encaisse pas, ne calcule ni ne paie les reversements.",
       "GESTIONNAIRE": "Accès à tout le patrimoine et à toute la gestion, comme vous (hors paramètres sensibles réservés à l'administrateur)."
     },
-    "doubleAuth": "La double authentification est exigée : à sa première connexion, l'employé configurera une application d'authentification (Google Authenticator, Microsoft Authenticator, Authy…). Aucun SMS.",
+    "doubleAuth": "La double authentification est facultative : l'employé peut l'activer depuis son profil avec une application d'authentification (Google Authenticator, Microsoft Authenticator, Authy…). Aucun SMS.",
     "deuxFacteursAConfigurer": "2FA à configurer",
     "reinitialiserDeuxFacteurs": "Réinitialiser la 2FA",
     "reinitialiserPour": "Réinitialiser la double authentification de {nom}",

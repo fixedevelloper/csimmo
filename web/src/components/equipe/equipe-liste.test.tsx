@@ -77,7 +77,7 @@ describe("EquipeListe", () => {
     await userEvent.click(screen.getByText("Immeuble Bonanjo"));
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
     await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
-    expect(post.mock.calls[0][1].body).toMatchObject({ role: "GESTIONNAIRE_BIENS", deuxFacteursActif: true });
+    expect(post.mock.calls[0][1].body).toMatchObject({ role: "GESTIONNAIRE_BIENS", deuxFacteursActif: false });
     expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-2"]);
   });
 
@@ -94,7 +94,7 @@ describe("EquipeListe", () => {
     await userEvent.click(screen.getByText("Résidence Palmiers"));
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
     await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
-    expect(post.mock.calls[0][1].body).toMatchObject({ role: "COMPTABLE", deuxFacteursActif: true });
+    expect(post.mock.calls[0][1].body).toMatchObject({ role: "COMPTABLE", deuxFacteursActif: false });
     expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-1"]);
   });
 
@@ -122,7 +122,7 @@ describe("EquipeListe", () => {
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
 
     await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
-    expect(post.mock.calls[0][1].body).toMatchObject({ nom: "Nina Nouvelle", telephone: "+237633333333", role: "ENCAISSEUR", deuxFacteursActif: true });
+    expect(post.mock.calls[0][1].body).toMatchObject({ nom: "Nina Nouvelle", telephone: "+237633333333", role: "ENCAISSEUR", deuxFacteursActif: false });
     expect(put.mock.calls[0][1].params.path.id).toBe("u-9");
     expect(put.mock.calls[0][1].body.immeubleIds.sort()).toEqual(["i-1", "i-3"]);
     expect(await screen.findByTestId("recap-mot-de-passe")).toHaveTextContent(post.mock.calls[0][1].body.motDePasse);
@@ -139,7 +139,7 @@ describe("EquipeListe", () => {
     await userEvent.click(screen.getByRole("button", { name: "Générer un mot de passe" }));
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
-    expect(post.mock.calls[0][1].body).toMatchObject({ role: "GESTIONNAIRE", deuxFacteursActif: true });
+    expect(post.mock.calls[0][1].body).toMatchObject({ role: "GESTIONNAIRE", deuxFacteursActif: false });
     expect(put).not.toHaveBeenCalled();
   });
 
@@ -200,7 +200,7 @@ describe("EquipeListe", () => {
     await userEvent.click(screen.getByRole("button", { name: "Générer un mot de passe" }));
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
     await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
-    expect(post.mock.calls[0][1].body).toMatchObject({ nom: "Eric Email", email: "eric@x.cm", role: "GESTIONNAIRE", deuxFacteursActif: true });
+    expect(post.mock.calls[0][1].body).toMatchObject({ nom: "Eric Email", email: "eric@x.cm", role: "GESTIONNAIRE", deuxFacteursActif: false });
     expect(post.mock.calls[0][1].body.telephone).toBeUndefined();
   });
 });

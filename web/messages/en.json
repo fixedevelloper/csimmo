@@ -533,7 +533,7 @@
       "COMPTABLE": "Reads the payments, expenses and payouts of the buildings assigned to them and validates payouts. They do not collect rent nor compute or pay payouts.",
       "GESTIONNAIRE": "Access to the whole portfolio and all management, like you (except sensitive settings reserved to the administrator)."
     },
-    "doubleAuth": "Two-factor authentication is required: at first sign-in, the employee will set up an authenticator app (Google Authenticator, Microsoft Authenticator, Authy…). No SMS.",
+    "doubleAuth": "Two-factor authentication is optional: the employee can turn it on from their profile with an authenticator app (Google Authenticator, Microsoft Authenticator, Authy…). No SMS.",
     "deuxFacteursAConfigurer": "2FA to set up",
     "reinitialiserDeuxFacteurs": "Reset 2FA",
     "reinitialiserPour": "Reset two-factor authentication for {nom}",

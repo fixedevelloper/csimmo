@@ -62,7 +62,7 @@ export function FormulaireEmploye({ onCree, onAnnuler }: Props) {
     try {
       const cree = deballer(
         await api.POST("/api/v1/utilisateurs", {
-          body: { nom: v.nom, telephone: optionnel(v.telephone), email: optionnel(v.email), role: v.role, motDePasse: v.motDePasse, deuxFacteursActif: true },
+          body: { nom: v.nom, telephone: optionnel(v.telephone), email: optionnel(v.email), role: v.role, motDePasse: v.motDePasse, deuxFacteursActif: false },
         }),
       );
       id = cree.id;

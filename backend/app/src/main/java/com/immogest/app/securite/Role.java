@@ -23,9 +23,4 @@ public enum Role {
     public boolean restreintAuxAffectations() {
         return this == ENCAISSEUR || this == GESTIONNAIRE_BIENS || this == COMPTABLE;
     }
-
-    /** Rôles pour lesquels la double authentification est imposée (aucun compte ne peut s'en passer). */
-    public boolean deuxFacteursObligatoire() {
-        return restreintAuxAffectations();
-    }
 }

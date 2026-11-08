@@ -11,8 +11,9 @@ Le second facteur était un code envoyé par SMS. Le SMS coûte, dépend d'un op
 - **Second facteur = TOTP** (RFC 6238 : HMAC-SHA1, pas de 30 s, 6 chiffres, fenêtre ±1 pas), compatible Google Authenticator, Microsoft Authenticator, Authy, FreeOTP. Aucune dépendance ajoutée côté serveur (`securite.infra.Totp`).
 - **Secret chiffré au repos** (AES-GCM, `ChiffrementDonnees`), jamais renvoyé après l'enrôlement ni journalisé. Un code déjà accepté (`totp_dernier_pas`) ne rejoue pas.
 - **Défi de connexion** : après un mot de passe correct, le serveur ne délivre **aucune session** mais un défi opaque (seul son SHA-256 est stocké, 10 min, tentatives plafonnées, `sec_defi_2fa`). Le code seul n'ouvre jamais de session. Un code faux compte dans le verrouillage du compte.
-- **Enrôlement forcé** : un compte qui doit avoir la double authentification (`ENCAISSEUR`, `GESTIONNAIRE_BIENS`, `COMPTABLE`, ou activée par choix) mais sans secret reçoit un défi d'enrôlement : il scanne le QR (web) ou saisit la clé (mobile), confirme avec un premier code, et la session s'ouvre ensuite.
-- **Profil** : activer = mot de passe → clé/QR → premier code ; désactiver = mot de passe + code (interdit aux rôles restreints).
+- **Facultative pour tous, désactivée par défaut** (y compris `ENCAISSEUR`, `GESTIONNAIRE_BIENS`, `COMPTABLE` : cela remplace la D6 de l'ADR 0009, qui l'imposait). L'ADMIN ou l'utilisateur l'active depuis le profil ou à la création d'un compte.
+- **Enrôlement à la connexion** : un compte où elle est activée mais sans secret reçoit un défi d'enrôlement : il scanne le QR (web) ou saisit la clé (mobile), confirme avec un premier code, et la session s'ouvre ensuite.
+- **Profil** : activer = mot de passe → clé/QR → premier code ; désactiver = mot de passe + code.
 - **Perte du téléphone** : l'ADMIN réinitialise (`POST /api/v1/utilisateurs/{id}/reinitialiser-deux-facteurs`) : secret effacé, sessions révoquées, nouvel enrôlement à la connexion suivante.
 - Le téléphone n'est plus exigé pour la double authentification ; un contact (téléphone **ou** e-mail) suffit.
 

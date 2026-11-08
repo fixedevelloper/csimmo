@@ -15,7 +15,7 @@ import { useErrorMessage } from "@/hooks/use-error-message";
 import { api } from "@/lib/api/client";
 import { deballer } from "@/lib/api/errors";
 import type { components } from "@/lib/api/schema";
-import { ROLES_MOT_DE_PASSE_OBLIGATOIRE, ROLES_RESTREINTS, type RoleUtilisateur } from "@/lib/utilisateurs";
+import { ROLES_MOT_DE_PASSE_OBLIGATOIRE, type RoleUtilisateur } from "@/lib/utilisateurs";
 
 type Utilisateur = components["schemas"]["UtilisateurDto"];
 type Etape = "repos" | "motDePasse" | "configuration" | "desactiver";
@@ -36,7 +36,6 @@ export function DoubleAuthentification({ moi }: { moi: Utilisateur }) {
   const [envoi, setEnvoi] = useState(false);
 
   const concerne = ROLES_MOT_DE_PASSE_OBLIGATOIRE.includes((moi.role ?? "") as RoleUtilisateur);
-  const obligatoire = ROLES_RESTREINTS.includes(moi.role ?? "");
   const active = moi.deuxFacteursActif === true;
   const configuree = active && moi.deuxFacteursConfigure === true;
 
@@ -101,7 +100,6 @@ export function DoubleAuthentification({ moi }: { moi: Utilisateur }) {
         ) : (
           <>
             <p className="text-sm text-muted-foreground">{configuree ? t("aideActive") : active ? t("aideAConfigurer") : t("aideInactive")}</p>
-            {obligatoire ? <p className="text-sm font-medium">{t("obligatoire")}</p> : null}
 
             {etape === "repos" ? (
               <div className="flex flex-wrap gap-2">
@@ -110,7 +108,7 @@ export function DoubleAuthentification({ moi }: { moi: Utilisateur }) {
                     {active ? t("configurerMaintenant") : t("configurer")}
                   </Button>
                 ) : null}
-                {configuree && !obligatoire ? (
+                {configuree ? (
                   <Button type="button" variant="outline" onClick={() => setEtape("desactiver")}>
                     {t("desactiver")}
                   </Button>

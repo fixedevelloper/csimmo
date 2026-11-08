@@ -195,10 +195,10 @@ class PerimetreComptableTest {
     }
 
     @Test
-    void la_double_authentification_est_obligatoire() throws Exception {
+    void la_double_authentification_est_facultative() throws Exception {
         mvc.perform(post("/api/v1/utilisateurs").with(ADMIN).contentType(MediaType.APPLICATION_JSON)
                 .content(json("nom", "Sans 2FA", "telephone", tel(), "role", "COMPTABLE", "deuxFacteursActif", false, "motDePasse", SecuriteTestSupport.MOT_DE_PASSE)))
-                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.code").value("UTILISATEUR_2FA_OBLIGATOIRE"));
+                .andExpect(status().isCreated());
     }
 
     // ------------------------------------------------------------------ outils métier

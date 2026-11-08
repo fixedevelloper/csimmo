@@ -63,7 +63,7 @@ Refusé : contre-passation (demande à l'ADMIN avec motif), honoraires, taux de 
 
 ### D6 — Sécurité
 
-- Double authentification **obligatoire** pour tout compte `ENCAISSEUR`, `GESTIONNAIRE_BIENS` et `COMPTABLE` (la double authentification est aujourd'hui facultative).
+- ~~Double authentification obligatoire pour les rôles restreints~~ : abandonné, elle est facultative et désactivée par défaut pour tous les comptes (ADR 0010).
 - Désactiver un employé ou retirer ses affectations **révoque ses sessions** (refresh tokens) immédiatement.
 - Créer, modifier, affecter et retirer un employé produit un événement d'audit avec avant/après.
 - Le périmètre se lit à chaque requête (jamais copié dans le JWT) : un retrait d'affectation agit sans attendre l'expiration du jeton.

@@ -74,7 +74,7 @@ public class DeuxFacteursService {
 
     /** Un compte doit-il passer par la double authentification à la connexion ? */
     static boolean exigee(Utilisateur u) {
-        return u.isDeuxFacteursActif() || u.getRole().deuxFacteursObligatoire();
+        return u.isDeuxFacteursActif();
     }
 
     /** Défi à remettre au client après un bon mot de passe : vérification d'un code, ou enrôlement si l'application n'est pas encore configurée. */
@@ -138,13 +138,10 @@ public class DeuxFacteursService {
         confirmerSecretEnAttente(u, defi, code);
     }
 
-    /** Désactivation : refusée pour les rôles qui doivent toujours l'avoir ; le code courant est exigé quand l'application est configurée. */
+    /** Désactivation : le code courant est exigé quand l'application est configurée. */
     @Transactional(noRollbackFor = ErreurMetier.class)
     public void desactiver(UUID utilisateurId, String code) {
         Utilisateur u = charger(utilisateurId);
-        if (u.getRole().deuxFacteursObligatoire()) {
-            throw new ErreurMetier("DEUX_FACTEURS_OBLIGATOIRE", "La double authentification est obligatoire pour votre rôle", HttpStatus.CONFLICT);
-        }
         if (u.aUneApplicationDAuthentification()) {
             verifierCode(u, null, code);
         }
