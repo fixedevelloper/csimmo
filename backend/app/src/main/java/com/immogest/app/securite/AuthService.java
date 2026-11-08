@@ -44,10 +44,12 @@ public class AuthService {
     private final SecuriteProperties proprietes;
     private final ApplicationEventPublisher evenements;
     private final Clock horloge;
+    private final DeuxFacteursService deuxFacteurs;
 
     AuthService(UtilisateurRepository utilisateurs, RefreshTokenRepository refreshTokens, OtpCodeRepository otps,
             PasswordEncoder encodeur, JwtService jwt, OtpSender otpSender, SecuriteProperties proprietes,
-            ApplicationEventPublisher evenements, Clock horloge) {
+            ApplicationEventPublisher evenements, Clock horloge, DeuxFacteursService deuxFacteurs) {
+        this.deuxFacteurs = deuxFacteurs;
         this.utilisateurs = utilisateurs;
         this.refreshTokens = refreshTokens;
         this.otps = otps;
@@ -88,11 +90,31 @@ public class AuthService {
         if (!u.isActif()) {
             throw new ErreurMetier("COMPTE_DESACTIVE", "Ce compte est désactivé", HttpStatus.FORBIDDEN);
         }
-        if (u.isDeuxFacteursActif()) {
-            envoyerOtp(u, maintenant);
-            return ReponseConnexion.deuxFacteurs();
+        if (DeuxFacteursService.exigee(u)) {
+            // pas de session sans application d'authentification : vérification du code, ou configuration d'abord (enrôlement)
+            var defi = deuxFacteurs.creerDefi(u);
+            return defi.enrolement() ? ReponseConnexion.enrolement(defi.jeton()) : ReponseConnexion.deuxFacteurs(defi.jeton());
         }
         return ouvrirSession(u, maintenant);
+    }
+
+    // ---------------------------------------------------------------- double authentification (application)
+
+    /** Deuxième étape de la connexion : le code de l'application d'authentification, avec le défi reçu après le mot de passe. */
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public ReponseConnexion verifierDeuxFacteurs(String defi, String code) {
+        return ouvrirSession(deuxFacteurs.verifierDefi(defi, code), maintenant());
+    }
+
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public DeuxFacteursService.Enrolement demarrerEnrolement(String defi) {
+        return deuxFacteurs.demarrerEnrolement(defi);
+    }
+
+    /** Premier code correct : l'application est configurée, la session s'ouvre. */
+    @Transactional(noRollbackFor = ErreurMetier.class)
+    public ReponseConnexion confirmerEnrolement(String defi, String code) {
+        return ouvrirSession(deuxFacteurs.confirmerEnrolement(defi, code), maintenant());
     }
 
     // ---------------------------------------------------------------- OTP
@@ -111,6 +133,9 @@ public class AuthService {
     public ReponseConnexion verifierOtp(String identifiant, String code) {
         OffsetDateTime maintenant = maintenant();
         Utilisateur u = trouver(identifiant).orElseThrow(AuthService::otpInvalide);
+        if (u.getRole().motDePasseObligatoire()) { // ADMIN, GESTIONNAIRE et employés : mot de passe puis application, jamais un code SMS seul
+            throw otpInvalide();
+        }
         if (u.estVerrouille(maintenant)) {
             throw compteVerrouille();
         }
@@ -195,7 +220,7 @@ public class AuthService {
                 u.getId().toString()));
     }
 
-    // ---------------------------------------------------------------- profil : mot de passe actuel et double authentification
+    // ---------------------------------------------------------------- profil : confirmation du mot de passe actuel
 
     /**
      * Confirme l'identité d'un utilisateur déjà connecté avant une opération sensible sur son profil. Chaque mot de passe faux compte comme à
@@ -217,62 +242,6 @@ public class AuthService {
                 throw compteVerrouille();
             }
             throw new ErreurMetier("MOT_DE_PASSE_ACTUEL_INCORRECT", "Mot de passe actuel incorrect", HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    /** Étape 1 de l'activation : mot de passe confirmé, puis code SMS envoyé au numéro du compte (preuve qu'on le reçoit avant de l'exiger à la connexion). */
-    @Transactional(noRollbackFor = ErreurMetier.class)
-    public void demanderActivationDeuxFacteurs(UUID utilisateurId, String motDePasse) {
-        verifierMotDePasseActuel(utilisateurId, motDePasse);
-        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
-        verifierDeuxFacteursPossible(u);
-        envoyerOtp(u, maintenant());
-    }
-
-    /** Étape 2 : le bon code active la double authentification. */
-    @Transactional(noRollbackFor = ErreurMetier.class)
-    public void activerDeuxFacteurs(UUID utilisateurId, String code) {
-        OffsetDateTime maintenant = maintenant();
-        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
-        verifierDeuxFacteursPossible(u);
-        OtpCode otp = otps.findFirstByUtilisateurIdOrderByCreatedAtDesc(u.getId())
-                .filter(o -> o.estValide(maintenant, proprietes.otpTentativesMax()))
-                .orElseThrow(AuthService::otpInvalide);
-        if (!hash(u.getId() + ":" + code).equals(otp.getCodeHash())) {
-            otp.compterTentative();
-            otps.save(otp);
-            throw otpInvalide();
-        }
-        otp.consommer();
-        otps.save(otp);
-        u.definirDeuxFacteurs(true);
-        utilisateurs.save(u);
-        evenements.publishEvent(new EvenementSecurite("SECURITE.DEUX_FACTEURS_ACTIVES", u.getId(), null, null, u.getId().toString()));
-    }
-
-    /** Désactivation : mot de passe exigé ; impossible pour les rôles qui doivent toujours avoir la double authentification. */
-    @Transactional(noRollbackFor = ErreurMetier.class)
-    public void desactiverDeuxFacteurs(UUID utilisateurId, String motDePasse) {
-        verifierMotDePasseActuel(utilisateurId, motDePasse);
-        Utilisateur u = utilisateurs.findById(utilisateurId).orElseThrow(AuthService::identifiantsInvalides);
-        if (u.getRole().deuxFacteursObligatoire()) {
-            throw new ErreurMetier("DEUX_FACTEURS_OBLIGATOIRE", "La double authentification est obligatoire pour votre rôle", HttpStatus.CONFLICT);
-        }
-        if (!u.isDeuxFacteursActif()) {
-            return;
-        }
-        u.definirDeuxFacteurs(false);
-        utilisateurs.save(u);
-        evenements.publishEvent(new EvenementSecurite("SECURITE.DEUX_FACTEURS_DESACTIVES", u.getId(), null, null, u.getId().toString()));
-    }
-
-    private static void verifierDeuxFacteursPossible(Utilisateur u) {
-        if (!u.getRole().motDePasseObligatoire()) {
-            throw new ErreurMetier("UTILISATEUR_2FA_ROLE_NON_CONCERNE",
-                    "La double authentification concerne les rôles ADMIN, GESTIONNAIRE, ENCAISSEUR, GESTIONNAIRE_BIENS et COMPTABLE", HttpStatus.CONFLICT);
-        }
-        if (u.isDeuxFacteursActif()) {
-            throw new ErreurMetier("DEUX_FACTEURS_DEJA_ACTIFS", "La double authentification est déjà activée", HttpStatus.CONFLICT);
         }
     }
 

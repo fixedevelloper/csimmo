@@ -251,7 +251,7 @@ abstract class AppLocalizations {
   /// No description provided for @deuxFacteursInfo.
   ///
   /// In fr, this message translates to:
-  /// **'Un code à 6 chiffres vous a été envoyé par SMS.'**
+  /// **'Saisissez le code à 6 chiffres affiché par votre application d\'authentification.'**
   String get deuxFacteursInfo;
 
   /// No description provided for @codeEnvoye.
@@ -1277,13 +1277,13 @@ abstract class AppLocalizations {
   /// No description provided for @deuxAideActive.
   ///
   /// In fr, this message translates to:
-  /// **'Un code reçu par SMS est demandé à chaque connexion.'**
+  /// **'Le code de votre application d\'authentification est demandé à chaque connexion.'**
   String get deuxAideActive;
 
   /// No description provided for @deuxAideInactive.
   ///
   /// In fr, this message translates to:
-  /// **'Ajoute une étape de sécurité : un code reçu par SMS est demandé après votre mot de passe.'**
+  /// **'Après votre mot de passe, vous saisissez le code affiché par une application d\'authentification. Aucun SMS.'**
   String get deuxAideInactive;
 
   /// No description provided for @deuxObligatoire.
@@ -1291,12 +1291,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Obligatoire pour votre rôle : elle ne peut pas être désactivée.'**
   String get deuxObligatoire;
-
-  /// No description provided for @deuxSansTelephone.
-  ///
-  /// In fr, this message translates to:
-  /// **'Ajoutez un numéro de téléphone ci-dessus pour pouvoir l\'activer.'**
-  String get deuxSansTelephone;
 
   /// No description provided for @deuxActiver.
   ///
@@ -1310,29 +1304,11 @@ abstract class AppLocalizations {
   /// **'Désactiver'**
   String get deuxDesactiver;
 
-  /// No description provided for @deuxEnvoyerCode.
-  ///
-  /// In fr, this message translates to:
-  /// **'Envoyer le code'**
-  String get deuxEnvoyerCode;
-
-  /// No description provided for @deuxCodeEnvoye.
-  ///
-  /// In fr, this message translates to:
-  /// **'Un code à 6 chiffres a été envoyé par SMS au {telephone}.'**
-  String deuxCodeEnvoye(String telephone);
-
   /// No description provided for @deuxCode.
   ///
   /// In fr, this message translates to:
   /// **'Code reçu par SMS'**
   String get deuxCode;
-
-  /// No description provided for @deuxConfirmer.
-  ///
-  /// In fr, this message translates to:
-  /// **'Confirmer l\'activation'**
-  String get deuxConfirmer;
 
   /// No description provided for @deuxActivee.
   ///
@@ -1370,12 +1346,6 @@ abstract class AppLocalizations {
   /// **'La double authentification est déjà activée.'**
   String get errDeuxFacteursDejaActifs;
 
-  /// No description provided for @errTelephoneRequisCode.
-  ///
-  /// In fr, this message translates to:
-  /// **'Ajoutez d\'abord un numéro de téléphone à votre profil.'**
-  String get errTelephoneRequisCode;
-
   /// No description provided for @errContactDejaUtilise.
   ///
   /// In fr, this message translates to:
@@ -1388,17 +1358,101 @@ abstract class AppLocalizations {
   /// **'Numéro de téléphone invalide.'**
   String get errTelephoneInvalide;
 
-  /// No description provided for @errTelephoneRequis2fa.
-  ///
-  /// In fr, this message translates to:
-  /// **'Un numéro de téléphone est requis tant que la double authentification est activée.'**
-  String get errTelephoneRequis2fa;
-
   /// No description provided for @errTropDeRequetes.
   ///
   /// In fr, this message translates to:
   /// **'Trop de tentatives : réessayez dans un instant.'**
   String get errTropDeRequetes;
+
+  /// No description provided for @codeApplicationLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de l\'application'**
+  String get codeApplicationLabel;
+
+  /// No description provided for @enrolementTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Configurez votre application d\'authentification'**
+  String get enrolementTitre;
+
+  /// No description provided for @enrolementEtapes.
+  ///
+  /// In fr, this message translates to:
+  /// **'1. Installez une application d\'authentification (Google Authenticator, Microsoft Authenticator, Authy…).\n2. Ajoutez un compte et saisissez la clé ci-dessous (type de clé : basé sur l\'heure).\n3. Saisissez ensuite le code à 6 chiffres qu\'elle affiche.'**
+  String get enrolementEtapes;
+
+  /// No description provided for @enrolementCle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé à saisir dans l\'application'**
+  String get enrolementCle;
+
+  /// No description provided for @enrolementCopier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier la clé'**
+  String get enrolementCopier;
+
+  /// No description provided for @enrolementCopiee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé copiée'**
+  String get enrolementCopiee;
+
+  /// No description provided for @enrolementConfirmer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer et se connecter'**
+  String get enrolementConfirmer;
+
+  /// No description provided for @errDefiExpire.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre connexion a expiré : saisissez de nouveau votre mot de passe.'**
+  String get errDefiExpire;
+
+  /// No description provided for @deuxAConfigurer.
+  ///
+  /// In fr, this message translates to:
+  /// **'À configurer'**
+  String get deuxAConfigurer;
+
+  /// No description provided for @deuxAideAConfigurer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle est exigée pour votre compte mais votre application n\'est pas encore configurée : vous la configurerez à votre prochaine connexion, ou maintenant.'**
+  String get deuxAideAConfigurer;
+
+  /// No description provided for @deuxConfigurer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Configurer'**
+  String get deuxConfigurer;
+
+  /// No description provided for @deuxConfigurerMaintenant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Configurer maintenant'**
+  String get deuxConfigurerMaintenant;
+
+  /// No description provided for @deuxContinuer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get deuxContinuer;
+
+  /// No description provided for @deuxConfirmerActivation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer et activer'**
+  String get deuxConfirmerActivation;
+
+  /// No description provided for @deuxCodeApplication.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de l\'application'**
+  String get deuxCodeApplication;
 }
 
 class _AppLocalizationsDelegate

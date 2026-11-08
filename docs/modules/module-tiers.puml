@@ -10,17 +10,18 @@ top to bottom direction
 
 Container_Boundary("ImmoGestApplication.ImmoGestApplication_boundary", "ImmoGestApplication", $tags="") {
   Component(ImmoGestApplication.ImmoGestApplication.Commun, "Commun", $techn="Module", $descr="", $tags="", $link="")
-  Component(ImmoGestApplication.ImmoGestApplication.Sécurité, "Sécurité", $techn="Module", $descr="", $tags="", $link="")
   Component(ImmoGestApplication.ImmoGestApplication.Stockage, "Stockage", $techn="Module", $descr="", $tags="", $link="")
+  Component(ImmoGestApplication.ImmoGestApplication.Sécurité, "Sécurité", $techn="Module", $descr="", $tags="", $link="")
   Component(ImmoGestApplication.ImmoGestApplication.Tiers, "Tiers", $techn="Module", $descr="", $tags="", $link="")
 }
 
+Rel(ImmoGestApplication.ImmoGestApplication.Sécurité, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Sécurité, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Sécurité, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Sécurité, ImmoGestApplication.ImmoGestApplication.Commun, "listens to", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Sécurité, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

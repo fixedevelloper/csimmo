@@ -15,7 +15,7 @@ import org.springframework.modulith.test.ApplicationModuleTest;
 import org.springframework.modulith.test.Scenario;
 
 /** Module licence isolé (avec ses dépendances directes) : les événements publiés arrivent bien (outbox). */
-@ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.DIRECT_DEPENDENCIES)
+@ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.ALL_DEPENDENCIES)
 @Import(LicenceTestSupport.class)
 @TestPropertySource(properties = {"immogest.dev.installation-auto=false", "db-scheduler.enabled=false"})
 class LicenceModuleTest {

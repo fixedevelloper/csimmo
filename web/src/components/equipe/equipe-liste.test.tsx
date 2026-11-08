@@ -15,9 +15,9 @@ vi.mock("@/hooks/use-equipe", () => ({
     refetch: vi.fn(),
     data: {
       content: [
-        { id: "u-1", nom: "Awa Encaisseuse", telephone: "+237611111111", role: "ENCAISSEUR", actif: true, verrouille: false },
+        { id: "u-1", nom: "Awa Encaisseuse", telephone: "+237611111111", role: "ENCAISSEUR", actif: true, verrouille: false, deuxFacteursActif: true, deuxFacteursConfigure: true },
         { id: "u-2", nom: "Boris Chef", telephone: "+237622222222", role: "GESTIONNAIRE", actif: true, verrouille: false },
-        { id: "u-3", nom: "Carine Biens", telephone: "+237633000000", role: "GESTIONNAIRE_BIENS", actif: true, verrouille: false },
+        { id: "u-3", nom: "Carine Biens", telephone: "+237633000000", role: "GESTIONNAIRE_BIENS", actif: true, verrouille: false, deuxFacteursActif: true, deuxFacteursConfigure: false },
       ],
       page: 0, size: 20, totalElements: 3,
     },
@@ -32,7 +32,8 @@ vi.mock("@/hooks/use-equipe", () => ({
     ],
   }),
 }));
-vi.mock("@/hooks/use-actions-utilisateur", () => ({ useActionsUtilisateur: () => ({ basculerActif: vi.fn(), deverrouiller: vi.fn() }) }));
+const reinitialiser = vi.fn();
+vi.mock("@/hooks/use-actions-utilisateur", () => ({ useActionsUtilisateur: () => ({ basculerActif: vi.fn(), deverrouiller: vi.fn(), reinitialiserDeuxFacteurs: reinitialiser }) }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 import { EquipeListe } from "./equipe-liste";
@@ -97,12 +98,12 @@ describe("EquipeListe", () => {
     expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-1"]);
   });
 
-  it("exige un téléphone et un mot de passe valides avant d'appeler l'API", async () => {
+  it("exige un contact (téléphone ou e-mail) et un mot de passe valides avant d'appeler l'API", async () => {
     rendu();
     await userEvent.click(screen.getByRole("button", { name: "Nouvel employé" }));
     await userEvent.type(screen.getByLabelText("Nom"), "Nina");
     await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
-    expect(await screen.findByText(/Le téléphone est obligatoire/)).toBeInTheDocument();
+    expect(await screen.findByText("Un téléphone ou un e-mail est obligatoire.")).toBeInTheDocument();
     expect(screen.getByText("Le mot de passe contient entre 12 et 100 caractères.")).toBeInTheDocument();
     expect(post).not.toHaveBeenCalled();
   });
@@ -168,5 +169,38 @@ describe("EquipeListe", () => {
     await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
     expect(put.mock.calls[0][1].params.path.id).toBe("u-1");
     expect(put.mock.calls[0][1].body.immeubleIds).toEqual(["i-1"]);
+  });
+
+  it("signale la double authentification à configurer et propose de la réinitialiser seulement quand une application existe", () => {
+    rendu();
+    const configuree = screen.getByText("Awa Encaisseuse").closest("tr") as HTMLElement;
+    expect(within(configuree).getByRole("button", { name: "Réinitialiser la 2FA" })).toBeInTheDocument();
+    const aConfigurer = screen.getByText("Carine Biens").closest("tr") as HTMLElement;
+    expect(within(aConfigurer).getByText("2FA à configurer")).toBeInTheDocument();
+    expect(within(aConfigurer).queryByRole("button", { name: "Réinitialiser la 2FA" })).not.toBeInTheDocument();
+  });
+
+  it("demande confirmation avant de réinitialiser la double authentification", async () => {
+    rendu();
+    const ligne = screen.getByText("Awa Encaisseuse").closest("tr") as HTMLElement;
+    await userEvent.click(within(ligne).getByRole("button", { name: "Réinitialiser la 2FA" }));
+    expect(screen.getByText("Réinitialiser la double authentification de Awa Encaisseuse")).toBeInTheDocument();
+    expect(reinitialiser).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole("button", { name: "Réinitialiser" }));
+    expect(reinitialiser).toHaveBeenCalledWith(expect.objectContaining({ id: "u-1" }));
+  });
+
+  it("crée un employé avec seulement un e-mail (pas de téléphone)", async () => {
+    post.mockReturnValueOnce(ok({ id: "u-13" }));
+    rendu();
+    await userEvent.click(screen.getByRole("button", { name: "Nouvel employé" }));
+    await userEvent.selectOptions(screen.getByLabelText("Rôle"), "GESTIONNAIRE");
+    await userEvent.type(screen.getByLabelText("Nom"), "Eric Email");
+    await userEvent.type(screen.getByLabelText("E-mail"), "eric@x.cm");
+    await userEvent.click(screen.getByRole("button", { name: "Générer un mot de passe" }));
+    await userEvent.click(screen.getByRole("button", { name: "Créer l'employé" }));
+    await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
+    expect(post.mock.calls[0][1].body).toMatchObject({ nom: "Eric Email", email: "eric@x.cm", role: "GESTIONNAIRE", deuxFacteursActif: true });
+    expect(post.mock.calls[0][1].body.telephone).toBeUndefined();
   });
 });

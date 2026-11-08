@@ -18,6 +18,7 @@ class FakeBackend {
   FakeBackend._(this._server);
 
   static const codeOtp = '123456';
+  final _defis = <String, dynamic>{};
 
   final HttpServer _server;
   final Map<String, FakeUser> _utilisateurs = {};
@@ -74,9 +75,14 @@ class FakeBackend {
             return await _probleme(req, 401, 'IDENTIFIANTS_INVALIDES');
           }
           if (u.deuxFacteurs) {
-            _otpDemandes.add((json['identifiant'] as String).toLowerCase());
-            return await _json(req, 200, {'deuxFacteursRequis': true});
+            _defis['defi-${u.motDePasse}'] = u;
+            return await _json(req, 200, {'deuxFacteursRequis': true, 'defi': 'defi-${u.motDePasse}'});
           }
+          return await _json(req, 200, _session(u));
+        case ('POST', '/api/v1/auth/deux-facteurs/verifier'):
+          final u = _defis[json['defi']];
+          if (u == null || json['code'] != codeOtp) return await _probleme(req, 401, 'OTP_INVALIDE');
+          _defis.remove(json['defi']);
           return await _json(req, 200, _session(u));
         case ('POST', '/api/v1/auth/otp/demander'):
           final id = (json['identifiant'] as String? ?? '').toLowerCase();

@@ -12,6 +12,10 @@ import 'package:dio/dio.dart';
 import 'package:immogest_api/src/model/changement_mot_de_passe.dart';
 import 'package:immogest_api/src/model/code_requete.dart';
 import 'package:immogest_api/src/model/connexion_requete.dart';
+import 'package:immogest_api/src/model/desactivation_requete.dart';
+import 'package:immogest_api/src/model/deux_facteurs_defi.dart';
+import 'package:immogest_api/src/model/deux_facteurs_enrolement.dart';
+import 'package:immogest_api/src/model/deux_facteurs_verification.dart';
 import 'package:immogest_api/src/model/mot_de_passe_requete.dart';
 import 'package:immogest_api/src/model/otp_demande.dart';
 import 'package:immogest_api/src/model/otp_verification.dart';
@@ -183,11 +187,11 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
     return _response;
   }
 
-  /// demanderDeuxFacteurs
+  /// confirmerEnrolementDeuxFacteurs
   /// 
   ///
   /// Parameters:
-  /// * [motDePasseRequete] 
+  /// * [deuxFacteursVerification] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -195,10 +199,10 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future]
+  /// Returns a [Future] containing a [Response] with a [ReponseConnexion] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<void>> demanderDeuxFacteurs({ 
-    required MotDePasseRequete motDePasseRequete,
+  Future<Response<ReponseConnexion>> confirmerEnrolementDeuxFacteurs({ 
+    required DeuxFacteursVerification deuxFacteursVerification,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -206,7 +210,7 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/auth/moi/double-authentification/demander';
+    final _path = r'/api/v1/auth/deux-facteurs/enrolement/confirmer';
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -223,7 +227,7 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(motDePasseRequete);
+      _bodyData = jsonEncode(deuxFacteursVerification);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -246,7 +250,32 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
       onReceiveProgress: onReceiveProgress,
     );
 
-    return _response;
+    ReponseConnexion? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ReponseConnexion, ReponseConnexion>(rawData, 'ReponseConnexion', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<ReponseConnexion>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
   }
 
   /// demanderOtp
@@ -315,7 +344,7 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
     return _response;
   }
 
-  /// desactiverDeuxFacteurs
+  /// demarrerDeuxFacteurs
   /// 
   ///
   /// Parameters:
@@ -327,10 +356,192 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future] containing a [Response] with a [DeuxFacteursEnrolement] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<DeuxFacteursEnrolement>> demarrerDeuxFacteurs({ 
+    required MotDePasseRequete motDePasseRequete,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/api/v1/auth/moi/double-authentification/demarrer';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(motDePasseRequete);
+
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    DeuxFacteursEnrolement? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<DeuxFacteursEnrolement, DeuxFacteursEnrolement>(rawData, 'DeuxFacteursEnrolement', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<DeuxFacteursEnrolement>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// demarrerEnrolementDeuxFacteurs
+  /// 
+  ///
+  /// Parameters:
+  /// * [deuxFacteursDefi] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [DeuxFacteursEnrolement] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<DeuxFacteursEnrolement>> demarrerEnrolementDeuxFacteurs({ 
+    required DeuxFacteursDefi deuxFacteursDefi,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/api/v1/auth/deux-facteurs/enrolement/demarrer';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(deuxFacteursDefi);
+
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    DeuxFacteursEnrolement? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<DeuxFacteursEnrolement, DeuxFacteursEnrolement>(rawData, 'DeuxFacteursEnrolement', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<DeuxFacteursEnrolement>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// desactiverDeuxFacteurs
+  /// 
+  ///
+  /// Parameters:
+  /// * [desactivationRequete] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
   /// Returns a [Future] containing a [Response] with a [UtilisateurDto] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<UtilisateurDto>> desactiverDeuxFacteurs({ 
-    required MotDePasseRequete motDePasseRequete,
+    required DesactivationRequete desactivationRequete,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -355,7 +566,7 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(motDePasseRequete);
+      _bodyData = jsonEncode(desactivationRequete);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -765,6 +976,97 @@ _responseData = rawData == null ? null : deserialize<UtilisateurDto, Utilisateur
 
     try {
       _bodyData = jsonEncode(refreshRequete);
+
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    ReponseConnexion? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ReponseConnexion, ReponseConnexion>(rawData, 'ReponseConnexion', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<ReponseConnexion>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// verifierDeuxFacteurs
+  /// 
+  ///
+  /// Parameters:
+  /// * [deuxFacteursVerification] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [ReponseConnexion] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<ReponseConnexion>> verifierDeuxFacteurs({ 
+    required DeuxFacteursVerification deuxFacteursVerification,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/api/v1/auth/deux-facteurs/verifier';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+      _bodyData = jsonEncode(deuxFacteursVerification);
 
     } catch(error, stackTrace) {
       throw DioException(

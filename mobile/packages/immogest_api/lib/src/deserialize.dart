@@ -32,6 +32,10 @@ import 'package:immogest_api/src/model/demande_anonymisation_dto.dart';
 import 'package:immogest_api/src/model/demande_saisie.dart';
 import 'package:immogest_api/src/model/depense_dto.dart';
 import 'package:immogest_api/src/model/depense_requete.dart';
+import 'package:immogest_api/src/model/desactivation_requete.dart';
+import 'package:immogest_api/src/model/deux_facteurs_defi.dart';
+import 'package:immogest_api/src/model/deux_facteurs_enrolement.dart';
+import 'package:immogest_api/src/model/deux_facteurs_verification.dart';
 import 'package:immogest_api/src/model/diagnostic_dto.dart';
 import 'package:immogest_api/src/model/document_bail_dto.dart';
 import 'package:immogest_api/src/model/document_dto.dart';
@@ -218,6 +222,14 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DepenseDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DepenseRequete':
           return DepenseRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DesactivationRequete':
+          return DesactivationRequete.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeuxFacteursDefi':
+          return DeuxFacteursDefi.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeuxFacteursEnrolement':
+          return DeuxFacteursEnrolement.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeuxFacteursVerification':
+          return DeuxFacteursVerification.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DiagnosticDto':
           return DiagnosticDto.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DocumentBailDto':

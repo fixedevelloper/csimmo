@@ -815,6 +815,21 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UtilisateurDto"
+  /api/v1/utilisateurs/{id}/reinitialiser-deux-facteurs:
+    post:
+      tags:
+      - utilisateur-controller
+      operationId: reinitialiserDeuxFacteurs
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
   /api/v1/utilisateurs/{id}/mot-de-passe:
     post:
       tags:
@@ -2678,7 +2693,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MotDePasseRequete"
+              $ref: "#/components/schemas/DesactivationRequete"
         required: true
       responses:
         "200":
@@ -2687,11 +2702,11 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UtilisateurDto"
-  /api/v1/auth/moi/double-authentification/demander:
+  /api/v1/auth/moi/double-authentification/demarrer:
     post:
       tags:
       - auth-controller
-      operationId: demanderDeuxFacteurs
+      operationId: demarrerDeuxFacteurs
       requestBody:
         content:
           application/json:
@@ -2701,6 +2716,10 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DeuxFacteursEnrolement"
   /api/v1/auth/moi/double-authentification/activer:
     post:
       tags:
@@ -2743,6 +2762,60 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ConnexionRequete"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReponseConnexion"
+  /api/v1/auth/deux-facteurs/verifier:
+    post:
+      tags:
+      - auth-controller
+      operationId: verifierDeuxFacteurs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeuxFacteursVerification"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReponseConnexion"
+  /api/v1/auth/deux-facteurs/enrolement/demarrer:
+    post:
+      tags:
+      - auth-controller
+      operationId: demarrerEnrolementDeuxFacteurs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeuxFacteursDefi"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DeuxFacteursEnrolement"
+  /api/v1/auth/deux-facteurs/enrolement/confirmer:
+    post:
+      tags:
+      - auth-controller
+      operationId: confirmerEnrolementDeuxFacteurs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeuxFacteursVerification"
         required: true
       responses:
         "200":
@@ -3553,6 +3626,8 @@ components:
         actif:
           type: boolean
         deuxFacteursActif:
+          type: boolean
+        deuxFacteursConfigure:
           type: boolean
         verrouille:
           type: boolean
@@ -5390,6 +5465,10 @@ components:
           - COMPTABLE
         deuxFacteursRequis:
           type: boolean
+        enrolementRequis:
+          type: boolean
+        defi:
+          type: string
     OtpVerification:
       type: object
       properties:
@@ -5424,6 +5503,18 @@ components:
       required:
       - ancienMotDePasse
       - nouveauMotDePasse
+    DesactivationRequete:
+      type: object
+      properties:
+        motDePasse:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          maxLength: 12
+          minLength: 0
+      required:
+      - motDePasse
     MotDePasseRequete:
       type: object
       properties:
@@ -5432,6 +5523,13 @@ components:
           minLength: 1
       required:
       - motDePasse
+    DeuxFacteursEnrolement:
+      type: object
+      properties:
+        secret:
+          type: string
+        uri:
+          type: string
     CodeRequete:
       type: object
       properties:
@@ -5453,6 +5551,29 @@ components:
       required:
       - identifiant
       - motDePasse
+    DeuxFacteursVerification:
+      type: object
+      properties:
+        defi:
+          type: string
+          maxLength: 200
+          minLength: 0
+        code:
+          type: string
+          maxLength: 12
+          minLength: 0
+      required:
+      - code
+      - defi
+    DeuxFacteursDefi:
+      type: object
+      properties:
+        defi:
+          type: string
+          maxLength: 200
+          minLength: 0
+      required:
+      - defi
     PageReponseUtilisateurDto:
       type: object
       properties:

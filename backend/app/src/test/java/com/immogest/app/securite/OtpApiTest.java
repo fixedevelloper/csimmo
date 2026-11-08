@@ -132,34 +132,26 @@ class OtpApiTest {
         assertThat(sms.pour(u.telephone())).isEmpty();
     }
 
-    // ------------------------------------------------------------------ 2FA
+    // ------------------------------------------------------------------ plus de code SMS pour les employés
 
     @Test
-    void deuxFacteursExigeMotDePassePuisCode() throws Exception {
-        UtilisateurDto u = creer(Role.GESTIONNAIRE, true);
-
-        var login = postJson(mvc, "/api/v1/auth/login", json("identifiant", u.telephone(), "motDePasse", MOT_DE_PASSE));
-        assertThat(login.statut()).isEqualTo(200);
-        assertThat(login.corps().path("deuxFacteursRequis").asBoolean()).isTrue();
-        assertThat(login.corps().has("accessToken")).isFalse();
-        assertThat(login.corps().has("refreshToken")).isFalse();
-
-        var mauvais = verifier(u.telephone(), autreCode(sms.dernierCode(u.telephone())));
-        assertThat(mauvais.statut()).isEqualTo(401);
-
-        var ok = verifier(u.telephone(), sms.dernierCode(u.telephone()));
-        assertThat(ok.statut()).isEqualTo(200);
-        assertThat(ok.corps().path("accessToken").asText()).isNotBlank();
-        assertThat(ok.corps().path("role").asText()).isEqualTo("GESTIONNAIRE");
+    void lesComptesAMotDePasseObligatoireNeSeConnectentJamaisParSms() throws Exception {
+        for (Role role : new Role[] {Role.ADMIN, Role.GESTIONNAIRE, Role.ENCAISSEUR, Role.GESTIONNAIRE_BIENS, Role.COMPTABLE}) {
+            UtilisateurDto u = creer(role, role.deuxFacteursObligatoire());
+            assertThat(demander(u.telephone()).statut()).isEqualTo(202); // réponse uniforme : ne révèle rien
+            assertThat(sms.pour(u.telephone())).isEmpty();                // et aucun SMS n'est envoyé
+            assertThat(verifier(u.telephone(), "123456").statut()).isEqualTo(401);
+        }
     }
 
     @Test
-    void deuxFacteursNEnvoieRienSiLeMotDePasseEstFaux() throws Exception {
-        UtilisateurDto u = creer(Role.ADMIN, true);
-
-        var login = postJson(mvc, "/api/v1/auth/login", json("identifiant", u.telephone(), "motDePasse", "faux"));
-
-        assertThat(login.statut()).isEqualTo(401);
+    void laConnexionAvecDeuxFacteursNEnvoieAucunSms() throws Exception {
+        UtilisateurDto u = creer(Role.GESTIONNAIRE, true);
+        var login = postJson(mvc, "/api/v1/auth/login", json("identifiant", u.telephone(), "motDePasse", MOT_DE_PASSE));
+        assertThat(login.statut()).isEqualTo(200);
+        assertThat(login.corps().path("enrolementRequis").asBoolean()).isTrue(); // pas encore d'application : elle sera configurée
+        assertThat(login.corps().path("defi").asText()).isNotBlank();
+        assertThat(login.corps().has("accessToken")).isFalse();
         assertThat(sms.pour(u.telephone())).isEmpty();
     }
 }

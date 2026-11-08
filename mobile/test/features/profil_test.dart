@@ -18,7 +18,7 @@ class _FausseSession extends AuthActions {
   Future<void> logout() async => deconnecte = true;
 }
 
-Map<String, Object?> _moi(String role, {bool deuxFacteurs = false, String? telephone = '+237690000001'}) => {
+Map<String, Object?> _moi(String role, {bool deuxFacteurs = false, bool configure = true, String? telephone = '+237690000001'}) => {
       'id': 'u-1',
       'nom': 'Boris Chef',
       'telephone': telephone,
@@ -26,6 +26,7 @@ Map<String, Object?> _moi(String role, {bool deuxFacteurs = false, String? telep
       'role': role,
       'actif': true,
       'deuxFacteursActif': deuxFacteurs,
+      'deuxFacteursConfigure': deuxFacteurs && configure,
     };
 
 /// Serveur scripté : mémorise les appels d'écriture (méthode, chemin, corps).
@@ -41,7 +42,7 @@ class _Serveur {
     ecritures.add((o.method, o.path, o.data is String ? jsonDecode(o.data as String) : o.data));
     final forcee = echecs['${o.method} ${o.path}'];
     if (forcee != null) return forcee;
-    if (o.path.endsWith('/demander')) return (status: 202, corps: null);
+    if (o.path.endsWith('/demarrer')) return (status: 200, corps: {'secret': 'ABCDEFGHIJKLMNOPABCDEFGHIJKLMNOP', 'uri': 'otpauth://totp/x'});
     if (o.path == '/api/v1/auth/mot-de-passe') return (status: 204, corps: null);
     if (o.path.endsWith('/activer')) return (status: 200, corps: {...utilisateur, 'deuxFacteursActif': true});
     if (o.path.endsWith('/desactiver')) return (status: 200, corps: {...utilisateur, 'deuxFacteursActif': false});
@@ -162,15 +163,16 @@ void main() {
     });
   });
 
-  group('double authentification', () {
-    testWidgets('active en deux étapes : mot de passe puis code SMS', (tester) async {
+  group('double authentification (application)', () {
+    testWidgets('configure en deux étapes : mot de passe, puis clé et premier code', (tester) async {
       final serveur = await ouvrir(tester, _moi('GESTIONNAIRE'));
       expect(find.text('Désactivée'), findsOneWidget);
-      await appuyer(tester, 'deux-activer');
+      await appuyer(tester, 'deux-configurer');
       await taper(tester, 'deux-mdp', 'Motdepasse123');
       await appuyer(tester, 'deux-valider-mdp');
-      expect(serveur.ecritures.single.$2, '/api/v1/auth/moi/double-authentification/demander');
-      expect(find.byKey(const Key('deux-code-envoye')), findsOneWidget);
+      expect(serveur.ecritures.single.$2, '/api/v1/auth/moi/double-authentification/demarrer');
+      expect(serveur.ecritures.single.$3, {'motDePasse': 'Motdepasse123'});
+      expect(find.byKey(const Key('cle-application')), findsOneWidget);
 
       expect(tester.widget<FilledButton>(find.byKey(const Key('deux-confirmer'))).onPressed, isNull); // code incomplet
       await taper(tester, 'deux-code', '123456');
@@ -180,9 +182,9 @@ void main() {
       expect(serveur.ecritures.last.$3, {'code': '123456'});
     });
 
-    testWidgets('un code refusé reste à l\'étape du code', (tester) async {
+    testWidgets("un code refusé reste à l'étape du code", (tester) async {
       await ouvrir(tester, _moi('GESTIONNAIRE'), echecs: {'POST /api/v1/auth/moi/double-authentification/activer': (status: 401, corps: {'code': 'OTP_INVALIDE'})});
-      await appuyer(tester, 'deux-activer');
+      await appuyer(tester, 'deux-configurer');
       await taper(tester, 'deux-mdp', 'Motdepasse123');
       await appuyer(tester, 'deux-valider-mdp');
       await taper(tester, 'deux-code', '000000');
@@ -192,27 +194,34 @@ void main() {
       expect(find.byKey(const Key('deux-confirmer')), findsOneWidget);
     });
 
-    testWidgets('désactive avec le mot de passe', (tester) async {
+    testWidgets("désactive avec le mot de passe ET le code de l'application", (tester) async {
       final serveur = await ouvrir(tester, _moi('ADMIN', deuxFacteurs: true));
       expect(find.text('Activée'), findsOneWidget);
       await appuyer(tester, 'deux-desactiver');
       await taper(tester, 'deux-mdp', 'Motdepasse123');
+      await taper(tester, 'deux-code-desactiver', '123456');
+      await tester.pump();
       await appuyer(tester, 'deux-valider-mdp');
       expect(serveur.ecritures.single.$2, '/api/v1/auth/moi/double-authentification/desactiver');
-      expect(serveur.ecritures.single.$3, {'motDePasse': 'Motdepasse123'});
+      expect(serveur.ecritures.single.$3, {'motDePasse': 'Motdepasse123', 'code': '123456'});
     });
 
     testWidgets('un employé restreint ne peut pas la désactiver', (tester) async {
       await ouvrir(tester, _moi('ENCAISSEUR', deuxFacteurs: true));
       expect(find.byKey(const Key('deux-obligatoire')), findsOneWidget);
       expect(find.byKey(const Key('deux-desactiver')), findsNothing);
-      expect(find.byKey(const Key('deux-activer')), findsNothing);
+      expect(find.byKey(const Key('deux-configurer')), findsNothing);
     });
 
-    testWidgets("demande d'abord un téléphone quand il manque", (tester) async {
+    testWidgets('propose de configurer maintenant quand elle est exigée sans application', (tester) async {
+      await ouvrir(tester, _moi('COMPTABLE', deuxFacteurs: true, configure: false));
+      expect(find.text('À configurer'), findsOneWidget);
+      expect(find.text('Configurer maintenant'), findsOneWidget);
+    });
+
+    testWidgets('sans téléphone, la configuration reste possible (plus de SMS)', (tester) async {
       await ouvrir(tester, _moi('GESTIONNAIRE', telephone: null));
-      expect(find.byKey(const Key('deux-sans-telephone')), findsOneWidget);
-      expect(find.byKey(const Key('deux-activer')), findsNothing);
+      expect(find.byKey(const Key('deux-configurer')), findsOneWidget);
     });
   });
 }

@@ -50,8 +50,11 @@ class UtilisateurController {
 
     private final UtilisateurService service;
     private final com.immogest.app.securite.AffectationService affectations;
+    private final com.immogest.app.securite.DeuxFacteursService deuxFacteurs;
 
-    UtilisateurController(UtilisateurService service, com.immogest.app.securite.AffectationService affectations) {
+    UtilisateurController(UtilisateurService service, com.immogest.app.securite.AffectationService affectations,
+            com.immogest.app.securite.DeuxFacteursService deuxFacteurs) {
+        this.deuxFacteurs = deuxFacteurs;
         this.service = service;
         this.affectations = affectations;
     }
@@ -117,5 +120,16 @@ class UtilisateurController {
     @io.swagger.v3.oas.annotations.Operation(operationId = "definirAffectations")
     AffectationsReponse definirAffectations(@PathVariable UUID id, @Valid @RequestBody AffectationsRequete r) {
         return new AffectationsReponse(affectations.definir(id, r.immeubleIds()));
+    }
+
+    /**
+     * Téléphone perdu : retire l'application d'authentification du compte et ferme ses sessions. À sa prochaine connexion, l'utilisateur en
+     * configure une nouvelle si la double authentification est exigée pour lui.
+     */
+    @PostMapping("/{id}/reinitialiser-deux-facteurs")
+    @io.swagger.v3.oas.annotations.Operation(operationId = "reinitialiserDeuxFacteurs")
+    ResponseEntity<Void> reinitialiserDeuxFacteurs(@PathVariable UUID id) {
+        deuxFacteurs.reinitialiser(id);
+        return ResponseEntity.noContent().build();
     }
 }

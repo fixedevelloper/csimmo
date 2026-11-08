@@ -89,7 +89,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deuxFacteursInfo =>
-      'Un code à 6 chiffres vous a été envoyé par SMS.';
+      'Saisissez le code à 6 chiffres affiché par votre application d\'authentification.';
 
   @override
   String get codeEnvoye =>
@@ -665,19 +665,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deuxAideActive =>
-      'Un code reçu par SMS est demandé à chaque connexion.';
+      'Le code de votre application d\'authentification est demandé à chaque connexion.';
 
   @override
   String get deuxAideInactive =>
-      'Ajoute une étape de sécurité : un code reçu par SMS est demandé après votre mot de passe.';
+      'Après votre mot de passe, vous saisissez le code affiché par une application d\'authentification. Aucun SMS.';
 
   @override
   String get deuxObligatoire =>
       'Obligatoire pour votre rôle : elle ne peut pas être désactivée.';
-
-  @override
-  String get deuxSansTelephone =>
-      'Ajoutez un numéro de téléphone ci-dessus pour pouvoir l\'activer.';
 
   @override
   String get deuxActiver => 'Activer';
@@ -686,18 +682,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deuxDesactiver => 'Désactiver';
 
   @override
-  String get deuxEnvoyerCode => 'Envoyer le code';
-
-  @override
-  String deuxCodeEnvoye(String telephone) {
-    return 'Un code à 6 chiffres a été envoyé par SMS au $telephone.';
-  }
-
-  @override
   String get deuxCode => 'Code reçu par SMS';
-
-  @override
-  String get deuxConfirmer => 'Confirmer l\'activation';
 
   @override
   String get deuxActivee => 'Double authentification activée.';
@@ -720,10 +705,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'La double authentification est déjà activée.';
 
   @override
-  String get errTelephoneRequisCode =>
-      'Ajoutez d\'abord un numéro de téléphone à votre profil.';
-
-  @override
   String get errContactDejaUtilise =>
       'Ce téléphone ou cet e-mail est déjà utilisé.';
 
@@ -731,10 +712,55 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errTelephoneInvalide => 'Numéro de téléphone invalide.';
 
   @override
-  String get errTelephoneRequis2fa =>
-      'Un numéro de téléphone est requis tant que la double authentification est activée.';
-
-  @override
   String get errTropDeRequetes =>
       'Trop de tentatives : réessayez dans un instant.';
+
+  @override
+  String get codeApplicationLabel => 'Code de l\'application';
+
+  @override
+  String get enrolementTitre =>
+      'Configurez votre application d\'authentification';
+
+  @override
+  String get enrolementEtapes =>
+      '1. Installez une application d\'authentification (Google Authenticator, Microsoft Authenticator, Authy…).\n2. Ajoutez un compte et saisissez la clé ci-dessous (type de clé : basé sur l\'heure).\n3. Saisissez ensuite le code à 6 chiffres qu\'elle affiche.';
+
+  @override
+  String get enrolementCle => 'Clé à saisir dans l\'application';
+
+  @override
+  String get enrolementCopier => 'Copier la clé';
+
+  @override
+  String get enrolementCopiee => 'Clé copiée';
+
+  @override
+  String get enrolementConfirmer => 'Confirmer et se connecter';
+
+  @override
+  String get errDefiExpire =>
+      'Votre connexion a expiré : saisissez de nouveau votre mot de passe.';
+
+  @override
+  String get deuxAConfigurer => 'À configurer';
+
+  @override
+  String get deuxAideAConfigurer =>
+      'Elle est exigée pour votre compte mais votre application n\'est pas encore configurée : vous la configurerez à votre prochaine connexion, ou maintenant.';
+
+  @override
+  String get deuxConfigurer => 'Configurer';
+
+  @override
+  String get deuxConfigurerMaintenant => 'Configurer maintenant';
+
+  @override
+  String get deuxContinuer => 'Continuer';
+
+  @override
+  String get deuxConfirmerActivation => 'Confirmer et activer';
+
+  @override
+  String get deuxCodeApplication => 'Code de l\'application';
 }

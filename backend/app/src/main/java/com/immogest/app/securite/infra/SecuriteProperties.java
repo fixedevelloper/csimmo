@@ -14,11 +14,14 @@ public record SecuriteProperties(
         int echecsMax,
         int verrouillageMinutes,
         int limiteAuthParMinute,
-        int limiteRefreshParMinute) {
+        int limiteRefreshParMinute,
+        /** Nom affiché dans l'application d'authentification (Google Authenticator…). */
+        String totpEmetteur) {
 
     /** Valeurs par défaut des limites de débit (par adresse IP) si elles ne sont pas configurées. */
     public SecuriteProperties {
         limiteAuthParMinute = limiteAuthParMinute <= 0 ? 20 : limiteAuthParMinute;
         limiteRefreshParMinute = limiteRefreshParMinute <= 0 ? 60 : limiteRefreshParMinute;
+        totpEmetteur = totpEmetteur == null || totpEmetteur.isBlank() ? "ImmoGest" : totpEmetteur;
     }
 }

@@ -141,13 +141,13 @@ void main() {
     expect(find.text('Espace prestataire'), findsOneWidget);
   });
 
-  testWidgets('double authentification : mot de passe puis code SMS', (tester) async {
+  testWidgets('double authentification : mot de passe puis code de l\'application', (tester) async {
     await lancer(tester);
     await configurerServeur(tester);
     await seConnecter(tester, 'admin@immo.local', 'Secret123');
 
     await attendre(tester, find.byKey(const Key('champ-code')));
-    expect(find.text('Un code à 6 chiffres vous a été envoyé par SMS.'), findsOneWidget);
+    expect(find.text('Saisissez le code à 6 chiffres affiché par votre application d\'authentification.'), findsOneWidget);
     expect(await TokenStore(store).read(), isNull, reason: 'pas de session avant le second facteur');
 
     await tester.enterText(find.byKey(const Key('champ-code')), '000000');

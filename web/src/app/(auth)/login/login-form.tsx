@@ -16,6 +16,7 @@ import {
   Shield,
 } from "lucide-react";
 
+import { ConfigurationApplication } from "@/components/auth/configuration-application";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,10 +39,13 @@ function destinationSure(next: string | null): string {
     : "/tableau-de-bord";
 }
 
+/** Réponse d'une étape de connexion : session ouverte, ou second facteur / application à configurer (avec le défi à renvoyer). */
+type ReponseEtape = { deuxFacteursRequis?: boolean; enrolementRequis?: boolean; defi?: string; secret?: string; uri?: string };
+
 async function appeler(
   url: string,
   corps: unknown,
-): Promise<{ deuxFacteursRequis: boolean }> {
+): Promise<ReponseEtape> {
   let reponse: Response;
 
   try {
@@ -58,7 +62,7 @@ async function appeler(
 
   if (!reponse.ok) throw enApiError(donnees, reponse.status);
 
-  return donnees as { deuxFacteursRequis: boolean };
+  return donnees as ReponseEtape;
 }
 
 export function LoginForm() {
@@ -67,10 +71,12 @@ export function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [etape, setEtape] = useState<"identifiants" | "otp">(
+  const [etape, setEtape] = useState<"identifiants" | "code" | "enrolement">(
     "identifiants",
   );
   const [erreur, setErreur] = useState<string | null>(null);
+  const [defi, setDefi] = useState("");
+  const [enrolement, setEnrolement] = useState<{ secret: string; uri: string } | null>(null);
 
   const schemaIdentifiants = useMemo(
     () =>
@@ -125,8 +131,15 @@ export function LoginForm() {
     try {
       const reponse = await appeler("/api/auth/login", valeurs);
 
-      if (reponse.deuxFacteursRequis) {
-        setEtape("otp");
+      if (reponse.deuxFacteursRequis && reponse.defi) {
+        setDefi(reponse.defi);
+        setEtape("code");
+      } else if (reponse.enrolementRequis && reponse.defi) {
+        // première connexion d'un compte qui doit avoir une application d'authentification : on la configure avant d'ouvrir la session
+        const e = await appeler("/api/auth/enrolement", { defi: reponse.defi });
+        setDefi(reponse.defi);
+        setEnrolement({ secret: e.secret ?? "", uri: e.uri ?? "" });
+        setEtape("enrolement");
       } else {
         termine();
       }
@@ -135,14 +148,14 @@ export function LoginForm() {
     }
   }
 
-  async function soumettreOtp(
+  async function soumettreCode(
     valeurs: z.infer<typeof schemaOtp>,
   ) {
     setErreur(null);
 
     try {
-      await appeler("/api/auth/otp", {
-        identifiant: formIdentifiants.getValues("identifiant"),
+      await appeler(etape === "enrolement" ? "/api/auth/enrolement/confirmer" : "/api/auth/deux-facteurs", {
+        defi,
         code: valeurs.code,
       });
 
@@ -168,7 +181,7 @@ export function LoginForm() {
           {/* Logo */}
           <div className="flex items-center justify-between">
             <div className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-              {etape === "otp" ? (
+              {etape !== "identifiants" ? (
                 <Fingerprint className="size-7" />
               ) : (
                 <ShieldCheck className="size-7" />
@@ -187,17 +200,17 @@ export function LoginForm() {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               <Sparkles className="size-3.5" />
-              {etape === "otp" ? "Double authentification" : "Espace sécurisé"}
+              {etape !== "identifiants" ? "Double authentification" : "Espace sécurisé"}
             </div>
 
             <CardTitle className="text-3xl font-bold tracking-tight">
-              {etape === "otp"
+              {etape !== "identifiants"
                 ? t("codeOtp")
                 : t("titre")}
             </CardTitle>
 
             <CardDescription className="text-sm leading-relaxed">
-              {etape === "otp"
+              {etape !== "identifiants"
                 ? t("deuxFacteursInfo")
                 : "Connectez-vous à votre espace personnel pour accéder à votre tableau de bord."}
             </CardDescription>
@@ -271,7 +284,7 @@ export function LoginForm() {
             </form>
           ) : (
             <form
-              onSubmit={formOtp.handleSubmit(soumettreOtp)}
+              onSubmit={formOtp.handleSubmit(soumettreCode)}
               noValidate
               className="space-y-5"
             >
@@ -283,14 +296,16 @@ export function LoginForm() {
 
                   <div className="space-y-1">
                     <p className="text-sm font-semibold">
-                      Vérification de sécurité
+                      {etape === "enrolement" ? t("enrolementTitre") : t("codeApplicationTitre")}
                     </p>
                     <p className="text-xs leading-relaxed text-muted-foreground">
-                      Saisissez le code à 6 chiffres pour confirmer votre identité.
+                      {etape === "enrolement" ? t("enrolementAide") : t("codeApplicationAide")}
                     </p>
                   </div>
                 </div>
               </div>
+
+              {etape === "enrolement" && enrolement ? <ConfigurationApplication secret={enrolement.secret} uri={enrolement.uri} /> : null}
 
               <TextField
                 control={formOtp.control}
@@ -317,7 +332,9 @@ export function LoginForm() {
               >
                 {formOtp.formState.isSubmitting
                   ? t("verificationEnCours")
-                  : t("verifier")}
+                  : etape === "enrolement"
+                    ? t("enrolementConfirmer")
+                    : t("verifier")}
 
                 <ArrowRight className="ml-2 size-4" />
               </Button>
@@ -329,6 +346,8 @@ export function LoginForm() {
                 onClick={() => {
                   setErreur(null);
                   formOtp.reset();
+                  setDefi("");
+                  setEnrolement(null);
                   setEtape("identifiants");
                 }}
               >

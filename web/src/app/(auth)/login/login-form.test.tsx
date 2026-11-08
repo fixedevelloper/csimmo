@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderIntl } from "@/test/render";
 
+vi.mock("qrcode", () => ({ default: { toDataURL: () => Promise.resolve("data:image/png;base64,iVBORw0KGgo=") } }));
+
 const replace = vi.fn();
 const refresh = vi.fn();
 let parametres = new URLSearchParams();
@@ -80,31 +82,74 @@ describe("LoginForm", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("Impossible de joindre le serveur");
   });
 
-  it("enchaîne sur le code SMS quand la double authentification est requise", async () => {
+  it("enchaîne sur le code de l'application quand la double authentification est requise", async () => {
     fetchMock
-      .mockReturnValueOnce(reponse(200, { deuxFacteursRequis: true }))
+      .mockReturnValueOnce(reponse(200, { deuxFacteursRequis: true, defi: "defi-1" }))
       .mockReturnValueOnce(reponse(200, { role: "GESTIONNAIRE", deuxFacteursRequis: false }));
     renderIntl(<LoginForm />);
     await saisir("+237600000001");
 
-    await userEvent.type(await screen.findByLabelText("Code reçu par SMS"), "123456");
+    await userEvent.type(await screen.findByLabelText("Code de l'application"), "123456");
     await userEvent.click(screen.getByRole("button", { name: "Vérifier" }));
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith("/tableau-de-bord"));
-    expect(fetchMock.mock.calls[1][0]).toBe("/api/auth/otp");
-    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ identifiant: "+237600000001", code: "123456" });
+    expect(fetchMock.mock.calls[1][0]).toBe("/api/auth/deux-facteurs");
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ defi: "defi-1", code: "123456" });
   });
 
-  it("refuse un code SMS qui n'a pas 6 chiffres", async () => {
-    fetchMock.mockReturnValueOnce(reponse(200, { deuxFacteursRequis: true }));
+  it("refuse un code qui n'a pas 6 chiffres", async () => {
+    fetchMock.mockReturnValueOnce(reponse(200, { deuxFacteursRequis: true, defi: "defi-1" }));
     renderIntl(<LoginForm />);
     await saisir();
 
-    await userEvent.type(await screen.findByLabelText("Code reçu par SMS"), "12ab");
+    await userEvent.type(await screen.findByLabelText("Code de l'application"), "12ab");
     await userEvent.click(screen.getByRole("button", { name: "Vérifier" }));
 
     expect(await screen.findByText("Le code comporte 6 chiffres")).toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("affiche le code refusé et reste à l'étape du code", async () => {
+    fetchMock
+      .mockReturnValueOnce(reponse(200, { deuxFacteursRequis: true, defi: "defi-1" }))
+      .mockReturnValueOnce(reponse(401, { code: "OTP_INVALIDE" }));
+    renderIntl(<LoginForm />);
+    await saisir();
+    await userEvent.type(await screen.findByLabelText("Code de l'application"), "000000");
+    await userEvent.click(screen.getByRole("button", { name: "Vérifier" }));
+
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(replace).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Code de l'application")).toBeInTheDocument();
+  });
+
+  it("configure l'application à la première connexion (QR, clé) puis ouvre la session", async () => {
+    fetchMock
+      .mockReturnValueOnce(reponse(200, { enrolementRequis: true, defi: "defi-2" }))
+      .mockReturnValueOnce(reponse(200, { secret: "ABCDEFGHIJKLMNOPABCDEFGHIJKLMNOP", uri: "otpauth://totp/ImmoGest:a?secret=ABCDEFGHIJKLMNOPABCDEFGHIJKLMNOP" }))
+      .mockReturnValueOnce(reponse(200, { role: "ENCAISSEUR", deuxFacteursRequis: false }));
+    renderIntl(<LoginForm />);
+    await saisir("+237600000002");
+
+    expect(await screen.findByText("Configurez votre application d'authentification")).toBeInTheDocument();
+    expect(fetchMock.mock.calls[1][0]).toBe("/api/auth/enrolement");
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ defi: "defi-2" });
+    expect(screen.getByTestId("cle-application")).toHaveTextContent("ABCD EFGH IJKL MNOP ABCD EFGH IJKL MNOP");
+    expect(await screen.findByAltText(/Code QR/)).toBeInTheDocument();
+
+    await userEvent.type(screen.getByLabelText("Code de l'application"), "654321");
+    await userEvent.click(screen.getByRole("button", { name: "Confirmer et se connecter" }));
+    await waitFor(() => expect(replace).toHaveBeenCalledWith("/tableau-de-bord"));
+    expect(fetchMock.mock.calls[2][0]).toBe("/api/auth/enrolement/confirmer");
+    expect(JSON.parse(fetchMock.mock.calls[2][1].body)).toEqual({ defi: "defi-2", code: "654321" });
+  });
+
+  it("ne garde aucun défi en revenant à l'écran du mot de passe", async () => {
+    fetchMock.mockReturnValueOnce(reponse(200, { deuxFacteursRequis: true, defi: "defi-1" }));
+    renderIntl(<LoginForm />);
+    await saisir();
+    await userEvent.click(await screen.findByRole("button", { name: "Retour" }));
+    expect(screen.getByLabelText("Téléphone ou e-mail")).toBeInTheDocument();
   });
 
   it("revient à la page demandée avant la connexion", async () => {

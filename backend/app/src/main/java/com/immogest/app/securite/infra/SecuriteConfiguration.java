@@ -73,7 +73,9 @@ class SecuriteConfiguration {
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.POST,
                                 "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout",
-                                "/api/v1/auth/otp/demander", "/api/v1/auth/otp/verifier").permitAll()
+                                "/api/v1/auth/otp/demander", "/api/v1/auth/otp/verifier",
+                                "/api/v1/auth/deux-facteurs/verifier", "/api/v1/auth/deux-facteurs/enrolement/demarrer",
+                                "/api/v1/auth/deux-facteurs/enrolement/confirmer").permitAll()
                         .requestMatchers("/api/v1/health", "/actuator/health", "/api/v1/webhooks/**").permitAll()
                         // Assistant de premier lancement (module licence) : public, une seule fois, 409 ensuite
                         .requestMatchers("/api/v1/installation").permitAll()

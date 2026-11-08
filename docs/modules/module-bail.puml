@@ -21,12 +21,12 @@ Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestAp
 Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Stockage, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Commun, "listens to", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Stockage, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Commun, "uses", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

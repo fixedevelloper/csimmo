@@ -308,6 +308,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/utilisateurs/{id}/reinitialiser-deux-facteurs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["reinitialiserDeuxFacteurs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/utilisateurs/{id}/mot-de-passe": {
         parameters: {
             query?: never;
@@ -1092,7 +1108,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/moi/double-authentification/demander": {
+    "/api/v1/auth/moi/double-authentification/demarrer": {
         parameters: {
             query?: never;
             header?: never;
@@ -1101,7 +1117,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["demanderDeuxFacteurs"];
+        post: operations["demarrerDeuxFacteurs"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1150,6 +1166,54 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/deux-facteurs/verifier": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["verifierDeuxFacteurs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/deux-facteurs/enrolement/demarrer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["demarrerEnrolementDeuxFacteurs"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/deux-facteurs/enrolement/confirmer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["confirmerEnrolementDeuxFacteurs"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1691,6 +1755,7 @@ export interface components {
             role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE";
             actif?: boolean;
             deuxFacteursActif?: boolean;
+            deuxFacteursConfigure?: boolean;
             verrouille?: boolean;
         };
         AffectationsRequete: {
@@ -2538,6 +2603,8 @@ export interface components {
             /** @enum {string} */
             role?: "ADMIN" | "GESTIONNAIRE" | "PROPRIETAIRE_TIERS" | "LOCATAIRE" | "PRESTATAIRE" | "ENCAISSEUR" | "GESTIONNAIRE_BIENS" | "COMPTABLE";
             deuxFacteursRequis?: boolean;
+            enrolementRequis?: boolean;
+            defi?: string;
         };
         OtpVerification: {
             identifiant: string;
@@ -2550,8 +2617,16 @@ export interface components {
             ancienMotDePasse: string;
             nouveauMotDePasse: string;
         };
+        DesactivationRequete: {
+            motDePasse: string;
+            code?: string;
+        };
         MotDePasseRequete: {
             motDePasse: string;
+        };
+        DeuxFacteursEnrolement: {
+            secret?: string;
+            uri?: string;
         };
         CodeRequete: {
             code: string;
@@ -2559,6 +2634,13 @@ export interface components {
         ConnexionRequete: {
             identifiant: string;
             motDePasse: string;
+        };
+        DeuxFacteursVerification: {
+            defi: string;
+            code: string;
+        };
+        DeuxFacteursDefi: {
+            defi: string;
         };
         PageReponseUtilisateurDto: {
             content?: components["schemas"]["UtilisateurDto"][];
@@ -3983,6 +4065,26 @@ export interface operations {
                 content: {
                     "*/*": components["schemas"]["UtilisateurDto"];
                 };
+            };
+        };
+    };
+    reinitialiserDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -5757,7 +5859,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["MotDePasseRequete"];
+                "application/json": components["schemas"]["DesactivationRequete"];
             };
         };
         responses: {
@@ -5772,7 +5874,7 @@ export interface operations {
             };
         };
     };
-    demanderDeuxFacteurs: {
+    demarrerDeuxFacteurs: {
         parameters: {
             query?: never;
             header?: never;
@@ -5790,7 +5892,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "*/*": components["schemas"]["DeuxFacteursEnrolement"];
+                };
             };
         };
     };
@@ -5850,6 +5954,78 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ConnexionRequete"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ReponseConnexion"];
+                };
+            };
+        };
+    };
+    verifierDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeuxFacteursVerification"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ReponseConnexion"];
+                };
+            };
+        };
+    };
+    demarrerEnrolementDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeuxFacteursDefi"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeuxFacteursEnrolement"];
+                };
+            };
+        };
+    };
+    confirmerEnrolementDeuxFacteurs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeuxFacteursVerification"];
             };
         };
         responses: {

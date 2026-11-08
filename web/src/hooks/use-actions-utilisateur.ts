@@ -45,5 +45,12 @@ export function useActionsUtilisateur() {
   const deverrouiller = (u: Utilisateur) =>
     agir(async () => deballer(await api.POST("/api/v1/utilisateurs/{id}/deverrouiller", { params: { path: { id: u.id ?? "" } } })), t("deverrouille"));
 
-  return { basculerActif, deverrouiller };
+  /** Téléphone perdu : retire l'application d'authentification du compte et ferme ses sessions (ADMIN). */
+  const reinitialiserDeuxFacteurs = (u: Utilisateur) =>
+    agir(
+      async () => deballer(await api.POST("/api/v1/utilisateurs/{id}/reinitialiser-deux-facteurs", { params: { path: { id: u.id ?? "" } } })),
+      t("deuxFacteursReinitialises"),
+    );
+
+  return { basculerActif, deverrouiller, reinitialiserDeuxFacteurs };
 }

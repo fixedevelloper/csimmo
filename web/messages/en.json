@@ -48,10 +48,10 @@
     "motDePasse": "Password",
     "seConnecter": "Sign in",
     "connexionEnCours": "Signing in…",
-    "codeOtp": "Code received by SMS",
+    "codeOtp": "App code",
     "verifier": "Verify",
     "verificationEnCours": "Verifying…",
-    "deuxFacteursInfo": "A 6-digit code has been sent to you by SMS.",
+    "deuxFacteursInfo": "Open your authenticator app to get the code.",
     "retour": "Back",
     "deconnexion": "Sign out",
     "sessionExpiree": "Your session has expired. Please sign in again.",
@@ -61,7 +61,12 @@
     "motDePasseRequis": "Password is required",
     "codeInvalide": "The code has 6 digits",
     "connecteEn": "Signed in as {nom}",
-    "installationTerminee": "Installation complete. Sign in with the administrator account you just created."
+    "installationTerminee": "Installation complete. Sign in with the administrator account you just created.",
+    "codeApplicationTitre": "Two-step verification",
+    "codeApplicationAide": "Enter the 6-digit code shown by your authenticator app.",
+    "enrolementTitre": "Set up your authenticator app",
+    "enrolementAide": "Two-factor authentication is required for your account. Add it to an app, then enter the first code.",
+    "enrolementConfirmer": "Confirm and sign in"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -323,7 +328,9 @@
     "DEMANDE_INTROUVABLE": "Request not found.",
     "DEMANDE_MOTIF_REQUIS": "The reason for refusal is required.",
     "ANONYMISATION_IMPOSSIBLE": "Anonymisation is impossible while a lease is running, arrears remain or buildings are attached.",
-    "TROP_DE_REQUETES": "Too many requests: try again in a moment."
+    "TROP_DE_REQUETES": "Too many requests: try again in a moment.",
+    "DEFI_DEUX_FACTEURS_INVALIDE": "Your sign-in has expired: enter your password again.",
+    "DEUX_FACTEURS_NON_CONFIGURES": "Two-factor authentication is not set up on this account."
   },
   "installation": {
     "titre": "CSImmo setup",
@@ -427,6 +434,7 @@
     "reinitialiserPour": "New password for {nom}",
     "reinitialise": "Password reset.",
     "deverrouiller": "Unlock",
+    "deuxFacteursReinitialises": "Two-factor authentication reset.",
     "deverrouille": "Account unlocked.",
     "desactiver": "Disable",
     "activer": "Enable",
@@ -479,26 +487,32 @@
       "titre": "Two-factor authentication",
       "active": "On",
       "inactive": "Off",
-      "aideActive": "A code received by SMS is requested at each sign-in.",
-      "aideInactive": "Adds a security step: a code received by SMS is requested after your password.",
+      "aConfigurer": "To set up",
+      "aideActive": "The code from your authenticator app (Google Authenticator, Microsoft Authenticator, Authy…) is requested at each sign-in.",
+      "aideInactive": "Adds a security step: after your password, you enter the code shown by an authenticator app on your phone. No SMS.",
+      "aideAConfigurer": "It is required for your account but your app is not set up yet: you will set it up at your next sign-in, or now.",
       "obligatoire": "Mandatory for your role: it cannot be turned off.",
-      "sansTelephone": "Add a phone number above to be able to turn it on.",
-      "activer": "Turn on",
-      "envoyerCode": "Send the code",
-      "codeEnvoye": "A 6-digit code was sent by SMS to {telephone}.",
-      "code": "Code received by SMS",
-      "confirmer": "Confirm activation",
+      "configurer": "Set up",
+      "configurerMaintenant": "Set up now",
+      "continuer": "Continue",
       "activee": "Two-factor authentication turned on.",
       "desactiver": "Turn off",
       "desactivee": "Two-factor authentication turned off.",
       "confirmerMotDePasse": "Current password",
+      "codeApplication": "App code",
+      "confirmerActivation": "Confirm and turn on",
       "annuler": "Cancel",
-      "nonConcerne": "Two-factor authentication is only offered to employee accounts.",
-      "erreurs": {
-        "motDePasse": "Enter your password.",
-        "code": "The code has 6 digits."
-      }
+      "nonConcerne": "Two-factor authentication is only offered to employee accounts."
     }
+  },
+  "configurationApplication": {
+    "etape1": "Install an authenticator app on your phone (Google Authenticator, Microsoft Authenticator, Authy, FreeOTP…).",
+    "etape2": "Scan the QR code with the app, or enter the key below.",
+    "etape3": "Then enter the 6-digit code it shows.",
+    "qrAlt": "QR code to scan with the authenticator app",
+    "cleManuelle": "No camera? Enter this key in the app (key type: time-based).",
+    "copier": "Copy the key",
+    "copiee": "Copied"
   },
   "equipe": {
     "titre": "Team",
@@ -519,7 +533,12 @@
       "COMPTABLE": "Reads the payments, expenses and payouts of the buildings assigned to them and validates payouts. They do not collect rent nor compute or pay payouts.",
       "GESTIONNAIRE": "Access to the whole portfolio and all management, like you (except sensitive settings reserved to the administrator)."
     },
-    "doubleAuth": "Two-factor authentication is on: the employee gets an SMS code at each sign-in.",
+    "doubleAuth": "Two-factor authentication is required: at first sign-in, the employee will set up an authenticator app (Google Authenticator, Microsoft Authenticator, Authy…). No SMS.",
+    "deuxFacteursAConfigurer": "2FA to set up",
+    "reinitialiserDeuxFacteurs": "Reset 2FA",
+    "reinitialiserPour": "Reset two-factor authentication for {nom}",
+    "reinitialiserAide": "Use this if the employee lost or changed their phone: their app is removed and their sessions are closed. At their next sign-in, they will set up a new one.",
+    "reinitialiserConfirmer": "Reset",
     "immeubles": "Buildings",
     "immeublesAffectes": "Assigned buildings",
     "immeublesAide": "The cashier only sees these buildings. With none ticked, they see nothing.",

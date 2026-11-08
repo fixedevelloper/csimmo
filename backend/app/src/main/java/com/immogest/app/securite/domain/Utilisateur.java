@@ -42,6 +42,14 @@ public class Utilisateur extends BaseEntity {
     @Column(name = "derniere_connexion")
     private OffsetDateTime derniereConnexion;
 
+    /** Secret TOTP chiffré (jamais en clair, jamais renvoyé) ; vide tant que l'application d'authentification n'est pas configurée. */
+    @Column(name = "totp_secret_chiffre")
+    private String totpSecretChiffre;
+
+    /** Dernier pas de 30 s accepté : un code ne sert qu'une fois. */
+    @Column(name = "totp_dernier_pas", nullable = false)
+    private long totpDernierPas;
+
     protected Utilisateur() {
     }
 
@@ -89,6 +97,35 @@ public class Utilisateur extends BaseEntity {
         this.role = role;
         this.actif = actif;
         this.deuxFacteursActif = deuxFacteursActif;
+    }
+
+    public boolean aUneApplicationDAuthentification() {
+        return totpSecretChiffre != null;
+    }
+
+    public String getTotpSecretChiffre() {
+        return totpSecretChiffre;
+    }
+
+    public long getTotpDernierPas() {
+        return totpDernierPas;
+    }
+
+    /** Enregistre le secret confirmé et active la double authentification. */
+    public void configurerApplication(String secretChiffre, long pasConfirme) {
+        this.totpSecretChiffre = secretChiffre;
+        this.totpDernierPas = pasConfirme;
+        this.deuxFacteursActif = true;
+    }
+
+    public void memoriserPasTotp(long pas) {
+        this.totpDernierPas = pas;
+    }
+
+    /** Retire l'application (perte du téléphone, désactivation) ; l'indicateur {@code deuxFacteursActif} est réglé à part. */
+    public void retirerApplication() {
+        this.totpSecretChiffre = null;
+        this.totpDernierPas = 0;
     }
 
     public void definirDeuxFacteurs(boolean actif) {

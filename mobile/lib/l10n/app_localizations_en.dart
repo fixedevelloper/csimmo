@@ -88,7 +88,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verifier => 'Verify';
 
   @override
-  String get deuxFacteursInfo => 'A 6-digit code has been sent to you by SMS.';
+  String get deuxFacteursInfo =>
+      'Enter the 6-digit code shown by your authenticator app.';
 
   @override
   String get codeEnvoye =>
@@ -660,19 +661,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deuxAideActive =>
-      'A code received by SMS is requested at each sign-in.';
+      'The code from your authenticator app is requested at each sign-in.';
 
   @override
   String get deuxAideInactive =>
-      'Adds a security step: a code received by SMS is requested after your password.';
+      'After your password, you enter the code shown by an authenticator app. No SMS.';
 
   @override
   String get deuxObligatoire =>
       'Mandatory for your role: it cannot be turned off.';
-
-  @override
-  String get deuxSansTelephone =>
-      'Add a phone number above to be able to turn it on.';
 
   @override
   String get deuxActiver => 'Turn on';
@@ -681,18 +678,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deuxDesactiver => 'Turn off';
 
   @override
-  String get deuxEnvoyerCode => 'Send the code';
-
-  @override
-  String deuxCodeEnvoye(String telephone) {
-    return 'A 6-digit code was sent by SMS to $telephone.';
-  }
-
-  @override
   String get deuxCode => 'Code received by SMS';
-
-  @override
-  String get deuxConfirmer => 'Confirm activation';
 
   @override
   String get deuxActivee => 'Two-factor authentication turned on.';
@@ -715,10 +701,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Two-factor authentication is already on.';
 
   @override
-  String get errTelephoneRequisCode =>
-      'Add a phone number to your profile first.';
-
-  @override
   String get errContactDejaUtilise =>
       'This phone number or email is already in use.';
 
@@ -726,9 +708,53 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errTelephoneInvalide => 'Invalid phone number.';
 
   @override
-  String get errTelephoneRequis2fa =>
-      'A phone number is required while two-factor authentication is on.';
+  String get errTropDeRequetes => 'Too many attempts: try again in a moment.';
 
   @override
-  String get errTropDeRequetes => 'Too many attempts: try again in a moment.';
+  String get codeApplicationLabel => 'App code';
+
+  @override
+  String get enrolementTitre => 'Set up your authenticator app';
+
+  @override
+  String get enrolementEtapes =>
+      '1. Install an authenticator app (Google Authenticator, Microsoft Authenticator, Authy…).\n2. Add an account and enter the key below (key type: time-based).\n3. Then enter the 6-digit code it shows.';
+
+  @override
+  String get enrolementCle => 'Key to enter in the app';
+
+  @override
+  String get enrolementCopier => 'Copy the key';
+
+  @override
+  String get enrolementCopiee => 'Key copied';
+
+  @override
+  String get enrolementConfirmer => 'Confirm and sign in';
+
+  @override
+  String get errDefiExpire =>
+      'Your sign-in has expired: enter your password again.';
+
+  @override
+  String get deuxAConfigurer => 'To set up';
+
+  @override
+  String get deuxAideAConfigurer =>
+      'It is required for your account but your app is not set up yet: you will set it up at your next sign-in, or now.';
+
+  @override
+  String get deuxConfigurer => 'Set up';
+
+  @override
+  String get deuxConfigurerMaintenant => 'Set up now';
+
+  @override
+  String get deuxContinuer => 'Continue';
+
+  @override
+  String get deuxConfirmerActivation => 'Confirm and turn on';
+
+  @override
+  String get deuxCodeApplication => 'App code';
 }

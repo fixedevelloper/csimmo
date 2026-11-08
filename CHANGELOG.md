@@ -4,6 +4,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+### Modifié
+- **Double authentification par application (TOTP : Google Authenticator, Microsoft Authenticator, Authy…) à la place du SMS**, sur le web et le mobile. Enrôlement forcé à la première connexion des employés restreints, activation/désactivation depuis le profil (mot de passe + code), réinitialisation par l'ADMIN depuis la page Équipe en cas de perte du téléphone. Le téléphone n'est plus exigé : téléphone ou e-mail suffit. La connexion par SMS des locataires et prestataires est inchangée. Voir `docs/adr/0010-double-authentification-totp.md`.
+
 ## [0.2.0] - 2026-11-08
 
 Équipe et périmètres d'accès (lot 12), jeu de données de démonstration, suites de l'audit de sécurité.

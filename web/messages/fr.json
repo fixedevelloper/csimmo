@@ -48,10 +48,10 @@
     "motDePasse": "Mot de passe",
     "seConnecter": "Se connecter",
     "connexionEnCours": "Connexion…",
-    "codeOtp": "Code reçu par SMS",
+    "codeOtp": "Code de l'application",
     "verifier": "Vérifier",
     "verificationEnCours": "Vérification…",
-    "deuxFacteursInfo": "Un code à 6 chiffres vous a été envoyé par SMS.",
+    "deuxFacteursInfo": "Ouvrez votre application d'authentification pour obtenir le code.",
     "retour": "Retour",
     "deconnexion": "Se déconnecter",
     "sessionExpiree": "Votre session a expiré. Reconnectez-vous.",
@@ -61,7 +61,12 @@
     "motDePasseRequis": "Le mot de passe est obligatoire",
     "codeInvalide": "Le code comporte 6 chiffres",
     "connecteEn": "Connecté en tant que {nom}",
-    "installationTerminee": "Installation terminée. Connectez-vous avec le compte administrateur que vous venez de créer."
+    "installationTerminee": "Installation terminée. Connectez-vous avec le compte administrateur que vous venez de créer.",
+    "codeApplicationTitre": "Vérification en deux étapes",
+    "codeApplicationAide": "Saisissez le code à 6 chiffres affiché par votre application d'authentification.",
+    "enrolementTitre": "Configurez votre application d'authentification",
+    "enrolementAide": "La double authentification est exigée pour votre compte. Enregistrez-le dans une application, puis saisissez le premier code.",
+    "enrolementConfirmer": "Confirmer et se connecter"
   },
   "roles": {
     "ADMIN": "Administrateur",
@@ -323,7 +328,9 @@
     "DEMANDE_INTROUVABLE": "Demande introuvable.",
     "DEMANDE_MOTIF_REQUIS": "Le motif du refus est obligatoire.",
     "ANONYMISATION_IMPOSSIBLE": "Anonymisation impossible tant qu'un bail est en cours, que des impayés subsistent ou que des biens sont rattachés.",
-    "TROP_DE_REQUETES": "Trop de requêtes : réessayez dans quelques instants."
+    "TROP_DE_REQUETES": "Trop de requêtes : réessayez dans quelques instants.",
+    "DEFI_DEUX_FACTEURS_INVALIDE": "Votre connexion a expiré : saisissez de nouveau votre mot de passe.",
+    "DEUX_FACTEURS_NON_CONFIGURES": "La double authentification n'est pas configurée sur ce compte."
   },
   "installation": {
     "titre": "Installation de CSImmo",
@@ -427,6 +434,7 @@
     "reinitialiserPour": "Nouveau mot de passe de {nom}",
     "reinitialise": "Mot de passe réinitialisé.",
     "deverrouiller": "Déverrouiller",
+    "deuxFacteursReinitialises": "Double authentification réinitialisée.",
     "deverrouille": "Compte déverrouillé.",
     "desactiver": "Désactiver",
     "activer": "Activer",
@@ -479,26 +487,32 @@
       "titre": "Double authentification",
       "active": "Activée",
       "inactive": "Désactivée",
-      "aideActive": "Un code reçu par SMS est demandé à chaque connexion.",
-      "aideInactive": "Ajoute une étape de sécurité : un code reçu par SMS est demandé après votre mot de passe.",
+      "aConfigurer": "À configurer",
+      "aideActive": "Le code de votre application d'authentification (Google Authenticator, Microsoft Authenticator, Authy…) est demandé à chaque connexion.",
+      "aideInactive": "Ajoute une étape de sécurité : après votre mot de passe, vous saisissez le code affiché par une application d'authentification sur votre téléphone. Aucun SMS.",
+      "aideAConfigurer": "Elle est exigée pour votre compte mais votre application n'est pas encore configurée : vous la configurerez à votre prochaine connexion, ou maintenant.",
       "obligatoire": "Obligatoire pour votre rôle : elle ne peut pas être désactivée.",
-      "sansTelephone": "Ajoutez un numéro de téléphone ci-dessus pour pouvoir l'activer.",
-      "activer": "Activer",
-      "envoyerCode": "Envoyer le code",
-      "codeEnvoye": "Un code à 6 chiffres a été envoyé par SMS au {telephone}.",
-      "code": "Code reçu par SMS",
-      "confirmer": "Confirmer l'activation",
+      "configurer": "Configurer",
+      "configurerMaintenant": "Configurer maintenant",
+      "continuer": "Continuer",
       "activee": "Double authentification activée.",
       "desactiver": "Désactiver",
       "desactivee": "Double authentification désactivée.",
       "confirmerMotDePasse": "Mot de passe actuel",
+      "codeApplication": "Code de l'application",
+      "confirmerActivation": "Confirmer et activer",
       "annuler": "Annuler",
-      "nonConcerne": "La double authentification n'est proposée qu'aux comptes d'employés.",
-      "erreurs": {
-        "motDePasse": "Saisissez votre mot de passe.",
-        "code": "Le code contient 6 chiffres."
-      }
+      "nonConcerne": "La double authentification n'est proposée qu'aux comptes d'employés."
     }
+  },
+  "configurationApplication": {
+    "etape1": "Installez une application d'authentification sur votre téléphone (Google Authenticator, Microsoft Authenticator, Authy, FreeOTP…).",
+    "etape2": "Scannez le code QR avec l'application, ou saisissez la clé ci-dessous.",
+    "etape3": "Saisissez ensuite le code à 6 chiffres qu'elle affiche.",
+    "qrAlt": "Code QR à scanner avec l'application d'authentification",
+    "cleManuelle": "Pas de caméra ? Saisissez cette clé dans l'application (type de clé : basé sur l'heure).",
+    "copier": "Copier la clé",
+    "copiee": "Copiée"
   },
   "equipe": {
     "titre": "Équipe",
@@ -519,7 +533,12 @@
       "COMPTABLE": "Lit les paiements, dépenses et reversements des immeubles qui lui sont affectés et valide les reversements. Il n'encaisse pas, ne calcule ni ne paie les reversements.",
       "GESTIONNAIRE": "Accès à tout le patrimoine et à toute la gestion, comme vous (hors paramètres sensibles réservés à l'administrateur)."
     },
-    "doubleAuth": "La double authentification est activée : l'employé reçoit un code par SMS à chaque connexion.",
+    "doubleAuth": "La double authentification est exigée : à sa première connexion, l'employé configurera une application d'authentification (Google Authenticator, Microsoft Authenticator, Authy…). Aucun SMS.",
+    "deuxFacteursAConfigurer": "2FA à configurer",
+    "reinitialiserDeuxFacteurs": "Réinitialiser la 2FA",
+    "reinitialiserPour": "Réinitialiser la double authentification de {nom}",
+    "reinitialiserAide": "À utiliser si l'employé a perdu ou changé son téléphone : son application est retirée et ses sessions sont fermées. À sa prochaine connexion, il en configurera une nouvelle.",
+    "reinitialiserConfirmer": "Réinitialiser",
     "immeubles": "Immeubles",
     "immeublesAffectes": "Immeubles affectés",
     "immeublesAide": "L'encaisseur ne voit que ces immeubles. Sans immeuble coché, il ne voit rien.",

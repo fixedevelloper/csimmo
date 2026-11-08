@@ -31,6 +31,10 @@ class ReponseConnexion {
      this.role,
 
      this.deuxFacteursRequis,
+
+     this.enrolementRequis,
+
+     this.defi,
   });
 
   @JsonKey(
@@ -105,6 +109,30 @@ class ReponseConnexion {
 
 
 
+  @JsonKey(
+    
+    name: r'enrolementRequis',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? enrolementRequis;
+
+
+
+  @JsonKey(
+    
+    name: r'defi',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? defi;
+
+
+
 
 
     @override
@@ -114,7 +142,9 @@ class ReponseConnexion {
       other.expiresIn == expiresIn &&
       other.tokenType == tokenType &&
       other.role == role &&
-      other.deuxFacteursRequis == deuxFacteursRequis;
+      other.deuxFacteursRequis == deuxFacteursRequis &&
+      other.enrolementRequis == enrolementRequis &&
+      other.defi == defi;
 
     @override
     int get hashCode =>
@@ -123,7 +153,9 @@ class ReponseConnexion {
         expiresIn.hashCode +
         tokenType.hashCode +
         role.hashCode +
-        deuxFacteursRequis.hashCode;
+        deuxFacteursRequis.hashCode +
+        enrolementRequis.hashCode +
+        defi.hashCode;
 
   factory ReponseConnexion.fromJson(Map<String, dynamic> json) => _$ReponseConnexionFromJson(json);
 

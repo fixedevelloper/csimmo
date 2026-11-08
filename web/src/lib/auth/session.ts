@@ -35,7 +35,7 @@ export function memeOrigine(requete: NextRequest): boolean {
 }
 
 /**
- * Transforme la réponse du backend à /auth/login ou /auth/otp/verifier :
+ * Transforme la réponse du backend à /auth/login, /auth/deux-facteurs/verifier ou /auth/deux-facteurs/enrolement/confirmer :
  * les jetons vont dans des cookies httpOnly et ne sont jamais renvoyés au navigateur.
  */
 export async function reponseDeConnexion(amont: Response): Promise<NextResponse> {
@@ -47,8 +47,12 @@ export async function reponseDeConnexion(amont: Response): Promise<NextResponse>
     });
   }
   const donnees = (await amont.json()) as ReponseConnexion;
+  // second facteur à fournir, ou application à configurer : pas de session, seulement le défi (inutilisable sans le code de l'application)
   if (donnees.deuxFacteursRequis) {
-    return NextResponse.json({ deuxFacteursRequis: true });
+    return NextResponse.json({ deuxFacteursRequis: true, defi: donnees.defi });
+  }
+  if (donnees.enrolementRequis) {
+    return NextResponse.json({ enrolementRequis: true, defi: donnees.defi });
   }
   const reponse = NextResponse.json({ role: donnees.role, deuxFacteursRequis: false });
   poserSession(reponse, donnees);

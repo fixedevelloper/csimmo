@@ -10,6 +10,7 @@ import { FormulaireEmploye } from "@/components/equipe/formulaire-employe";
 import { ErrorDisplay } from "@/components/error-display";
 import { StatutPastille } from "@/components/statut-pastille";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormulaireReinitialisation, Recapitulatif } from "@/components/utilisateurs/utilisateurs-liste";
 import { useActionsUtilisateur } from "@/hooks/use-actions-utilisateur";
 import { useAffectations, useEmployes } from "@/hooks/use-equipe";
@@ -31,7 +32,7 @@ function NombreImmeubles({ utilisateur }: { utilisateur: Utilisateur }) {
   );
 }
 
-type Panneau = { type: "creation" } | { type: "immeubles" | "motDePasse"; utilisateur: Utilisateur } | null;
+type Panneau = { type: "creation" } | { type: "immeubles" | "motDePasse" | "reinitialisation"; utilisateur: Utilisateur } | null;
 
 /** Page Équipe (ADMIN) : employés, immeubles affectés, mot de passe, activation. */
 export function EquipeListe() {
@@ -42,7 +43,7 @@ export function EquipeListe() {
   const [panneau, setPanneau] = useState<Panneau>(null);
   const [recap, setRecap] = useState<{ identifiant: string; motDePasse: string } | null>(null);
   const [avertissement, setAvertissement] = useState<string | null>(null);
-  const { basculerActif, deverrouiller } = useActionsUtilisateur();
+  const { basculerActif, deverrouiller, reinitialiserDeuxFacteurs } = useActionsUtilisateur();
 
   const colonnes: Colonne<Utilisateur>[] = [
     {
@@ -64,6 +65,7 @@ export function EquipeListe() {
         <div className="flex flex-wrap gap-1.5">
           <StatutPastille statut={u.actif ? "ACTIF" : "ANNULE"} libelle={u.actif ? tu("actif") : tu("inactif")} />
           {u.verrouille ? <StatutPastille statut="ECHEC" libelle={tu("verrouille")} /> : null}
+          {u.deuxFacteursActif && !u.deuxFacteursConfigure ? <StatutPastille statut="EN_ATTENTE" libelle={t("deuxFacteursAConfigurer")} /> : null}
         </div>
       ),
     },
@@ -81,6 +83,11 @@ export function EquipeListe() {
             {tu("reinitialiser")}
           </Button>
           {u.verrouille ? <Button type="button" size="sm" variant="outline" onClick={() => void deverrouiller(u)}>{tu("deverrouiller")}</Button> : null}
+          {u.deuxFacteursConfigure ? (
+            <Button type="button" size="sm" variant="outline" onClick={() => { setPanneau({ type: "reinitialisation", utilisateur: u }); setRecap(null); }}>
+              {t("reinitialiserDeuxFacteurs")}
+            </Button>
+          ) : null}
           <Button type="button" size="sm" variant="ghost" onClick={() => void basculerActif(u)}>
             {u.actif ? tu("desactiver") : tu("activer")}
           </Button>
@@ -101,6 +108,30 @@ export function EquipeListe() {
       {recap ? <Recapitulatif {...recap} onFermer={() => setRecap(null)} /> : null}
       {panneau?.type === "creation" ? (
         <FormulaireEmploye onAnnuler={() => setPanneau(null)} onCree={(identifiant, motDePasse, avert) => { setPanneau(null); setRecap({ identifiant, motDePasse }); setAvertissement(avert ?? null); }} />
+      ) : null}
+      {panneau?.type === "reinitialisation" ? (
+        <Card role="group" aria-label={t("reinitialiserDeuxFacteurs")}>
+          <CardHeader>
+            <CardTitle>{t("reinitialiserPour", { nom: panneau.utilisateur.nom ?? "" })}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex max-w-xl flex-col gap-3">
+            <p className="text-sm text-muted-foreground">{t("reinitialiserAide")}</p>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="accent"
+                onClick={() => {
+                  const u = panneau.utilisateur;
+                  setPanneau(null);
+                  void reinitialiserDeuxFacteurs(u);
+                }}
+              >
+                {t("reinitialiserConfirmer")}
+              </Button>
+              <Button type="button" variant="ghost" onClick={() => setPanneau(null)}>{t("annuler")}</Button>
+            </div>
+          </CardContent>
+        </Card>
       ) : null}
       {panneau?.type === "immeubles" ? <AffectationsEmploye utilisateur={panneau.utilisateur} onFini={() => setPanneau(null)} /> : null}
       {panneau?.type === "motDePasse" ? (

@@ -7,6 +7,7 @@
 
 * `c.i.a.s.AffectationService`
 * `c.i.a.s.AuthService`
+* `c.i.a.s.DeuxFacteursService`
 * `c.i.a.s.UtilisateurService`
 
 _Others_
@@ -15,6 +16,7 @@ _Others_
 * `c.i.a.s.OtpSender` (via `c.i.a.s.infra.OtpSenderIndisponible`)
 |Bean references
 |* `c.i.a.s.ActeurCourant` (in Commun)
+* `c.i.a.s.ChiffrementDonnees` (in Stockage)
 |Events listened to
 |* `c.i.a.s.PersonneAnonymisee` (async) 
 |===

@@ -17,15 +17,15 @@ Container_Boundary("ImmoGestApplication.ImmoGestApplication_boundary", "ImmoGest
   Component(ImmoGestApplication.ImmoGestApplication.Patrimoine, "Patrimoine", $techn="Module", $descr="", $tags="", $link="")
 }
 
+Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Patrimoine, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Démonstration, ImmoGestApplication.ImmoGestApplication.Patrimoine, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Démonstration, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Démonstration, ImmoGestApplication.ImmoGestApplication.Baux, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Démonstration, ImmoGestApplication.ImmoGestApplication.Finance, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Démonstration, ImmoGestApplication.ImmoGestApplication.Sécurité, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Patrimoine, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Baux, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
-Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Tiers, ImmoGestApplication.ImmoGestApplication.Sécurité, "uses", $techn="", $tags="", $link="")
+Rel(ImmoGestApplication.ImmoGestApplication.Patrimoine, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Patrimoine, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Baux, "uses", $techn="", $tags="", $link="")
 Rel(ImmoGestApplication.ImmoGestApplication.Finance, ImmoGestApplication.ImmoGestApplication.Tiers, "uses", $techn="", $tags="", $link="")

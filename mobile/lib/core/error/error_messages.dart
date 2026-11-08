@@ -41,11 +41,10 @@ String errorMessage(AppLocalizations l, Object erreur) {
       'MOT_DE_PASSE_ACTUEL_INCORRECT' => l.errMotDePasseActuel,
       'DEUX_FACTEURS_OBLIGATOIRE' => l.errDeuxFacteursObligatoire,
       'DEUX_FACTEURS_DEJA_ACTIFS' => l.errDeuxFacteursDejaActifs,
-      'OTP_TELEPHONE_REQUIS' => l.errTelephoneRequisCode,
+      'DEFI_DEUX_FACTEURS_INVALIDE' => l.errDefiExpire,
       'UTILISATEUR_CONTACT_REQUIS' => l.profilContactRequis,
       'UTILISATEUR_DEJA_EXISTANT' => l.errContactDejaUtilise,
       'UTILISATEUR_TELEPHONE_INVALIDE' => l.errTelephoneInvalide,
-      'UTILISATEUR_TELEPHONE_REQUIS_2FA' => l.errTelephoneRequis2fa,
       'TROP_DE_REQUETES' => l.errTropDeRequetes,
       _ => l.errInconnue,
     };

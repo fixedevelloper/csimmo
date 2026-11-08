@@ -86,10 +86,9 @@ class ProfilApiTest {
     }
 
     @Test
-    void ne_retire_pas_son_telephone_tant_que_la_double_authentification_est_active() throws Exception {
+    void peut_retirer_son_telephone_avec_la_double_authentification_car_le_code_vient_de_l_application() throws Exception {
         UtilisateurDto u = creer(Role.GESTIONNAIRE, telephoneUnique(), emailUnique(), true);
-        modifier(u, "Sans téléphone", "", u.email(), MOT_DE_PASSE).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("UTILISATEUR_TELEPHONE_REQUIS_2FA"));
+        modifier(u, "Sans téléphone", "", u.email(), MOT_DE_PASSE).andExpect(status().isOk()).andExpect(jsonPath("$.deuxFacteursActif").value(true));
     }
 
     @Test
@@ -101,82 +100,11 @@ class ProfilApiTest {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.role").value("LOCATAIRE")).andExpect(jsonPath("$.actif").value(true));
     }
 
-    // ------------------------------------------------------------------ double authentification
-
-    @Test
-    void active_la_double_authentification_avec_un_code_recu_par_sms() throws Exception {
-        UtilisateurDto u = creer(Role.GESTIONNAIRE, telephoneUnique(), null, false);
-        poster(u, "/api/v1/auth/moi/double-authentification/demander", json("motDePasse", "faux-faux-faux")).andExpect(status().isUnprocessableEntity());
-        assertThat(sms.pour(u.telephone())).isEmpty();
-
-        poster(u, "/api/v1/auth/moi/double-authentification/demander", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isAccepted());
-        String code = sms.dernierCode(u.telephone());
-        assertThat(code).matches("\\d{6}");
-
-        String faux = "%06d".formatted((Integer.parseInt(code) + 1) % 1_000_000);
-        poster(u, "/api/v1/auth/moi/double-authentification/activer", json("code", faux)).andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("OTP_INVALIDE"));
-        mvc.perform(get("/api/v1/auth/moi").with(moi(u))).andExpect(jsonPath("$.deuxFacteursActif").value(false));
-
-        poster(u, "/api/v1/auth/moi/double-authentification/activer", json("code", code)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.deuxFacteursActif").value(true));
-        // la connexion exige désormais le code
-        assertThat(postJson(mvc, "/api/v1/auth/login", json("identifiant", u.telephone(), "motDePasse", MOT_DE_PASSE)).corps().path("deuxFacteursRequis").asBoolean()).isTrue();
-        // déjà active
-        poster(u, "/api/v1/auth/moi/double-authentification/demander", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value("DEUX_FACTEURS_DEJA_ACTIFS"));
-    }
-
-    @Test
-    void desactive_la_double_authentification_avec_le_mot_de_passe() throws Exception {
-        UtilisateurDto u = creer(Role.ADMIN, telephoneUnique(), null, true);
-        poster(u, "/api/v1/auth/moi/double-authentification/desactiver", json("motDePasse", "faux-faux-faux")).andExpect(status().isUnprocessableEntity());
-        mvc.perform(get("/api/v1/auth/moi").with(moi(u))).andExpect(jsonPath("$.deuxFacteursActif").value(true));
-
-        poster(u, "/api/v1/auth/moi/double-authentification/desactiver", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.deuxFacteursActif").value(false));
-        assertThat(postJson(mvc, "/api/v1/auth/login", json("identifiant", u.telephone(), "motDePasse", MOT_DE_PASSE)).corps().path("accessToken").asText()).isNotBlank();
-    }
-
-    @Test
-    void les_employes_restreints_ne_peuvent_pas_desactiver_la_double_authentification() throws Exception {
-        for (Role role : new Role[] {Role.ENCAISSEUR, Role.GESTIONNAIRE_BIENS, Role.COMPTABLE}) {
-            UtilisateurDto u = creer(role, telephoneUnique(), null, true);
-            poster(u, "/api/v1/auth/moi/double-authentification/desactiver", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isConflict())
-                    .andExpect(jsonPath("$.code").value("DEUX_FACTEURS_OBLIGATOIRE"));
-            mvc.perform(get("/api/v1/auth/moi").with(moi(u))).andExpect(jsonPath("$.deuxFacteursActif").value(true));
-        }
-    }
-
-    @Test
-    void la_double_authentification_ne_concerne_pas_les_locataires_et_exige_un_telephone() throws Exception {
-        UtilisateurDto locataire = creer(Role.LOCATAIRE, telephoneUnique(), null, false);
-        poster(locataire, "/api/v1/auth/moi/double-authentification/demander", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value("UTILISATEUR_2FA_ROLE_NON_CONCERNE"));
-
-        UtilisateurDto sansTelephone = creer(Role.GESTIONNAIRE, null, emailUnique(), false);
-        poster(sansTelephone, "/api/v1/auth/moi/double-authentification/demander", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.code").value("OTP_TELEPHONE_REQUIS"));
-    }
-
-    @Test
-    void un_code_deja_utilise_n_active_rien() throws Exception {
-        UtilisateurDto u = creer(Role.GESTIONNAIRE, telephoneUnique(), null, false);
-        poster(u, "/api/v1/auth/moi/double-authentification/demander", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isAccepted());
-        String code = sms.dernierCode(u.telephone());
-        poster(u, "/api/v1/auth/moi/double-authentification/activer", json("code", code)).andExpect(status().isOk());
-        poster(u, "/api/v1/auth/moi/double-authentification/desactiver", json("motDePasse", MOT_DE_PASSE)).andExpect(status().isOk());
-        poster(u, "/api/v1/auth/moi/double-authentification/activer", json("code", code)).andExpect(status().isUnauthorized()); // le code est consommé
-        mvc.perform(get("/api/v1/auth/moi").with(moi(u))).andExpect(jsonPath("$.deuxFacteursActif").value(false));
-    }
-
     // ------------------------------------------------------------------ authentification
 
     @Test
     void sans_session_tout_est_refuse() throws Exception {
         mvc.perform(put("/api/v1/auth/moi").contentType(MediaType.APPLICATION_JSON).content(json("nom", "X", "motDePasse", "y"))).andExpect(status().isUnauthorized());
-        mvc.perform(post("/api/v1/auth/moi/double-authentification/demander").contentType(MediaType.APPLICATION_JSON).content(json("motDePasse", "y")))
-                .andExpect(status().isUnauthorized());
         mvc.perform(post("/api/v1/auth/moi/double-authentification/activer").contentType(MediaType.APPLICATION_JSON).content(json("code", "123456")))
                 .andExpect(status().isUnauthorized());
         mvc.perform(post("/api/v1/auth/moi/double-authentification/desactiver").contentType(MediaType.APPLICATION_JSON).content(json("motDePasse", "y")))

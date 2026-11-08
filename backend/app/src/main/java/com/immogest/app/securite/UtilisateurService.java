@@ -170,10 +170,6 @@ public class UtilisateurService {
             throw new ErreurMetier("UTILISATEUR_2FA_OBLIGATOIRE",
                     "La double authentification est obligatoire pour ce rôle", HttpStatus.BAD_REQUEST);
         }
-        if (saisie.deuxFacteursActif() && telephone == null) {
-            throw new ErreurMetier("UTILISATEUR_TELEPHONE_REQUIS_2FA",
-                    "Un numéro de téléphone est requis pour la double authentification", HttpStatus.BAD_REQUEST);
-        }
         if (saisie.deuxFacteursActif() && !saisie.role().motDePasseObligatoire()) {
             throw new ErreurMetier("UTILISATEUR_2FA_ROLE_NON_CONCERNE",
                     "La double authentification concerne les rôles ADMIN, GESTIONNAIRE et les employés restreints (ENCAISSEUR, GESTIONNAIRE_BIENS, COMPTABLE)", HttpStatus.BAD_REQUEST);
@@ -220,6 +216,6 @@ public class UtilisateurService {
 
     private UtilisateurDto dto(Utilisateur u) {
         return new UtilisateurDto(u.getId(), u.getNom(), u.getTelephone(), u.getEmail(), u.getRole(), u.isActif(),
-                u.isDeuxFacteursActif(), u.estVerrouille(OffsetDateTime.now(horloge)));
+                u.isDeuxFacteursActif(), u.aUneApplicationDAuthentification(), u.estVerrouille(OffsetDateTime.now(horloge)));
     }
 }

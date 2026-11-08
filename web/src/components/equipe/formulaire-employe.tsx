@@ -40,11 +40,13 @@ export function FormulaireEmploye({ onCree, onAnnuler }: Props) {
     () =>
       z.object({
         nom: z.string().trim().min(1, tu("erreurs.nom")).max(200),
-        telephone: z.string().trim().min(1, t("erreurs.telephone")).max(30),
+        telephone: z.string().trim().max(30),
         email: z.string().trim().max(200).refine((v) => v === "" || /^\S+@\S+\.\S+$/.test(v), tu("erreurs.email")),
         role: z.enum(ROLES_EMPLOYES),
         motDePasse: z.string().min(12, tu("erreurs.motDePasse")).max(100, tu("erreurs.motDePasse")),
-      }),
+      })
+      // un contact suffit (téléphone ou e-mail) : le second facteur vient d'une application, plus d'un SMS
+      .refine((v) => v.telephone !== "" || v.email !== "", { path: ["telephone"], message: tu("erreurs.contact") }),
     [t, tu],
   );
   type Valeurs = z.infer<typeof schema>;
@@ -80,7 +82,7 @@ export function FormulaireEmploye({ onCree, onAnnuler }: Props) {
     await queryClient.invalidateQueries({ queryKey: ["utilisateurs"] });
     await queryClient.invalidateQueries({ queryKey: ["affectations"] });
     toast.success(tu("cree"));
-    onCree(v.telephone.trim(), v.motDePasse, avertissement);
+    onCree(optionnel(v.telephone) ?? optionnel(v.email) ?? v.nom, v.motDePasse, avertissement);
   }
 
   return (

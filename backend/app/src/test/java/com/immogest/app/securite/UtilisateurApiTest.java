@@ -210,17 +210,19 @@ class UtilisateurApiTest {
     }
 
     @Test
-    void telephoneInvalideEtDeuxFacteursSansTelephoneRefuses() throws Exception {
+    void telephoneInvalideEtContactObligatoire() throws Exception {
         mvc.perform(post("/api/v1/utilisateurs").with(admin).contentType(MediaType.APPLICATION_JSON)
                         .content(creation("abc", null, Role.LOCATAIRE)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("UTILISATEUR_TELEPHONE_INVALIDE"));
 
+        // la double authentification passe par une application : plus besoin de téléphone pour recevoir un code
         mvc.perform(post("/api/v1/utilisateurs").with(admin).contentType(MediaType.APPLICATION_JSON)
                         .content(json("nom", "X", "email", emailUnique(), "role", "GESTIONNAIRE",
                                 "deuxFacteursActif", true, "motDePasse", MOT_DE_PASSE)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("UTILISATEUR_TELEPHONE_REQUIS_2FA"));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.deuxFacteursActif").value(true))
+                .andExpect(jsonPath("$.deuxFacteursConfigure").value(false));
 
         mvc.perform(post("/api/v1/utilisateurs").with(admin).contentType(MediaType.APPLICATION_JSON)
                         .content(json("nom", "X", "role", "LOCATAIRE", "motDePasse", MOT_DE_PASSE)))

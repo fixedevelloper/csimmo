@@ -19,6 +19,10 @@ abstract class _$ReponseConnexionCWProxy {
 
   ReponseConnexion deuxFacteursRequis(bool? deuxFacteursRequis);
 
+  ReponseConnexion enrolementRequis(bool? enrolementRequis);
+
+  ReponseConnexion defi(String? defi);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReponseConnexion(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -32,6 +36,8 @@ abstract class _$ReponseConnexionCWProxy {
     String? tokenType,
     ReponseConnexionRoleEnum? role,
     bool? deuxFacteursRequis,
+    bool? enrolementRequis,
+    String? defi,
   });
 }
 
@@ -63,6 +69,13 @@ class _$ReponseConnexionCWProxyImpl implements _$ReponseConnexionCWProxy {
       this(deuxFacteursRequis: deuxFacteursRequis);
 
   @override
+  ReponseConnexion enrolementRequis(bool? enrolementRequis) =>
+      this(enrolementRequis: enrolementRequis);
+
+  @override
+  ReponseConnexion defi(String? defi) => this(defi: defi);
+
+  @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReponseConnexion(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -76,6 +89,8 @@ class _$ReponseConnexionCWProxyImpl implements _$ReponseConnexionCWProxy {
     Object? tokenType = const $CopyWithPlaceholder(),
     Object? role = const $CopyWithPlaceholder(),
     Object? deuxFacteursRequis = const $CopyWithPlaceholder(),
+    Object? enrolementRequis = const $CopyWithPlaceholder(),
+    Object? defi = const $CopyWithPlaceholder(),
   }) {
     return ReponseConnexion(
       accessToken: accessToken == const $CopyWithPlaceholder()
@@ -102,6 +117,14 @@ class _$ReponseConnexionCWProxyImpl implements _$ReponseConnexionCWProxy {
           ? _value.deuxFacteursRequis
           // ignore: cast_nullable_to_non_nullable
           : deuxFacteursRequis as bool?,
+      enrolementRequis: enrolementRequis == const $CopyWithPlaceholder()
+          ? _value.enrolementRequis
+          // ignore: cast_nullable_to_non_nullable
+          : enrolementRequis as bool?,
+      defi: defi == const $CopyWithPlaceholder()
+          ? _value.defi
+          // ignore: cast_nullable_to_non_nullable
+          : defi as String?,
     );
   }
 }
@@ -131,6 +154,11 @@ ReponseConnexion _$ReponseConnexionFromJson(Map<String, dynamic> json) =>
           'deuxFacteursRequis',
           (v) => v as bool?,
         ),
+        enrolementRequis: $checkedConvert(
+          'enrolementRequis',
+          (v) => v as bool?,
+        ),
+        defi: $checkedConvert('defi', (v) => v as String?),
       );
       return val;
     });
@@ -143,6 +171,8 @@ Map<String, dynamic> _$ReponseConnexionToJson(ReponseConnexion instance) =>
       'tokenType': ?instance.tokenType,
       'role': ?_$ReponseConnexionRoleEnumEnumMap[instance.role],
       'deuxFacteursRequis': ?instance.deuxFacteursRequis,
+      'enrolementRequis': ?instance.enrolementRequis,
+      'defi': ?instance.defi,
     };
 
 const _$ReponseConnexionRoleEnumEnumMap = {

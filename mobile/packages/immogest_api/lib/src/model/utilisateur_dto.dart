@@ -34,6 +34,8 @@ class UtilisateurDto {
 
      this.deuxFacteursActif,
 
+     this.deuxFacteursConfigure,
+
      this.verrouille,
   });
 
@@ -123,6 +125,18 @@ class UtilisateurDto {
 
   @JsonKey(
     
+    name: r'deuxFacteursConfigure',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? deuxFacteursConfigure;
+
+
+
+  @JsonKey(
+    
     name: r'verrouille',
     required: false,
     includeIfNull: false,
@@ -144,6 +158,7 @@ class UtilisateurDto {
       other.role == role &&
       other.actif == actif &&
       other.deuxFacteursActif == deuxFacteursActif &&
+      other.deuxFacteursConfigure == deuxFacteursConfigure &&
       other.verrouille == verrouille;
 
     @override
@@ -155,6 +170,7 @@ class UtilisateurDto {
         role.hashCode +
         actif.hashCode +
         deuxFacteursActif.hashCode +
+        deuxFacteursConfigure.hashCode +
         verrouille.hashCode;
 
   factory UtilisateurDto.fromJson(Map<String, dynamic> json) => _$UtilisateurDtoFromJson(json);

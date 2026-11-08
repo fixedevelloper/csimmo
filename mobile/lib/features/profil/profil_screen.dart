@@ -4,6 +4,7 @@ import 'package:immogest_api/immogest_api.dart';
 
 import '../../core/auth/role.dart';
 import '../../core/error/error_messages.dart';
+import '../../core/widgets/cle_application.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth_actions.dart';
 import '../auth/auth_repository.dart';
@@ -169,8 +170,10 @@ class _InfosPersonnellesState extends ConsumerState<_InfosPersonnelles> {
   }
 }
 
-enum _Etape { repos, motDePasse, code, desactiver }
+enum _Etape { repos, motDePasse, configuration, desactiver }
 
+/// Double authentification par application (Google Authenticator, Microsoft Authenticator, Authy…) : on la configure en saisissant la clé puis le
+/// premier code, on la désactive avec le mot de passe et un code. Obligatoire pour les employés restreints. Aucun SMS.
 class _DoubleAuthentification extends ConsumerStatefulWidget {
   const _DoubleAuthentification({required this.utilisateur});
 
@@ -187,6 +190,7 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
   _Etape _etape = _Etape.repos;
   final _motDePasse = TextEditingController();
   final _code = TextEditingController();
+  Enrolement? _enrolement;
   String? _erreur;
   bool _envoi = false;
 
@@ -201,6 +205,7 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
         _etape = _Etape.repos;
         _motDePasse.clear();
         _code.clear();
+        _enrolement = null;
         _erreur = null;
       });
 
@@ -223,64 +228,81 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
     final l = AppLocalizations.of(context);
     final role = Role.fromCode(widget.utilisateur.role?.value);
     final concerne = role != null && _roles.contains(role);
-    final active = widget.utilisateur.deuxFacteursActif == true;
-    final obligatoire = role != null && _obligatoire.contains(role);
-    final telephone = widget.utilisateur.telephone;
     // Aucune section pour un rôle sans double authentification (locataire, prestataire, propriétaire).
     if (!concerne) return const SizedBox.shrink();
+    final active = widget.utilisateur.deuxFacteursActif == true;
+    final configuree = active && widget.utilisateur.deuxFacteursConfigure == true;
+    final obligatoire = _obligatoire.contains(role);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Expanded(child: Text(l.deuxTitre, style: Theme.of(context).textTheme.titleMedium)),
-            Chip(key: const Key('deux-etat'), label: Text(active ? l.deuxActive : l.deuxInactive)),
+            Chip(key: const Key('deux-etat'), label: Text(!active ? l.deuxInactive : configuree ? l.deuxActive : l.deuxAConfigurer)),
           ]),
-          Text(active ? l.deuxAideActive : l.deuxAideInactive, style: Theme.of(context).textTheme.bodySmall),
+          Text(configuree ? l.deuxAideActive : active ? l.deuxAideAConfigurer : l.deuxAideInactive, style: Theme.of(context).textTheme.bodySmall),
           if (obligatoire) Padding(padding: const EdgeInsets.only(top: 8), child: Text(l.deuxObligatoire, key: const Key('deux-obligatoire'))),
           const SizedBox(height: 8),
-          if (_etape == _Etape.repos && !obligatoire)
-            (!active && (telephone == null || telephone.isEmpty))
-                ? Text(l.deuxSansTelephone, key: const Key('deux-sans-telephone'))
-                : OutlinedButton(
-                    key: Key(active ? 'deux-desactiver' : 'deux-activer'),
-                    onPressed: () => setState(() => _etape = active ? _Etape.desactiver : _Etape.motDePasse),
-                    child: Text(active ? l.deuxDesactiver : l.deuxActiver)),
+          if (_etape == _Etape.repos) ...[
+            if (!configuree)
+              FilledButton(
+                key: const Key('deux-configurer'),
+                onPressed: () => setState(() => _etape = _Etape.motDePasse),
+                child: Text(active ? l.deuxConfigurerMaintenant : l.deuxConfigurer),
+              ),
+            if (configuree && !obligatoire)
+              OutlinedButton(key: const Key('deux-desactiver'), onPressed: () => setState(() => _etape = _Etape.desactiver), child: Text(l.deuxDesactiver)),
+          ],
           if (_etape == _Etape.motDePasse || _etape == _Etape.desactiver) ...[
             _ChampMotDePasse(cle: 'deux-mdp', libelle: l.profilMotDePasseActuel, controleur: _motDePasse),
+            if (_etape == _Etape.desactiver)
+              TextField(
+                key: const Key('deux-code-desactiver'),
+                controller: _code,
+                keyboardType: TextInputType.number,
+                maxLength: 6,
+                decoration: InputDecoration(labelText: l.deuxCodeApplication),
+                onChanged: (_) => setState(() {}),
+              ),
             const SizedBox(height: 8),
             Row(children: [
               FilledButton(
                 key: const Key('deux-valider-mdp'),
-                onPressed: _envoi
+                onPressed: _envoi || (_etape == _Etape.desactiver && _code.text.length != 6)
                     ? null
                     : () => _agir(l, () async {
                           final repo = ref.read(authRepositoryProvider);
                           final messager = ScaffoldMessenger.of(context);
                           if (_etape == _Etape.motDePasse) {
-                            await repo.demanderDeuxFacteurs(_motDePasse.text);
+                            final e = await repo.demarrerDeuxFacteurs(_motDePasse.text);
                             _motDePasse.clear();
-                            if (mounted) setState(() => _etape = _Etape.code);
+                            if (mounted) {
+                              setState(() {
+                                _enrolement = e;
+                                _etape = _Etape.configuration;
+                              });
+                            }
                           } else {
-                            await repo.desactiverDeuxFacteurs(_motDePasse.text);
+                            await repo.desactiverDeuxFacteurs(_motDePasse.text, _code.text);
                             ref.invalidate(currentUserProvider);
                             messager.showSnackBar(SnackBar(content: Text(l.deuxDesactivee)));
                             _annuler();
                           }
                         }),
-                child: Text(_etape == _Etape.motDePasse ? l.deuxEnvoyerCode : l.deuxDesactiver),
+                child: Text(_etape == _Etape.motDePasse ? l.deuxContinuer : l.deuxDesactiver),
               ),
               TextButton(onPressed: _annuler, child: Text(l.deuxAnnuler)),
             ]),
           ],
-          if (_etape == _Etape.code) ...[
-            Text(l.deuxCodeEnvoye(telephone ?? ''), key: const Key('deux-code-envoye')),
+          if (_etape == _Etape.configuration && _enrolement != null) ...[
+            CleApplication(secret: _enrolement!.secret),
             TextField(
               key: const Key('deux-code'),
               controller: _code,
               keyboardType: TextInputType.number,
               maxLength: 6,
-              decoration: InputDecoration(labelText: l.deuxCode),
+              decoration: InputDecoration(labelText: l.deuxCodeApplication),
               onChanged: (_) => setState(() {}),
             ),
             Row(children: [
@@ -295,7 +317,7 @@ class _DoubleAuthentificationState extends ConsumerState<_DoubleAuthentification
                           messager.showSnackBar(SnackBar(content: Text(l.deuxActivee)));
                           _annuler();
                         }),
-                child: Text(l.deuxConfirmer),
+                child: Text(l.deuxConfirmerActivation),
               ),
               TextButton(onPressed: _annuler, child: Text(l.deuxAnnuler)),
             ]),

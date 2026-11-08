@@ -13,6 +13,7 @@ vi.mock("@/lib/api/client", () => ({ api: { PUT: (...a: unknown[]) => put(...a),
 vi.mock("@/hooks/use-me", () => ({ useMe: () => ({ data: moi, error: null, refetch: vi.fn() }) }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace, refresh: vi.fn(), push: vi.fn() }) }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+vi.mock("qrcode", () => ({ default: { toDataURL: () => Promise.resolve("data:image/png;base64,iVBORw0KGgo=") } }));
 
 import { ProfilPage } from "./profil-page";
 
@@ -95,21 +96,24 @@ describe("ProfilPage", () => {
     });
   });
 
-  describe("double authentification", () => {
-    it("active en deux étapes : mot de passe puis code SMS", async () => {
-      post.mockReturnValueOnce(ok()).mockReturnValueOnce(ok({ ...gestionnaire, deuxFacteursActif: true }));
+  describe("double authentification (application)", () => {
+    const cle = "ABCDEFGHIJKLMNOPABCDEFGHIJKLMNOP";
+
+    it("configure en deux étapes : mot de passe, puis QR + premier code de l'application", async () => {
+      post.mockReturnValueOnce(ok({ secret: cle, uri: `otpauth://totp/ImmoGest:x?secret=${cle}` })).mockReturnValueOnce(ok({ ...gestionnaire, deuxFacteursActif: true, deuxFacteursConfigure: true }));
       rendu();
       expect(screen.getByText("Désactivée")).toBeInTheDocument();
-      await userEvent.click(screen.getByRole("button", { name: "Activer" }));
+      await userEvent.click(screen.getByRole("button", { name: "Configurer" }));
       await userEvent.type(screen.getByLabelText("Mot de passe actuel", { selector: "#df-mdp" }), "Motdepasse123");
-      await userEvent.click(screen.getByRole("button", { name: "Envoyer le code" }));
-      expect(await screen.findByText(/code à 6 chiffres a été envoyé/)).toHaveTextContent("+237690000001");
-      expect(post.mock.calls[0][0]).toBe("/api/v1/auth/moi/double-authentification/demander");
+      await userEvent.click(screen.getByRole("button", { name: "Continuer" }));
+      expect(await screen.findByTestId("cle-application")).toHaveTextContent("ABCD EFGH IJKL MNOP ABCD EFGH IJKL MNOP");
+      expect(post.mock.calls[0][0]).toBe("/api/v1/auth/moi/double-authentification/demarrer");
+      expect(post.mock.calls[0][1].body).toEqual({ motDePasse: "Motdepasse123" });
 
-      const confirmer = screen.getByRole("button", { name: "Confirmer l'activation" });
+      const confirmer = screen.getByRole("button", { name: "Confirmer et activer" });
       expect(confirmer).toBeDisabled();
-      await userEvent.type(screen.getByLabelText("Code reçu par SMS"), "12a3456"); // seuls les chiffres sont gardés
-      expect(screen.getByLabelText("Code reçu par SMS")).toHaveValue("123456");
+      await userEvent.type(screen.getByLabelText("Code de l'application"), "12a3456"); // seuls les chiffres sont gardés
+      expect(screen.getByLabelText("Code de l'application")).toHaveValue("123456");
       await userEvent.click(confirmer);
       await waitFor(() => expect(post).toHaveBeenCalledTimes(2));
       expect(post.mock.calls[1][0]).toBe("/api/v1/auth/moi/double-authentification/activer");
@@ -117,49 +121,52 @@ describe("ProfilPage", () => {
     });
 
     it("affiche un code refusé sans activer", async () => {
-      post.mockReturnValueOnce(ok()).mockReturnValueOnce(ko(401, "OTP_INVALIDE"));
+      post.mockReturnValueOnce(ok({ secret: cle, uri: "otpauth://totp/x" })).mockReturnValueOnce(ko(401, "OTP_INVALIDE"));
       rendu();
-      await userEvent.click(screen.getByRole("button", { name: "Activer" }));
+      await userEvent.click(screen.getByRole("button", { name: "Configurer" }));
       await userEvent.type(screen.getByLabelText("Mot de passe actuel", { selector: "#df-mdp" }), "Motdepasse123");
-      await userEvent.click(screen.getByRole("button", { name: "Envoyer le code" }));
-      await userEvent.type(await screen.findByLabelText("Code reçu par SMS"), "000000");
-      await userEvent.click(screen.getByRole("button", { name: "Confirmer l'activation" }));
+      await userEvent.click(screen.getByRole("button", { name: "Continuer" }));
+      await userEvent.type(await screen.findByLabelText("Code de l'application"), "000000");
+      await userEvent.click(screen.getByRole("button", { name: "Confirmer et activer" }));
       expect(await screen.findByRole("alert")).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Confirmer l'activation" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Confirmer et activer" })).toBeInTheDocument();
     });
 
-    it("désactive avec le mot de passe", async () => {
-      moi = { ...gestionnaire, deuxFacteursActif: true };
+    it("désactive avec le mot de passe ET le code de l'application", async () => {
+      moi = { ...gestionnaire, deuxFacteursActif: true, deuxFacteursConfigure: true };
       post.mockReturnValueOnce(ok({ ...gestionnaire, deuxFacteursActif: false }));
       rendu();
       expect(screen.getByText("Activée")).toBeInTheDocument();
       await userEvent.click(screen.getByRole("button", { name: "Désactiver" }));
+      const valider = screen.getAllByRole("button", { name: "Désactiver" })[0];
+      expect(valider).toBeDisabled();
       await userEvent.type(screen.getByLabelText("Mot de passe actuel", { selector: "#df-mdp" }), "Motdepasse123");
+      await userEvent.type(screen.getByLabelText("Code de l'application"), "123456");
       await userEvent.click(screen.getAllByRole("button", { name: "Désactiver" })[0]);
       await waitFor(() => expect(post).toHaveBeenCalledTimes(1));
       expect(post.mock.calls[0][0]).toBe("/api/v1/auth/moi/double-authentification/desactiver");
+      expect(post.mock.calls[0][1].body).toEqual({ motDePasse: "Motdepasse123", code: "123456" });
     });
 
     it("ne propose pas la désactivation à un employé restreint", () => {
-      moi = { ...gestionnaire, role: "ENCAISSEUR", deuxFacteursActif: true };
+      moi = { ...gestionnaire, role: "ENCAISSEUR", deuxFacteursActif: true, deuxFacteursConfigure: true };
       rendu();
       expect(screen.getByText("Obligatoire pour votre rôle : elle ne peut pas être désactivée.")).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: "Désactiver" })).not.toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: "Activer" })).not.toBeInTheDocument();
     });
 
-    it("demande d'abord un téléphone quand il manque", () => {
-      moi = { ...gestionnaire, telephone: undefined };
+    it("invite à configurer maintenant quand elle est exigée mais pas encore configurée", () => {
+      moi = { ...gestionnaire, role: "COMPTABLE", deuxFacteursActif: true, deuxFacteursConfigure: false };
       rendu();
-      expect(screen.getByText(/Ajoutez un numéro de téléphone ci-dessus/)).toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: "Activer" })).not.toBeInTheDocument();
+      expect(screen.getByText("À configurer")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Configurer maintenant" })).toBeInTheDocument();
     });
 
     it("n'est pas proposée à un locataire", () => {
       moi = { ...gestionnaire, role: "LOCATAIRE" };
       rendu();
       expect(screen.getByText("La double authentification n'est proposée qu'aux comptes d'employés.")).toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: "Activer" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "Configurer" })).not.toBeInTheDocument();
     });
   });
 });

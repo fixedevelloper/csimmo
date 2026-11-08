@@ -21,6 +21,8 @@ abstract class _$UtilisateurDtoCWProxy {
 
   UtilisateurDto deuxFacteursActif(bool? deuxFacteursActif);
 
+  UtilisateurDto deuxFacteursConfigure(bool? deuxFacteursConfigure);
+
   UtilisateurDto verrouille(bool? verrouille);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UtilisateurDto(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -37,6 +39,7 @@ abstract class _$UtilisateurDtoCWProxy {
     UtilisateurDtoRoleEnum? role,
     bool? actif,
     bool? deuxFacteursActif,
+    bool? deuxFacteursConfigure,
     bool? verrouille,
   });
 }
@@ -70,6 +73,10 @@ class _$UtilisateurDtoCWProxyImpl implements _$UtilisateurDtoCWProxy {
       this(deuxFacteursActif: deuxFacteursActif);
 
   @override
+  UtilisateurDto deuxFacteursConfigure(bool? deuxFacteursConfigure) =>
+      this(deuxFacteursConfigure: deuxFacteursConfigure);
+
+  @override
   UtilisateurDto verrouille(bool? verrouille) => this(verrouille: verrouille);
 
   @override
@@ -87,6 +94,7 @@ class _$UtilisateurDtoCWProxyImpl implements _$UtilisateurDtoCWProxy {
     Object? role = const $CopyWithPlaceholder(),
     Object? actif = const $CopyWithPlaceholder(),
     Object? deuxFacteursActif = const $CopyWithPlaceholder(),
+    Object? deuxFacteursConfigure = const $CopyWithPlaceholder(),
     Object? verrouille = const $CopyWithPlaceholder(),
   }) {
     return UtilisateurDto(
@@ -118,6 +126,11 @@ class _$UtilisateurDtoCWProxyImpl implements _$UtilisateurDtoCWProxy {
           ? _value.deuxFacteursActif
           // ignore: cast_nullable_to_non_nullable
           : deuxFacteursActif as bool?,
+      deuxFacteursConfigure:
+          deuxFacteursConfigure == const $CopyWithPlaceholder()
+          ? _value.deuxFacteursConfigure
+          // ignore: cast_nullable_to_non_nullable
+          : deuxFacteursConfigure as bool?,
       verrouille: verrouille == const $CopyWithPlaceholder()
           ? _value.verrouille
           // ignore: cast_nullable_to_non_nullable
@@ -152,6 +165,10 @@ UtilisateurDto _$UtilisateurDtoFromJson(Map<String, dynamic> json) =>
           'deuxFacteursActif',
           (v) => v as bool?,
         ),
+        deuxFacteursConfigure: $checkedConvert(
+          'deuxFacteursConfigure',
+          (v) => v as bool?,
+        ),
         verrouille: $checkedConvert('verrouille', (v) => v as bool?),
       );
       return val;
@@ -166,6 +183,7 @@ Map<String, dynamic> _$UtilisateurDtoToJson(UtilisateurDto instance) =>
       'role': ?_$UtilisateurDtoRoleEnumEnumMap[instance.role],
       'actif': ?instance.actif,
       'deuxFacteursActif': ?instance.deuxFacteursActif,
+      'deuxFacteursConfigure': ?instance.deuxFacteursConfigure,
       'verrouille': ?instance.verrouille,
     };
 

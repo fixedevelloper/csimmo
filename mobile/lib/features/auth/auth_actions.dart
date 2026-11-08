@@ -16,12 +16,21 @@ class AuthActions {
 
   AuthRepository get _repo => _ref.read(authRepositoryProvider);
 
-  /// Retourne `true` si la session est ouverte, `false` si un code SMS est requis (2FA).
-  Future<bool> login(String identifiant, String motDePasse) async {
-    final tokens = await _repo.login(identifiant.trim(), motDePasse);
-    if (tokens == null) return false;
-    await _ref.read(sessionProvider.notifier).signIn(tokens);
-    return true;
+  /// Connexion par mot de passe : ouvre la session, ou renvoie l'étape suivante (code de l'application, ou application à configurer).
+  Future<ResultatConnexion> login(String identifiant, String motDePasse) async {
+    final resultat = await _repo.login(identifiant.trim(), motDePasse);
+    if (resultat is SessionOuverte) await _ref.read(sessionProvider.notifier).signIn(resultat.tokens);
+    return resultat;
+  }
+
+  Future<void> verifierDeuxFacteurs(String defi, String code) async {
+    await _ref.read(sessionProvider.notifier).signIn(await _repo.verifierDeuxFacteurs(defi, code.trim()));
+  }
+
+  Future<Enrolement> demarrerEnrolement(String defi) => _repo.demarrerEnrolement(defi);
+
+  Future<void> confirmerEnrolement(String defi, String code) async {
+    await _ref.read(sessionProvider.notifier).signIn(await _repo.confirmerEnrolement(defi, code.trim()));
   }
 
   Future<void> demanderOtp(String identifiant) => _repo.demanderOtp(identifiant.trim());
