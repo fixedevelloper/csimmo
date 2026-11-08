@@ -25,6 +25,7 @@ class DashboardController {
     }
 
     @GetMapping("/synthese")
+    @io.swagger.v3.oas.annotations.Operation(operationId = "syntheseTableauDeBord")
     Synthese synthese() {
         return service.synthese();
     }

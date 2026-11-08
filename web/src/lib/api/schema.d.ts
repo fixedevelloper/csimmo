@@ -44,7 +44,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["changerStatut"];
+        put: operations["changerStatutSignalement"];
         post?: never;
         delete?: never;
         options?: never;
@@ -172,7 +172,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["changerStatut_1"];
+        put: operations["changerStatut"];
         post?: never;
         delete?: never;
         options?: never;
@@ -461,7 +461,7 @@ export interface paths {
         };
         get: operations["historique"];
         put?: never;
-        post: operations["relancer"];
+        post: operations["relancerEcheance"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1243,7 +1243,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["synthese"];
+        get: operations["syntheseTableauDeBord"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1691,7 +1691,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["arrieres_1"];
+        get: operations["listerArrieres"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3239,7 +3239,7 @@ export interface operations {
             };
         };
     };
-    changerStatut: {
+    changerStatutSignalement: {
         parameters: {
             query?: never;
             header?: never;
@@ -3613,7 +3613,7 @@ export interface operations {
             };
         };
     };
-    changerStatut_1: {
+    changerStatut: {
         parameters: {
             query?: never;
             header?: never;
@@ -4346,7 +4346,7 @@ export interface operations {
             };
         };
     };
-    relancer: {
+    relancerEcheance: {
         parameters: {
             query?: never;
             header?: never;
@@ -6062,7 +6062,7 @@ export interface operations {
             };
         };
     };
-    synthese: {
+    syntheseTableauDeBord: {
         parameters: {
             query?: never;
             header?: never;
@@ -6686,7 +6686,7 @@ export interface operations {
             };
         };
     };
-    arrieres_1: {
+    listerArrieres: {
         parameters: {
             query?: {
                 q?: string;

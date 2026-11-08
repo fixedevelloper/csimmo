@@ -171,7 +171,7 @@ _responseData = rawData == null ? null : deserialize<PhotoDto, PhotoDto>(rawData
     return _response;
   }
 
-  /// changerStatut1
+  /// changerStatut
   /// 
   ///
   /// Parameters:
@@ -186,7 +186,7 @@ _responseData = rawData == null ? null : deserialize<PhotoDto, PhotoDto>(rawData
   ///
   /// Returns a [Future] containing a [Response] with a [LotDto] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<LotDto>> changerStatut1({ 
+  Future<Response<LotDto>> changerStatut({ 
     required String id,
     required StatutRequete statutRequete,
     CancelToken? cancelToken,

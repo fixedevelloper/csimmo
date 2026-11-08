@@ -19,7 +19,7 @@ class SignalementControllerApi {
 
   const SignalementControllerApi(this._dio);
 
-  /// changerStatut
+  /// changerStatutSignalement
   /// 
   ///
   /// Parameters:
@@ -34,7 +34,7 @@ class SignalementControllerApi {
   ///
   /// Returns a [Future] containing a [Response] with a [SignalementDto] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<SignalementDto>> changerStatut({ 
+  Future<Response<SignalementDto>> changerStatutSignalement({ 
     required String id,
     required StatutSignalementRequete statutSignalementRequete,
     CancelToken? cancelToken,

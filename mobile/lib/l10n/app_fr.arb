@@ -247,7 +247,13 @@
     }
   },
   "bandeauFile": "{n, plural, =1{1 encaissement en attente d'envoi} other{{n} encaissements en attente d'envoi}}",
-  "@bandeauFile": { "placeholders": { "n": { "type": "int" } } },
+  "@bandeauFile": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "profilTitre": "Mon profil",
   "profilBouton": "Mon profil",
   "profilInfosTitre": "Informations personnelles",
@@ -302,5 +308,96 @@
   "deuxConfigurerMaintenant": "Configurer maintenant",
   "deuxContinuer": "Continuer",
   "deuxConfirmerActivation": "Confirmer et activer",
-  "deuxCodeApplication": "Code de l'application"
+  "deuxCodeApplication": "Code de l'application",
+  "ongletSuivi": "Suivi",
+  "gestionOccupation": "Occupation",
+  "gestionOccupationDetail": "{occupes} occupés · {libres} libres · {travaux} en travaux",
+  "@gestionOccupationDetail": {
+    "placeholders": {
+      "occupes": {
+        "type": "int"
+      },
+      "libres": {
+        "type": "int"
+      },
+      "travaux": {
+        "type": "int"
+      }
+    }
+  },
+  "gestionMois": "Ce mois-ci",
+  "gestionAttendu": "Attendu",
+  "gestionEncaisse": "Encaissé",
+  "gestionRecouvrement": "Recouvrement : {taux} %",
+  "@gestionRecouvrement": {
+    "placeholders": {
+      "taux": {
+        "type": "int"
+      }
+    }
+  },
+  "gestionArrieres": "Arriérés",
+  "gestionArrieresDetail": "{n, plural, =0{Aucune échéance en retard} =1{1 échéance en retard} other{{n} échéances en retard}}",
+  "@gestionArrieresDetail": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "gestionSignalements": "Signalements",
+  "gestionSignalementsAide": "Pannes signalées par les locataires",
+  "arrieresTitre": "Arriérés",
+  "aucunArriere": "Aucun arriéré. Tout est à jour.",
+  "rechercherArriere": "Rechercher un locataire",
+  "arriereRetard": "{n, plural, =1{1 jour de retard} other{{n} jours de retard}}",
+  "@arriereRetard": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "arriereReste": "Reste dû : {montant}",
+  "@arriereReste": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  },
+  "relancer": "Relancer",
+  "relanceEnvoyee": "Relance envoyée à {nom}.",
+  "@relanceEnvoyee": {
+    "placeholders": {
+      "nom": {
+        "type": "String"
+      }
+    }
+  },
+  "relanceDerniere": "Dernière relance : {date}",
+  "@relanceDerniere": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "signalementsGestionTitre": "Signalements",
+  "signalementsFiltreTous": "Tous",
+  "aucunSignalementGestion": "Aucun signalement dans cette catégorie.",
+  "signalementPar": "Signalé par {nom}",
+  "@signalementPar": {
+    "placeholders": {
+      "nom": {
+        "type": "String"
+      }
+    }
+  },
+  "signalementNote": "Note (facultative)",
+  "signalementPrendre": "Prendre en charge",
+  "signalementResoudre": "Marquer résolu",
+  "signalementRejeter": "Rejeter",
+  "signalementMisAJour": "Signalement mis à jour.",
+  "fermer": "Fermer"
 }

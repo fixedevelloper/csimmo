@@ -84,6 +84,7 @@ class SignalementController {
 
     @PutMapping("/{id}/statut")
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTIONNAIRE', 'GESTIONNAIRE_BIENS')")
+    @io.swagger.v3.oas.annotations.Operation(operationId = "changerStatutSignalement")
     SignalementDto changerStatut(@PathVariable UUID id, @Valid @RequestBody StatutSignalementRequete r) {
         return service.changerStatut(id, r.statut(), r.note());
     }

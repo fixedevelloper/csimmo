@@ -1453,6 +1453,180 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Code de l\'application'**
   String get deuxCodeApplication;
+
+  /// No description provided for @ongletSuivi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi'**
+  String get ongletSuivi;
+
+  /// No description provided for @gestionOccupation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Occupation'**
+  String get gestionOccupation;
+
+  /// No description provided for @gestionOccupationDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'{occupes} occupés · {libres} libres · {travaux} en travaux'**
+  String gestionOccupationDetail(int occupes, int libres, int travaux);
+
+  /// No description provided for @gestionMois.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mois-ci'**
+  String get gestionMois;
+
+  /// No description provided for @gestionAttendu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Attendu'**
+  String get gestionAttendu;
+
+  /// No description provided for @gestionEncaisse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaissé'**
+  String get gestionEncaisse;
+
+  /// No description provided for @gestionRecouvrement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recouvrement : {taux} %'**
+  String gestionRecouvrement(int taux);
+
+  /// No description provided for @gestionArrieres.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arriérés'**
+  String get gestionArrieres;
+
+  /// No description provided for @gestionArrieresDetail.
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucune échéance en retard} =1{1 échéance en retard} other{{n} échéances en retard}}'**
+  String gestionArrieresDetail(int n);
+
+  /// No description provided for @gestionSignalements.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalements'**
+  String get gestionSignalements;
+
+  /// No description provided for @gestionSignalementsAide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pannes signalées par les locataires'**
+  String get gestionSignalementsAide;
+
+  /// No description provided for @arrieresTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arriérés'**
+  String get arrieresTitre;
+
+  /// No description provided for @aucunArriere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun arriéré. Tout est à jour.'**
+  String get aucunArriere;
+
+  /// No description provided for @rechercherArriere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher un locataire'**
+  String get rechercherArriere;
+
+  /// No description provided for @arriereRetard.
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 jour de retard} other{{n} jours de retard}}'**
+  String arriereRetard(int n);
+
+  /// No description provided for @arriereReste.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reste dû : {montant}'**
+  String arriereReste(String montant);
+
+  /// No description provided for @relancer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relancer'**
+  String get relancer;
+
+  /// No description provided for @relanceEnvoyee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relance envoyée à {nom}.'**
+  String relanceEnvoyee(String nom);
+
+  /// No description provided for @relanceDerniere.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière relance : {date}'**
+  String relanceDerniere(String date);
+
+  /// No description provided for @signalementsGestionTitre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalements'**
+  String get signalementsGestionTitre;
+
+  /// No description provided for @signalementsFiltreTous.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get signalementsFiltreTous;
+
+  /// No description provided for @aucunSignalementGestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun signalement dans cette catégorie.'**
+  String get aucunSignalementGestion;
+
+  /// No description provided for @signalementPar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalé par {nom}'**
+  String signalementPar(String nom);
+
+  /// No description provided for @signalementNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note (facultative)'**
+  String get signalementNote;
+
+  /// No description provided for @signalementPrendre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre en charge'**
+  String get signalementPrendre;
+
+  /// No description provided for @signalementResoudre.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer résolu'**
+  String get signalementResoudre;
+
+  /// No description provided for @signalementRejeter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rejeter'**
+  String get signalementRejeter;
+
+  /// No description provided for @signalementMisAJour.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalement mis à jour.'**
+  String get signalementMisAJour;
+
+  /// No description provided for @fermer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer'**
+  String get fermer;
 }
 
 class _AppLocalizationsDelegate

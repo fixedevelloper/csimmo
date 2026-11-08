@@ -251,7 +251,7 @@ _responseData = rawData == null ? null : deserialize<List<BailAEcheance>, BailAE
     );
   }
 
-  /// synthese
+  /// syntheseTableauDeBord
   /// 
   ///
   /// Parameters:
@@ -264,7 +264,7 @@ _responseData = rawData == null ? null : deserialize<List<BailAEcheance>, BailAE
   ///
   /// Returns a [Future] containing a [Response] with a [Synthese] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<Synthese>> synthese({ 
+  Future<Response<Synthese>> syntheseTableauDeBord({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,

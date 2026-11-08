@@ -5,9 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/widgets/composants.dart';
 import '../../l10n/app_localizations.dart';
+import '../../core/auth/role.dart';
+import '../../core/providers.dart';
 import '../auth/auth_actions.dart';
 import 'a_envoyer_screen.dart';
 import 'encaisser_screen.dart';
+import '../gestion/accueil_gestion_screen.dart';
 import 'file_encaissements.dart';
 import 'listes_screens.dart';
 import 'synchro_encaissements.dart';
@@ -51,7 +54,16 @@ class _AgentShellState extends ConsumerState<AgentShell> {
     final l = AppLocalizations.of(context);
     final agent = ref.watch(agentIdProvider).value;
     final enAttente = agent == null ? const AsyncData<int>(0) : ref.watch(nombreEnAttenteProvider(agent));
-    const pages = [EncaisserScreen(), AEnvoyerScreen(), LotsScreen(), LocatairesScreen()];
+    final role = ref.watch(sessionProvider);
+    // suivi (indicateurs, arriérés, signalements) : réservé aux rôles de gestion ; les indicateurs seulement à ADMIN et GESTIONNAIRE
+    final suivi = role == Role.admin || role == Role.gestionnaire || role == Role.gestionnaireBiens;
+    final pages = [
+      const EncaisserScreen(),
+      const AEnvoyerScreen(),
+      const LotsScreen(),
+      const LocatairesScreen(),
+      if (suivi) AccueilGestionScreen(avecStats: role != Role.gestionnaireBiens),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: TitreMarque(l.espaceAgent, cleTexte: const Key('titre-GESTIONNAIRE')),
@@ -85,6 +97,7 @@ class _AgentShellState extends ConsumerState<AgentShell> {
           ),
           NavigationDestination(key: const Key('onglet-lots'), icon: const Icon(Icons.apartment_outlined), selectedIcon: const Icon(Icons.apartment), label: l.ongletLots),
           NavigationDestination(key: const Key('onglet-locataires'), icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: l.ongletLocataires),
+          if (suivi) NavigationDestination(key: const Key('onglet-suivi'), icon: const Icon(Icons.insights_outlined), selectedIcon: const Icon(Icons.insights), label: l.ongletSuivi),
         ],
       ),
     );

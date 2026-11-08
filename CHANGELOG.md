@@ -4,6 +4,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). Versionnage s
 
 ## [Non publié]
 
+- feat(mobile): onglet « Suivi » pour ADMIN, GESTIONNAIRE et GESTIONNAIRE_BIENS — indicateurs du mois (occupation, attendu/encaissé, arriérés ; ADMIN et GESTIONNAIRE), liste des arriérés avec relance manuelle, signalements des locataires (filtre, prise en charge, résolution ou rejet avec note). `operationId` explicites ajoutés sur `synthese`, `arrieres`, `relancer` et `changerStatut` des signalements ; OpenAPI et clients TS/Dart régénérés.
+
 ## [0.2.0] - 2026-11-08
 
 Équipe et périmètres d'accès (lot 12), jeu de données de démonstration, suites de l'audit de sécurité.

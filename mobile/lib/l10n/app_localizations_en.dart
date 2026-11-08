@@ -757,4 +757,120 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deuxCodeApplication => 'App code';
+
+  @override
+  String get ongletSuivi => 'Follow-up';
+
+  @override
+  String get gestionOccupation => 'Occupancy';
+
+  @override
+  String gestionOccupationDetail(int occupes, int libres, int travaux) {
+    return '$occupes occupied · $libres vacant · $travaux under works';
+  }
+
+  @override
+  String get gestionMois => 'This month';
+
+  @override
+  String get gestionAttendu => 'Expected';
+
+  @override
+  String get gestionEncaisse => 'Collected';
+
+  @override
+  String gestionRecouvrement(int taux) {
+    return 'Collection rate: $taux%';
+  }
+
+  @override
+  String get gestionArrieres => 'Arrears';
+
+  @override
+  String gestionArrieresDetail(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n overdue instalments',
+      one: '1 overdue instalment',
+      zero: 'No overdue instalment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gestionSignalements => 'Reports';
+
+  @override
+  String get gestionSignalementsAide => 'Issues reported by tenants';
+
+  @override
+  String get arrieresTitre => 'Arrears';
+
+  @override
+  String get aucunArriere => 'No arrears. Everything is up to date.';
+
+  @override
+  String get rechercherArriere => 'Search a tenant';
+
+  @override
+  String arriereRetard(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n days late',
+      one: '1 day late',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String arriereReste(String montant) {
+    return 'Outstanding: $montant';
+  }
+
+  @override
+  String get relancer => 'Send reminder';
+
+  @override
+  String relanceEnvoyee(String nom) {
+    return 'Reminder sent to $nom.';
+  }
+
+  @override
+  String relanceDerniere(String date) {
+    return 'Last reminder: $date';
+  }
+
+  @override
+  String get signalementsGestionTitre => 'Reports';
+
+  @override
+  String get signalementsFiltreTous => 'All';
+
+  @override
+  String get aucunSignalementGestion => 'No report in this category.';
+
+  @override
+  String signalementPar(String nom) {
+    return 'Reported by $nom';
+  }
+
+  @override
+  String get signalementNote => 'Note (optional)';
+
+  @override
+  String get signalementPrendre => 'Take charge';
+
+  @override
+  String get signalementResoudre => 'Mark resolved';
+
+  @override
+  String get signalementRejeter => 'Reject';
+
+  @override
+  String get signalementMisAJour => 'Report updated.';
+
+  @override
+  String get fermer => 'Close';
 }

@@ -247,7 +247,13 @@
     }
   },
   "bandeauFile": "{n, plural, =1{1 payment waiting to be sent} other{{n} payments waiting to be sent}}",
-  "@bandeauFile": { "placeholders": { "n": { "type": "int" } } },
+  "@bandeauFile": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "profilTitre": "My profile",
   "profilBouton": "My profile",
   "profilInfosTitre": "Personal information",
@@ -302,5 +308,96 @@
   "deuxConfigurerMaintenant": "Set up now",
   "deuxContinuer": "Continue",
   "deuxConfirmerActivation": "Confirm and turn on",
-  "deuxCodeApplication": "App code"
+  "deuxCodeApplication": "App code",
+  "ongletSuivi": "Follow-up",
+  "gestionOccupation": "Occupancy",
+  "gestionOccupationDetail": "{occupes} occupied · {libres} vacant · {travaux} under works",
+  "@gestionOccupationDetail": {
+    "placeholders": {
+      "occupes": {
+        "type": "int"
+      },
+      "libres": {
+        "type": "int"
+      },
+      "travaux": {
+        "type": "int"
+      }
+    }
+  },
+  "gestionMois": "This month",
+  "gestionAttendu": "Expected",
+  "gestionEncaisse": "Collected",
+  "gestionRecouvrement": "Collection rate: {taux}%",
+  "@gestionRecouvrement": {
+    "placeholders": {
+      "taux": {
+        "type": "int"
+      }
+    }
+  },
+  "gestionArrieres": "Arrears",
+  "gestionArrieresDetail": "{n, plural, =0{No overdue instalment} =1{1 overdue instalment} other{{n} overdue instalments}}",
+  "@gestionArrieresDetail": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "gestionSignalements": "Reports",
+  "gestionSignalementsAide": "Issues reported by tenants",
+  "arrieresTitre": "Arrears",
+  "aucunArriere": "No arrears. Everything is up to date.",
+  "rechercherArriere": "Search a tenant",
+  "arriereRetard": "{n, plural, =1{1 day late} other{{n} days late}}",
+  "@arriereRetard": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "arriereReste": "Outstanding: {montant}",
+  "@arriereReste": {
+    "placeholders": {
+      "montant": {
+        "type": "String"
+      }
+    }
+  },
+  "relancer": "Send reminder",
+  "relanceEnvoyee": "Reminder sent to {nom}.",
+  "@relanceEnvoyee": {
+    "placeholders": {
+      "nom": {
+        "type": "String"
+      }
+    }
+  },
+  "relanceDerniere": "Last reminder: {date}",
+  "@relanceDerniere": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "signalementsGestionTitre": "Reports",
+  "signalementsFiltreTous": "All",
+  "aucunSignalementGestion": "No report in this category.",
+  "signalementPar": "Reported by {nom}",
+  "@signalementPar": {
+    "placeholders": {
+      "nom": {
+        "type": "String"
+      }
+    }
+  },
+  "signalementNote": "Note (optional)",
+  "signalementPrendre": "Take charge",
+  "signalementResoudre": "Mark resolved",
+  "signalementRejeter": "Reject",
+  "signalementMisAJour": "Report updated.",
+  "fermer": "Close"
 }

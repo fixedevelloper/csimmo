@@ -763,4 +763,121 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deuxCodeApplication => 'Code de l\'application';
+
+  @override
+  String get ongletSuivi => 'Suivi';
+
+  @override
+  String get gestionOccupation => 'Occupation';
+
+  @override
+  String gestionOccupationDetail(int occupes, int libres, int travaux) {
+    return '$occupes occupés · $libres libres · $travaux en travaux';
+  }
+
+  @override
+  String get gestionMois => 'Ce mois-ci';
+
+  @override
+  String get gestionAttendu => 'Attendu';
+
+  @override
+  String get gestionEncaisse => 'Encaissé';
+
+  @override
+  String gestionRecouvrement(int taux) {
+    return 'Recouvrement : $taux %';
+  }
+
+  @override
+  String get gestionArrieres => 'Arriérés';
+
+  @override
+  String gestionArrieresDetail(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n échéances en retard',
+      one: '1 échéance en retard',
+      zero: 'Aucune échéance en retard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gestionSignalements => 'Signalements';
+
+  @override
+  String get gestionSignalementsAide => 'Pannes signalées par les locataires';
+
+  @override
+  String get arrieresTitre => 'Arriérés';
+
+  @override
+  String get aucunArriere => 'Aucun arriéré. Tout est à jour.';
+
+  @override
+  String get rechercherArriere => 'Rechercher un locataire';
+
+  @override
+  String arriereRetard(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n jours de retard',
+      one: '1 jour de retard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String arriereReste(String montant) {
+    return 'Reste dû : $montant';
+  }
+
+  @override
+  String get relancer => 'Relancer';
+
+  @override
+  String relanceEnvoyee(String nom) {
+    return 'Relance envoyée à $nom.';
+  }
+
+  @override
+  String relanceDerniere(String date) {
+    return 'Dernière relance : $date';
+  }
+
+  @override
+  String get signalementsGestionTitre => 'Signalements';
+
+  @override
+  String get signalementsFiltreTous => 'Tous';
+
+  @override
+  String get aucunSignalementGestion =>
+      'Aucun signalement dans cette catégorie.';
+
+  @override
+  String signalementPar(String nom) {
+    return 'Signalé par $nom';
+  }
+
+  @override
+  String get signalementNote => 'Note (facultative)';
+
+  @override
+  String get signalementPrendre => 'Prendre en charge';
+
+  @override
+  String get signalementResoudre => 'Marquer résolu';
+
+  @override
+  String get signalementRejeter => 'Rejeter';
+
+  @override
+  String get signalementMisAJour => 'Signalement mis à jour.';
+
+  @override
+  String get fermer => 'Fermer';
 }

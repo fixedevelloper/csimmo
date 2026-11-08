@@ -110,7 +110,7 @@ paths:
     put:
       tags:
       - signalement-controller
-      operationId: changerStatut
+      operationId: changerStatutSignalement
       parameters:
       - name: id
         in: path
@@ -431,7 +431,7 @@ paths:
     put:
       tags:
       - lot-controller
-      operationId: changerStatut_1
+      operationId: changerStatut
       parameters:
       - name: id
         in: path
@@ -1085,7 +1085,7 @@ paths:
     post:
       tags:
       - relance-controller
-      operationId: relancer
+      operationId: relancerEcheance
       requestBody:
         content:
           application/json:
@@ -2848,7 +2848,7 @@ paths:
     get:
       tags:
       - dashboard-controller
-      operationId: synthese
+      operationId: syntheseTableauDeBord
       responses:
         "200":
           description: OK
@@ -3502,7 +3502,7 @@ paths:
     get:
       tags:
       - relance-controller
-      operationId: arrieres_1
+      operationId: listerArrieres
       parameters:
       - name: q
         in: query

@@ -77,12 +77,14 @@ class RelanceController {
     @PostMapping("/relances")
     @PreAuthorize(GESTION)
     @ResponseStatus(HttpStatus.CREATED)
+    @io.swagger.v3.oas.annotations.Operation(operationId = "relancerEcheance")
     RelanceDto relancer(@Valid @RequestBody EcheanceRequete r) {
         return service.relancer(r.echeanceId());
     }
 
     @GetMapping("/arrieres")
     @PreAuthorize(GESTION)
+    @io.swagger.v3.oas.annotations.Operation(operationId = "listerArrieres")
     PageReponse<ArriereDto> arrieres(@RequestParam(required = false) String q, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String sort) {
         return PageReponse.de(service.arrieres(q, Pagination.de(page, size, sort, Set.of("dateEcheance", "montant"), "dateEcheance")));
