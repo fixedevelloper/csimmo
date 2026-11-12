@@ -24,7 +24,7 @@ services:
   # Stockage objet S3 livré avec l'installation. Réseau interne uniquement : aucun port publié, jamais joignable depuis Internet.
   seaweedfs:
     profiles: ["stockage-local"]
-    image: chrislusf/seaweedfs:4.50
+    image: chrislusf/seaweedfs:4.53
     restart: unless-stopped
     command: server -dir=/data -s3 -s3.config=/etc/seaweedfs/s3.json
     volumes:
