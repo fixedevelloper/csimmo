@@ -138,7 +138,7 @@ services:
   # Accès depuis Internet sans ouvrir de port (installation derrière un routeur) : le tunnel joint Caddy en HTTP, dans le réseau Docker.
   cloudflared:
     profiles: ["tunnel"]
-    image: cloudflare/cloudflared:2026.10.7
+    image: cloudflare/cloudflared:2026.11.0
     restart: unless-stopped
     command: tunnel --no-autoupdate run
     environment:
